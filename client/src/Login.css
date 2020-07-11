@@ -1,0 +1,8 @@
+.Login {
+  margin: auto;
+  width: 300px;
+  border: 1px solid rgba(0, 0, 0, 0.5);
+  padding: 50px;
+  text-align: center;
+  background-color: white;
+}
