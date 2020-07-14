@@ -1,0 +1,41 @@
+.TopBar{
+  height: 60px;
+  width: 100%;
+  left: 0;
+  top: 0;
+  z-index: 1;
+  background-color: #fff;
+  position: fixed!important;
+}
+
+.LeftBar{
+  height: 100%;
+  background-color: #f0fff0;
+  position: fixed!important;
+  z-index: 1;
+  top: 60px;
+  left: 0%;
+  right: 20%;
+  /* overflow: auto; */
+}
+
+.RightBar{
+  height: 100%;
+  background-color: #2A2E41;
+  position: fixed!important;
+  z-index: 1;
+  top: 60px;
+  left: 80%;
+  right: 0;
+}
+
+.MiddlePanel {
+  height: 100%;
+  width: 60%;
+  background-color: #000000;
+  position: fixed!important;
+  z-index: 1;
+  top: 60px;
+  left: 20%;
+  right: 20%;
+}
