@@ -8,7 +8,7 @@ Below you will find everyhing needed to run, test and deploy mercury.
 
 ### Prerequisites
 
-Before you develop or run anything, please makesure you have the following installed on your machine:
+Before you develop or run anything, please make sure you have the following installed on your machine:
 
 - Node.js 10 or above
   - For first-time installations, use [nvm](https://github.com/nvm-sh/nvm) (Node Version Manager) to install and manager different node versions (Windows users, checkout [nvm-windows](https://github.com/coreybutler/nvm-windows))
@@ -44,11 +44,11 @@ Mercury should being running:
 - Mercury frontend [http://localhost:3000](http://localhost:3000)
 - Mercury API [http://localhost:3000/api](http://localhost:3000/api)
 
-### Coding style
+### Code style
 
 Eslint and prettier should handle most of the code style and linting issues.
 
-There is the possibility of both plugins clashing over a specific code rule. If you experience this back-and-forth rule clash, add a [prettier-ignore](https://prettier.io/docs/en/ignore.html) for that specific line, or send a message in the group chat to figure out a better way to handle these issues.
+There is the possibility of both plugins clashing over a specific code rule. If you experience this back-and-forth rule clash, add a [prettier-ignore](https://prettier.io/docs/en/ignore.html) comment for that specific line, or send a message in the group chat to figure out a better way to handle these issues.
 
 ## Deployment
 
