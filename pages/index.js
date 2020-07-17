@@ -1,11 +1,15 @@
 import react from 'react'
+import { Menu } from 'semantic-ui-react'
 
 function HomePage() {
   return (
-    <div>
-      <h1>Mercury</h1>
-      <p>Coming soon...</p>
-    </div>
+    <Menu size="large" borderless>
+      <Menu.Item header>Mercury</Menu.Item>
+      <Menu.Item>Dashboard</Menu.Item>
+      <Menu.Menu position="right">
+        <Menu.Item>Logout</Menu.Item>
+      </Menu.Menu>
+    </Menu>
   )
 }
 
