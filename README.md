@@ -68,7 +68,7 @@ You can use [sequelize-cli](https://github.com/sequelize/cli) which contains som
 
   - `npx sequelize-cli db:migrate:undo --url postgres://user:pass@127.0.0.1:5432/mercury`
 
-  > **Note:** Some of the generated code above contains tons of comments and unnecessary functions. Feel free to remove/clean up what's not necessary.
+> **Note:** Some of the generated code above contains tons of comments and unnecessary functions. Feel free to remove/clean up what's not necessary.
 
 ## Deployment
 
