@@ -8,6 +8,7 @@ const SideSegment = styled(Segment)`
   height: 100%;
   z-index: -1;
   background-color: white !important;
+  padding: 14px !important;
 `
 
 const SideColumn = styled(Grid.Column)`
@@ -21,13 +22,13 @@ function Layout({ children, left, right }) {
       <Navbar />
       <Grid style={{ height: 'calc(100vh - 54px)', marginTop: 0 }}>
         <SideColumn width={3}>
-          <SideSegment textAlign="center" vertical>
+          <SideSegment style={{ paddingLeft: '24px !important' }} vertical>
             {left}
           </SideSegment>
         </SideColumn>
         <Grid.Column width={10}>{children}</Grid.Column>
         <SideColumn width={3}>
-          <SideSegment textAlign="center" vertical>
+          <SideSegment style={{ paddingRight: '24px !important' }} vertical>
             {right}
           </SideSegment>
         </SideColumn>
