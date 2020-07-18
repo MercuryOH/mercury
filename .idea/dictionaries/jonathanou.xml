@@ -2,6 +2,7 @@
   <dictionary name="jonathanou">
     <words>
       <w>navbar</w>
+      <w>nprogress</w>
       <w>sequelize</w>
     </words>
   </dictionary>
