@@ -1,7 +1,7 @@
 const express = require('express')
 const next = require('next')
 const apiRoutes = require('./server/routes')
-
+const { courseQueue } = require('./util/queue');
 const dev = process.env.NODE_ENV !== 'production'
 const app = next({ dev })
 const server = express()
