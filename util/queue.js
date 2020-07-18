@@ -37,7 +37,7 @@ class Queue {
       let currentQueue = this.map.get(course)
 
       if (currentQueue.length > 0) {
-        return currentQueue.pop();
+        return currentQueue.shift();
       }
 
       throw new Error("Invalid: Queue is empty")
