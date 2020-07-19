@@ -27,7 +27,7 @@ The plugins you should install are:
 
 ### Environment variables
 
-Mercury looks for the postgres connection uri in the environment variables. To do so, add a `.env.local` file in the root of the project contaning `POSTGRES_CONNECTION_STRING` (git is already setup to ignore this file in future commits).
+Mercury looks for the postgres connection uri in the environment variables. To do so, add a `.env` file in the root of the project contaning `POSTGRES_CONNECTION_STRING` (git is already setup to ignore this file in future commits).
 
 ```
 POSTGRES_CONNECTION_STRING=postgres://user:pass@127.0.0.1:5432/mercury
@@ -38,7 +38,7 @@ POSTGRES_CONNECTION_STRING=postgres://user:pass@127.0.0.1:5432/mercury
 Once you are done setting up the above, start by setting up the database
 
 1. Create a database named `mercury` using pgAdmin or your favorite postgres client.
-2. Add a `.env.local` file in the root of the project containing the necessary environment variables (See environment variable section)
+2. Add a `.env` file in the root of the project containing the necessary environment variables (See environment variable section)
 3. Install project dependencies by running `npm install`
 4. Run project migrations `npx sequelize-cli db:migrate --url postgres://user:pass@127.0.0.1:5432/mercury`
 5. Run development server `npm run dev`
