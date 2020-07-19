@@ -9,7 +9,7 @@ const ProfileContainer = styled.div`
 
 function Navbar() {
   return (
-    <Menu size="massive" style={{ marginBottom: 0 }} borderless>
+    <Menu size="massive" style={{ marginBottom: 0, zIndex: 1 }} borderless>
       <Menu.Item header>Mercury</Menu.Item>
       <Menu.Menu position="right">
         <ProfileContainer>

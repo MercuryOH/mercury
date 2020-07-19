@@ -6,7 +6,6 @@ import Navbar from './navbar'
 
 const SideSegment = styled(Segment)`
   height: 100%;
-  z-index: -1;
   background-color: white !important;
   padding: 14px !important;
 `
