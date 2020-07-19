@@ -1,7 +1,8 @@
 const express = require('express')
 const next = require('next')
+const modesl = require('./models')
 const apiRoutes = require('./api/routes')
-const { courseQueue } = require('./util/queue')
+
 const dev = process.env.NODE_ENV !== 'production'
 const app = next({ dev })
 const server = express()
@@ -11,6 +12,7 @@ server.use(express.json())
 
 async function main() {
   await app.prepare()
+  await modesl.sequelize.sync()
 
   server.use('/api', apiRoutes)
   server.all('*', (req, res) => handle(req, res))
