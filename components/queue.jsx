@@ -1,31 +1,67 @@
 import React, { Component } from 'react'
-import { Label } from 'semantic-ui-react'
+import { Label, Icon, Button } from 'semantic-ui-react'
 import styled from 'styled-components'
 
 const QueueDiv = styled.div`
-  display: grid;
   grid-gap: 2vh;
-`
-
-const QueueTitleLabel = styled(Label)`
-  text-align: center;
-  font-size: 1.42857143rem !important;
 `
 
 const QueueLabel = styled(Label)`
   text-align: center;
 `
 
+const UnclickableButton = styled(Button)`
+  pointer-events: none;
+`
+
 export default class Queue extends Component {
+  constructor(props) {
+    super(props)
+    this.state = {
+      displayStudentsStyle: { display: 'grid' },
+      iconToDisplay: 'caret square down outline',
+    }
+  }
+
+  isStudentDisplayed() {
+    let { display } = this.state.displayStudentsStyle
+    return display === 'grid'
+  }
+
+  alterStudentDisplay() {
+    let displayStudentsStyle = this.isStudentDisplayed()
+      ? { display: 'none' }
+      : { display: 'grid' }
+
+    let iconToDisplay = this.isStudentDisplayed()
+      ? 'caret square up outline'
+      : 'caret square down outline'
+
+    this.setState({ displayStudentsStyle, iconToDisplay })
+  }
+
   render() {
     return (
-      <QueueDiv>
-        <QueueTitleLabel>Queue</QueueTitleLabel>
+      <QueueDiv style={{ display: 'grid' }}>
+        <Button.Group size="huge" fluid>
+          <UnclickableButton
+            icon={'angle left'}
+            style={{ pointerEvents: null }}
+            content="Queue"
+          />
+          <Button
+            icon={this.state.iconToDisplay}
+            onClick={this.alterStudentDisplay.bind(this)}
+          />
+        </Button.Group>
+
         <br></br>
-        <QueueLabel>Jonathan Ou</QueueLabel>
-        <QueueLabel>Jonathan Ou</QueueLabel>
-        <QueueLabel>Jonathan Ou</QueueLabel>
-        <QueueLabel>Jonathan Ou</QueueLabel>
+        <QueueDiv style={this.state.displayStudentsStyle}>
+          <QueueLabel>Jonathan Ou</QueueLabel>
+          <QueueLabel>Jonathan Ou</QueueLabel>
+          <QueueLabel>Jonathan Ou</QueueLabel>
+          <QueueLabel>Jonathan Ou</QueueLabel>
+        </QueueDiv>
       </QueueDiv>
     )
   }
