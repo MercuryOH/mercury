@@ -20,9 +20,7 @@ export default class Queue extends Component {
         <QueueLabel>Jonathan Ou</QueueLabel>
         <QueueLabel>Jonathan Ou</QueueLabel>
         <QueueLabel>Jonathan Ou</QueueLabel>
-        <QueueLabel>
-          Jonathan Oufjljfljkfkjldfjkladfjlkljdfajlkdfljkadf
-        </QueueLabel>
+        <QueueLabel>Jonathan Ou</QueueLabel>
       </QueueDiv>
     )
   }
