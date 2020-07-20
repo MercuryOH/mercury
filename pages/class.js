@@ -1,6 +1,7 @@
 import React from 'react'
 import Layout from '../components/layout'
-import { Button, Icon, Accordion, List } from 'semantic-ui-react'
+import { Button, Accordion, List } from 'semantic-ui-react'
+import Queue from '../components/queue'
 
 function ClassPage() {
   return (
@@ -83,6 +84,7 @@ function ClassPage() {
           </div>
         </div>
       }
+      right={<Queue />}
     >
       Main contant here
     </Layout>
