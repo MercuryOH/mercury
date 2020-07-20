@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Label, Icon, Button } from 'semantic-ui-react'
+import { Label, Button } from 'semantic-ui-react'
 import styled from 'styled-components'
 
 const QueueDiv = styled.div`
