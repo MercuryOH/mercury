@@ -10,10 +10,6 @@ const QueueLabel = styled(Label)`
   text-align: center;
 `
 
-const UnclickableButton = styled(Button)`
-  pointer-events: none;
-`
-
 export default class Queue extends Component {
   constructor(props) {
     super(props)
@@ -44,7 +40,7 @@ export default class Queue extends Component {
     return (
       <QueueDiv style={{ display: 'grid' }}>
         <Button.Group size="huge" fluid>
-          <UnclickableButton
+          <Button
             icon={'angle left'}
             style={{ pointerEvents: null }}
             content="Queue"
