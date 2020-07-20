@@ -40,11 +40,7 @@ export default class Queue extends Component {
     return (
       <QueueDiv style={{ display: 'grid' }}>
         <Button.Group size="huge" fluid>
-          <Button
-            icon={'angle left'}
-            style={{ pointerEvents: null }}
-            content="Queue"
-          />
+          <Button icon={'angle left'} content="Queue" />
           <Button
             icon={this.state.iconToDisplay}
             onClick={this.alterStudentDisplay.bind(this)}
