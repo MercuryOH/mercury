@@ -23,12 +23,11 @@ function Zoom() {
   }, [])
 
   const startMeeting = () => {
-    console.log(ZoomMtg)
     const meetingConfig = testTool.getMeetingConfig()
     testTool.setCookie('meeting_number', meetingConfig.mn)
     testTool.setCookie('meeting_pwd', meetingConfig.pwd)
 
-    const signature = zoomSDK.ZoomMtg.generateSignature({
+    var signature = ZoomMtg.generateSignature({
       meetingNumber: meetingConfig.mn,
       apiKey: API_KEY,
       apiSecret: API_SECRET,
@@ -37,7 +36,7 @@ function Zoom() {
         console.log(res.result)
         meetingConfig.signature = res.result
         meetingConfig.apiKey = API_KEY
-        const joinUrl = '/meeting.html?' + testTool.serialize(meetingConfig)
+        var joinUrl = '/meeting.html?' + testTool.serialize(meetingConfig)
         console.log(joinUrl)
         window.open(joinUrl, '_blank')
       },

@@ -35,14 +35,18 @@ var testTool = {
   },
   getMeetingConfig: function () {
     return {
-      mn: 72978264758,
-      name: testTool.b64EncodeUnicode('Jim'),
-      pwd: 'k0rf4W',
-      role: 0,
-      email: testTool.b64EncodeUnicode(''),
-      lang: 'en-US',
+      mn: parseInt(document.getElementById('meeting_number').value),
+      name: testTool.b64EncodeUnicode(
+        document.getElementById('display_name').value
+      ),
+      pwd: document.getElementById('meeting_pwd').value,
+      role: parseInt(document.getElementById('meeting_role').value, 10),
+      email: testTool.b64EncodeUnicode(
+        document.getElementById('meeting_email').value
+      ),
+      lang: document.getElementById('meeting_lang').value,
       signature: '',
-      china: 0,
+      china: document.getElementById('meeting_china').value,
     }
   },
   createZoomNode: function (id, url) {
@@ -247,6 +251,7 @@ var testTool = {
     var regStrChrome2 = /ipad; cpu os (\d+_\d+)/gi
     var regStr_saf = /version\/[\d.]+/gi
     var regStr_saf2 = /safari\/[\d.]+/gi
+
     var regStr_edg = /edg\/[\d.]+/gi
 
     // firefox
@@ -333,4 +338,4 @@ var testTool = {
   },
 }
 
-export default testTool
+window.testTool = testTool
