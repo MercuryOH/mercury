@@ -24,8 +24,10 @@
   },
   "homepage": "https://github.com/Claude-lu/mercury#readme",
   "dependencies": {
+    "@zoomus/websdk": "^1.7.10",
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
+    "jquery": "^3.5.1",
     "next": "^9.4.4",
     "nprogress": "^0.2.0",
     "pg": "^8.3.0",

@@ -2,6 +2,10 @@ import React from 'react'
 import Layout from '../components/layout'
 import { Button, Accordion, List } from 'semantic-ui-react'
 import Queue from '../components/queue'
+import dynamic from 'next/dynamic'
+const NoSSRZoomPage = dynamic(() => import('../components/zoomPage'), {
+  ssr: false,
+})
 
 function ClassPage() {
   return (
@@ -86,7 +90,7 @@ function ClassPage() {
       }
       right={<Queue />}
     >
-      Main contant here
+      <NoSSRZoomPage />
     </Layout>
   )
 }
