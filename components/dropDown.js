@@ -30,19 +30,19 @@ export default class DropDown extends Component {
             index={0}
             onClick={this.handleClick}
           >
-            <Icon name="dropdown" style = {{fontSize: '1vw', width: '20%'}}/>
-            Student
+            <Icon name="dropdown" style = {{fontSize: '1vw', width: '20%', float: 'left'}}/>
+            <p style = {{fontSize: '1vw', width: '75%', float: 'left', marginBottom: '4%'}}>Student</p>
           </Accordion.Title>
           <Accordion.Content active={activeIndexs.includes(0)}>
-            <div class="ui selection list" style = {{fontSize: '1vw', width: '100%'}}>
-              <a class="item">
-                <div style = {{fontSize: '1vw', width: '100%', marginBottom: '4%'}} class="ui blue horizontal label">CS 2110</div>
+            <div className="ui selection list" style = {{fontSize: '1vw', width: '100%'}}>
+              <a className="item">
+                <div style = {{fontSize: '1vw', width: '100%', marginBottom: '4%'}} className="ui blue horizontal label">CS 2110</div>
               </a>
-              <a class="item">
-                <div style = {{fontSize: '1vw', width: '100%', marginBottom: '4%'}} class="ui green horizontal label">CS 2800</div>
+              <a className="item">
+                <div style = {{fontSize: '1vw', width: '100%', marginBottom: '4%'}} className="ui green horizontal label">CS 2800</div>
               </a>
-              <a class="item">
-                <div style = {{fontSize: '1vw', width: '100%', marginBottom: '4%'}} class="ui purple horizontal label">Math 2940</div>
+              <a className="item">
+                <div style = {{fontSize: '1vw', width: '100%', marginBottom: '4%'}} className="ui purple horizontal label">Math 2940</div>
               </a>
             </div>
           </Accordion.Content>
@@ -52,13 +52,13 @@ export default class DropDown extends Component {
             index={1}
             onClick={this.handleClick}
           >
-            <Icon style = {{fontSize: '1vw', width: '20%'}} name="dropdown" />
-            TA
+            <Icon style = {{fontSize: '1vw', width: '20%', float: 'left'}} name="dropdown" />
+            <p style = {{fontSize: '1vw', width: '75%', float: 'left', marginBottom: '4%'}}>TA</p>
           </Accordion.Title>
           <Accordion.Content active={activeIndexs.includes(1)}>
-            <div style = {{fontSize: '1vw', width: '100%'}} class="ui selection list">
-              <a class="item">
-                <div style = {{fontSize: '1vw', width: '100%', marginBottom: '4%'}} class="ui orange horizontal label">CS 1110</div>
+            <div style = {{fontSize: '1vw', width: '100%'}} className="ui selection list">
+              <a className="item">
+                <div style = {{fontSize: '1vw', width: '100%', marginBottom: '4%'}} className="ui orange horizontal label">CS 1110</div>
               </a>
             </div>
           </Accordion.Content>

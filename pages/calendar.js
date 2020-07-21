@@ -42,11 +42,7 @@ function Calendar() {
       <LargeLabel
         content = {<p>Classes</p>}>
       </LargeLabel>
-      <DropDown
-        content = {<p>Students</p>}>
-      </DropDown>
-      <DropDown
-        content = {<p>TA</p>}>
+      <DropDown>
       </DropDown>
     </div>
     right={<p>CALENDAR</p>}>
