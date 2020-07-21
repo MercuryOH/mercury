@@ -15,6 +15,7 @@ function Zoom() {
 
     ZoomMtg = require('@zoomus/websdk').ZoomMtg
 
+    ZoomMtg.setZoomJSLib('/zoom-dist/', '/av')
     ZoomMtg.preLoadWasm()
     ZoomMtg.prepareJssdk()
 

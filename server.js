@@ -1,3 +1,4 @@
+const path = require('path')
 const express = require('express')
 const next = require('next')
 const models = require('./models')
@@ -9,10 +10,14 @@ const server = express()
 const handle = app.getRequestHandler()
 
 server.use(express.json())
+server.use(
+  '/zoom-dist',
+  express.static(path.join(__dirname, 'node_modules/@zoomus/websdk/dist/lib/'))
+)
 
 async function main() {
   await app.prepare()
-  await models.sequelize.sync({ alter: true})
+  await models.sequelize.sync({ alter: true })
 
   server.use('/api', apiRoutes)
   server.all('*', (req, res) => handle(req, res))
