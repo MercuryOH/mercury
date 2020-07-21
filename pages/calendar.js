@@ -1,7 +1,8 @@
 import React from 'react'
+import LargeLabel from '../components/largeLabel'
 import DropDown from '../components/dropDown'
 import Layout from '../components/layout'
-import { Header } from 'semantic-ui-react'
+import { Header, Label } from 'semantic-ui-react'
 
 const friendOptions = [
   {
@@ -35,7 +36,20 @@ const friendOptions = [
 
 function Calendar() {
   return (
-    <Layout left={<DropDown></DropDown>} right={<p>CALENDAR</p>}>
+    <Layout
+    left=
+    <div>
+      <LargeLabel
+        content = {<p>Classes</p>}>
+      </LargeLabel>
+      <DropDown
+        content = {<p>Students</p>}>
+      </DropDown>
+      <DropDown
+        content = {<p>TA</p>}>
+      </DropDown>
+    </div>
+    right={<p>CALENDAR</p>}>
       <Header>Hello</Header>
       <button>Hello</button>
     </Layout>
