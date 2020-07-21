@@ -6,6 +6,10 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       User.belongsToMany(models.Class, { through: 'ClassUser' })
     }
+
+    isPasswordMatch(password) {
+      return bcrypt.compareSync(password, this.password)
+    }
   }
 
   User.init(
