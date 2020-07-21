@@ -1,29 +1,27 @@
-import React, { Component } from 'react'
+import React, { useEffect, useState } from 'react'
 import testTool from './util/testtool'
 import { Button } from 'semantic-ui-react'
-import { ZoomMtg } from '@zoomus/websdk'
-
-// ZoomMtg.preLoadWasm()
-// ZoomMtg.prepareJssdk()
 
 const API_KEY = '-VSz20FQSDeRhCs0QZShZA'
 const API_SECRET = 'ZQplFu9mkmFkORDiWe1zFC65H10xw1Z11COe'
 
-export default class ZoomPage extends Component {
-  constructor(props) {
-    super(props)
-    this.state = {
-      isComponentMounted: false,
-    }
-  }
+let ZoomMtg = null
 
-  componentDidMount() {
-    let isComponentMounted = true
-    this.setState({ isComponentMounted })
-  }
+function Zoom() {
+  const [isZoomLoaded, setZoomLoaded] = useState(false)
 
-  startMeeting(e) {
-    e.preventDefault()
+  useEffect(() => {
+    if (!window) return
+
+    ZoomMtg = require('@zoomus/websdk').ZoomMtg
+
+    ZoomMtg.preLoadWasm()
+    ZoomMtg.prepareJssdk()
+
+    setZoomLoaded(true)
+  }, [])
+
+  const startMeeting = () => {
     console.log(ZoomMtg)
     const meetingConfig = testTool.getMeetingConfig()
     testTool.setCookie('meeting_number', meetingConfig.mn)
@@ -45,15 +43,15 @@ export default class ZoomPage extends Component {
     })
   }
 
-  render() {
-    if (!this.state.isComponentMounted) {
-      return null
-    }
-
-    return (
-      <div>
-        <Button onClick={this.startMeeting.bind(this)}>Join Meeting</Button>
-      </div>
-    )
+  if (!isZoomLoaded) {
+    return <p>Loading...</p>
   }
+
+  return (
+    <div>
+      <Button onClick={startMeeting}>Join Meeting</Button>
+    </div>
+  )
 }
+
+export default Zoom
