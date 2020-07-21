@@ -2,6 +2,7 @@ const router = require('express').Router()
 const joi = require('@hapi/joi')
 const models = require('../../models')
 const crypto = require('../../util/crypto')
+const middleware = require('../../util/middleware')
 
 const createUserSchema = joi.object({
   firstName: joi.string().required(),
@@ -70,6 +71,15 @@ router.post('/login', async (req, res) => {
   } catch (err) {
     return res.status(400).json({ error: err.message || err })
   }
+})
+
+router.get('/me', middleware.authRequired, (req, res) => {
+  return res.json({
+    id: req.user.id,
+    firstName: req.user.firstName,
+    lastName: req.user.lastName,
+    email: req.user.email,
+  })
 })
 
 module.exports = router
