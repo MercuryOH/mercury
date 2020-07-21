@@ -9,8 +9,6 @@ const API_SECRET = 'ZQplFu9mkmFkORDiWe1zFC65H10xw1Z11COe'
 let ZoomMtg = null
 
 function Zoom() {
-  const [isZoomLoaded, setZoomLoaded] = useState(false)
-
   useEffect(() => {
     if (!window) return
     NProgress.start()
@@ -19,7 +17,6 @@ function Zoom() {
     ZoomMtg.setZoomJSLib('/zoom-dist/', '/av')
     ZoomMtg.preLoadWasm()
     ZoomMtg.prepareJssdk()
-    setZoomLoaded(true)
     NProgress.done()
   }, [])
 
@@ -43,12 +40,6 @@ function Zoom() {
       },
     })
   }
-
-  // if (!isZoomLoaded) {
-  //   NProgress.start()
-  // }
-
-  // NProgress.done()
 
   return (
     <div>
