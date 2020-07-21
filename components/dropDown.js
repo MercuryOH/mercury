@@ -37,15 +37,15 @@ export default class DropDown extends Component {
             Student
           </Accordion.Title>
           <Accordion.Content active={activeIndexs.includes(0)}>
-            <div class="ui selection list">
-              <a class="item">
-                <div class="ui blue horizontal label">CS 2110</div>
+            <div className="ui selection list">
+              <a className="item">
+                <div className="ui blue horizontal label">CS 2110</div>
               </a>
-              <a class="item">
-                <div class="ui green horizontal label">CS 2800</div>
+              <a className="item">
+                <div className="ui green horizontal label">CS 2800</div>
               </a>
-              <a class="item">
-                <div class="ui purple horizontal label">Math 2940</div>
+              <a className="item">
+                <div className="ui purple horizontal label">Math 2940</div>
               </a>
             </div>
           </Accordion.Content>
@@ -59,9 +59,9 @@ export default class DropDown extends Component {
             TA
           </Accordion.Title>
           <Accordion.Content active={activeIndexs.includes(1)}>
-            <div class="ui selection list">
-              <a class="item">
-                <div class="ui orange horizontal label">CS 1110</div>
+            <div className="ui selection list">
+              <a className="item">
+                <div className="ui orange horizontal label">CS 1110</div>
               </a>
             </div>
           </Accordion.Content>
