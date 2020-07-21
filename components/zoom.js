@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import testTool from './util/testtool'
 import { Button } from 'semantic-ui-react'
-import NProgress from 'nprogress'
 
 // Need to refactor this into the .env file
 const API_KEY = '-VSz20FQSDeRhCs0QZShZA'
@@ -14,12 +13,10 @@ function Zoom() {
 
   useEffect(() => {
     if (!window) return
-    NProgress.start() // start the loading bar
     ZoomMtg = require('@zoomus/websdk').ZoomMtg
     ZoomMtg.setZoomJSLib('/zoom-dist/', '/av') // set the zoom directory
     ZoomMtg.preLoadWasm()
     ZoomMtg.prepareJssdk()
-    NProgress.done() // end the loading bar
     setZoom(true)
   }, [])
 
@@ -44,7 +41,11 @@ function Zoom() {
   }
 
   if (!zoom) {
-    return null
+    return (
+      <Button loading primary>
+        Loading
+      </Button>
+    )
   }
 
   return (
