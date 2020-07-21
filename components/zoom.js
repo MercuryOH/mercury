@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import testTool from './util/testtool'
 import { Button } from 'semantic-ui-react'
 import NProgress from 'nprogress'
@@ -10,6 +10,8 @@ const API_SECRET = 'ZQplFu9mkmFkORDiWe1zFC65H10xw1Z11COe'
 let ZoomMtg = null
 
 function Zoom() {
+  const [zoom, setZoom] = useState(false)
+
   useEffect(() => {
     if (!window) return
     NProgress.start() // start the loading bar
@@ -18,6 +20,7 @@ function Zoom() {
     ZoomMtg.preLoadWasm()
     ZoomMtg.prepareJssdk()
     NProgress.done() // end the loading bar
+    setZoom(true)
   }, [])
 
   const startMeeting = () => {
@@ -38,6 +41,10 @@ function Zoom() {
         window.open(joinUrl, '_blank')
       },
     })
+  }
+
+  if (!zoom) {
+    return null
   }
 
   return (
