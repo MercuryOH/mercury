@@ -1,3 +1,7 @@
 body {
   background-color: #edf2f7 !important;
 }
+
+#zmmtg-root {
+  display: none;
+}
