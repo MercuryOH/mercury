@@ -50,7 +50,7 @@ function ClassPage() {
               },
               {
                 key: 'private-groups',
-                title: 'Private groups',
+                title: 'Private Groups',
                 content: {
                   content: (
                     <div style={{ paddingLeft: 20 }}>
@@ -81,7 +81,7 @@ function ClassPage() {
               bottom: 14,
             }}
           >
-            <Button icon="add" content="New group" fluid positive />
+            <Button icon="add" content="Create Meeting" fluid positive />
           </div>
         </div>
       }
