@@ -49,7 +49,12 @@ function Zoom() {
 
   return (
     <div>
-      <Button onClick={startMeeting}>Join Meeting</Button>
+      <Button
+        icon={'headphones'}
+        onClick={startMeeting}
+        content={'Join Meeting'}
+        primary
+      />
     </div>
   )
 }
