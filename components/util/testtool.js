@@ -35,9 +35,9 @@ var testTool = {
   },
   getMeetingConfig: function () {
     return {
-      mn: 72978264758,
+      mn: 96394333564,
       name: testTool.b64EncodeUnicode('Jim'),
-      pwd: 'k0rf4W',
+      pwd: '061326',
       role: 0,
       email: testTool.b64EncodeUnicode(''),
       lang: 'en-US',

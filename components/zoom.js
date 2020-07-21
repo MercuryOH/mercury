@@ -14,11 +14,10 @@ function Zoom() {
     if (!window) return
     NProgress.start() // start the loading bar
     ZoomMtg = require('@zoomus/websdk').ZoomMtg
-
     ZoomMtg.setZoomJSLib('/zoom-dist/', '/av') // set the zoom directory
     ZoomMtg.preLoadWasm()
     ZoomMtg.prepareJssdk()
-    NProgress.done()
+    NProgress.done() // end the loading bar
   }, [])
 
   const startMeeting = () => {
@@ -36,7 +35,6 @@ function Zoom() {
         meetingConfig.signature = res.result
         meetingConfig.apiKey = API_KEY
         var joinUrl = '/meeting.html?' + testTool.serialize(meetingConfig)
-        console.log(joinUrl)
         window.open(joinUrl, '_blank')
       },
     })
