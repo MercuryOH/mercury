@@ -23,7 +23,7 @@
       )
     })(),
     passWord: tmpArgs.pwd,
-    leaveUrl: '/index.html',
+    leaveUrl: '/sorry.html',
     role: parseInt(tmpArgs.role, 10),
     userEmail: (function () {
       try {

@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import testTool from './util/testtool'
 import { Button } from 'semantic-ui-react'
+import NProgress from 'nprogress' //nprogress module
 
 const API_KEY = '-VSz20FQSDeRhCs0QZShZA'
 const API_SECRET = 'ZQplFu9mkmFkORDiWe1zFC65H10xw1Z11COe'
@@ -12,14 +13,14 @@ function Zoom() {
 
   useEffect(() => {
     if (!window) return
-
+    NProgress.start()
     ZoomMtg = require('@zoomus/websdk').ZoomMtg
 
     ZoomMtg.setZoomJSLib('/zoom-dist/', '/av')
     ZoomMtg.preLoadWasm()
     ZoomMtg.prepareJssdk()
-
     setZoomLoaded(true)
+    NProgress.done()
   }, [])
 
   const startMeeting = () => {
@@ -27,7 +28,7 @@ function Zoom() {
     testTool.setCookie('meeting_number', meetingConfig.mn)
     testTool.setCookie('meeting_pwd', meetingConfig.pwd)
 
-    var signature = ZoomMtg.generateSignature({
+    ZoomMtg.generateSignature({
       meetingNumber: meetingConfig.mn,
       apiKey: API_KEY,
       apiSecret: API_SECRET,
@@ -43,9 +44,11 @@ function Zoom() {
     })
   }
 
-  if (!isZoomLoaded) {
-    return <p>Loading...</p>
-  }
+  // if (!isZoomLoaded) {
+  //   NProgress.start()
+  // }
+
+  // NProgress.done()
 
   return (
     <div>
