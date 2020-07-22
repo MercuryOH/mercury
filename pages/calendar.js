@@ -2,6 +2,7 @@ import React from 'react'
 import LargeLabel from '../components/largeLabel'
 import DropDown from '../components/dropDown'
 import Layout from '../components/layout'
+import ModalPop from '../components/modal'
 import { Header, Label } from 'semantic-ui-react'
 
 const friendOptions = [
@@ -48,6 +49,7 @@ function Calendar() {
     right={<p>CALENDAR</p>}>
       <Header>Hello</Header>
       <button>Hello</button>
+      <ModalPop content = {<p>Test</p>}></ModalPop>
     </Layout>
   )
 }
