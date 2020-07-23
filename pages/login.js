@@ -1,7 +1,10 @@
 import React from 'react'
+import axios from 'axios'
 import * as yup from 'yup'
+import { useRouter } from 'next/router'
 import { Formik } from 'formik'
 import { Button, Form, Grid, Header, Message, Segment } from 'semantic-ui-react'
+import { useAuth } from '../components/authProvider'
 
 const loginSchema = yup.object({
   email: yup.string().email().required(),
@@ -9,9 +12,19 @@ const loginSchema = yup.object({
 })
 
 function LoginPage() {
-  const handleLogin = (values, { setSubmitting }) => {
+  const router = useRouter()
+  const { login } = useAuth()
+
+  const handleLogin = async (values, { setSubmitting }) => {
     setSubmitting(true)
-    console.log(values)
+
+    const user = await login(values.email, values.password)
+
+    if (user) {
+      router.push('/')
+    }
+
+    setSubmitting(false)
   }
 
   return (

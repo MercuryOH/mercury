@@ -1,6 +1,7 @@
 import React from 'react'
 import Layout from '../components/layout'
 import { Button, Accordion, List } from 'semantic-ui-react'
+import { AuthRequired } from '../components/authProvider'
 import Queue from '../components/queue'
 import Zoom from '../components/zoom'
 
@@ -92,4 +93,4 @@ function ClassPage() {
   )
 }
 
-export default ClassPage
+export default AuthRequired(ClassPage)

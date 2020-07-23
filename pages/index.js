@@ -1,6 +1,7 @@
 import React from 'react'
-import Layout from '../components/layout'
 import { Header } from 'semantic-ui-react'
+import Layout from '../components/layout'
+import { AuthRequired } from '../components/authProvider'
 
 function HomePage() {
   return (
@@ -13,4 +14,4 @@ function HomePage() {
   )
 }
 
-export default HomePage
+export default AuthRequired(HomePage)
