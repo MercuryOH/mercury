@@ -40,7 +40,7 @@ function Calendar() {
   return (
     <Layout
       left={
-        <div>
+        <div style={{ paddingLeft: 20, paddingRight: 20}}>
           <LargeLabel content={<p>Classes</p>}></LargeLabel>
           <DropDown></DropDown>
           <ModalPop content={<p>Test</p>}></ModalPop>

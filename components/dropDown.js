@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Accordion, Icon, Header } from 'semantic-ui-react'
+import { Accordion, List, Button} from 'semantic-ui-react'
 
 export default class DropDown extends Component {
   state = { activeIndexs: [] }
@@ -24,7 +24,7 @@ export default class DropDown extends Component {
 
     return (
       <div>
-        <Accordion>
+        {/* <Accordion>
           <Accordion.Title
             active={activeIndexs.includes(0)}
             index={0}
@@ -62,7 +62,58 @@ export default class DropDown extends Component {
               </a>
             </div>
           </Accordion.Content>
-        </Accordion>
+        </Accordion> */}
+        <Accordion
+          fluid
+          exclusive={false}
+          defaultActiveIndex={[0, 1]}
+          panels={[
+            {
+              key: 'student',
+              title: 'Student',
+              content: {
+                content: (
+                  <div style={{ paddingLeft: 20, paddingRight: 20}}>
+                    <List relaxed>
+                      <List.Item>
+                        <List.Content>
+                          <Button color="blue" style={{width: '100%'}}>CS 2110</Button>
+                        </List.Content>
+                      </List.Item>
+                      <List.Item>
+                        <List.Content>
+                        <Button color="green" style={{width: '100%'}}>CS 2800</Button>
+                        </List.Content>
+                      </List.Item>
+                      <List.Item>
+                        <List.Content>
+                        <Button color="purple" style={{width: '100%'}}>MATH 2940</Button>
+                        </List.Content>
+                      </List.Item>
+                    </List>
+                  </div>
+                ),
+              },
+            },
+            {
+              key: 'ta',
+              title: 'TA',
+              content: {
+                content: (
+                  <div style={{ paddingLeft: 20, paddingRight: 20}}>
+                    <List relaxed>
+                      <List.Item>
+                        <List.Content>
+                        <Button color="orange" style={{width: '100%'}}>CS1110</Button>
+                        </List.Content>
+                      </List.Item>
+                    </List>
+                  </div>
+                ),
+              },
+            },
+          ]}
+        />
       </div>
     )
   }
