@@ -22,24 +22,17 @@ function InviteModal({ content, buttonText, placeholder }) {
           >
             {content}
           </Header>
-          <div style={{
-              textAlign: 'center',
-              width: '100%',
-              height: '70%',
-              margin: 'auto',
-              padding: '5%',
-            }}>
+          
             <Search
               fluid
               placeholder={placeholder}
-              // style={{
-              //   textAlign: 'center',
-              //   width: '100%',
-              //   //margin: 'auto',
-              //   padding: '5%',
-              // }}
+              input={{ fluid: true }}
+              style={{
+                textAlign: 'center',
+                padding: '5%',
+              }}
+           
             />
-          </div>
 
           {/* <div
             className="ui search"
