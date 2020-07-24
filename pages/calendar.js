@@ -5,6 +5,7 @@ import Layout from '../components/layout'
 import ModalPop from '../components/modal'
 import { Header, Label } from 'semantic-ui-react'
 import InviteModal from '../components/inviteModal'
+import JoinRequestModal from '../components/joinRequestModal'
 
 const friendOptions = [
   {
@@ -40,15 +41,16 @@ function Calendar() {
   return (
     <Layout
       left={
-        <div style={{ paddingLeft: 20, paddingRight: 20}}>
+        <div style={{ paddingLeft: 20, paddingRight: 20 }}>
           <LargeLabel content={<p>Classes</p>}></LargeLabel>
           <DropDown></DropDown>
           <ModalPop content={<p>Test</p>}></ModalPop>
           <InviteModal
             content={<p>New Private Group</p>}
-            buttonText={"Create"}
-            placeholder={"Add student to your group..."}
+            buttonText={'Create'}
+            placeholder={'Add student to your group...'}
           ></InviteModal>
+          <JoinRequestModal content={'[student] requested to join your group'}></JoinRequestModal>
         </div>
       }
     >
