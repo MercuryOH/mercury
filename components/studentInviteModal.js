@@ -2,14 +2,14 @@ import React, { useState } from 'react'
 import { Modal, Button, Header, Search } from 'semantic-ui-react'
 import PropTypes from 'prop-types'
 
-function InviteModal({ content, buttonText, placeholder }) {
+function StudentInviteModal({ content, buttonText, placeholder }) {
   const [modalState, toggleModal] = useState(true)
 
   return (
     <div>
       <Modal
         style={{ borderless: 'true', width: '40%', height: '40%' }}
-        trigger={<Button onClick={() => toggleModal(true)}>+ New Group</Button>}
+        trigger={<Button onClick={() => toggleModal(true)}>Invite to Group</Button>}
         open={modalState}
         onClose={() => toggleModal(false)}
         closeOnDimmerClick={false}
@@ -17,19 +17,6 @@ function InviteModal({ content, buttonText, placeholder }) {
         closeIcon
       >
         <Modal.Content style={{ borderless: 'true' }}>
-          <Header
-            style={{
-              fontSize: '2vw',
-              textAlign: 'center',
-              width: '100%',
-              padding: '5%',
-              height: '50%',
-              margin: 'auto',
-            }}
-          >
-            {content}
-          </Header>
-
           <div
             style={{
               textAlign: 'center',
@@ -62,10 +49,10 @@ function InviteModal({ content, buttonText, placeholder }) {
   )
 }
 
-InviteModal.propTypes = {
+StudentInviteModal.propTypes = {
   content: PropTypes.node,
   buttonText: PropTypes.string,
   placeholder: PropTypes.string,
 }
 
-export default InviteModal
+export default StudentInviteModal

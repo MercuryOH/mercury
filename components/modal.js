@@ -5,7 +5,7 @@ import PropTypes from 'prop-types'
 function ModalPop({content}) {
   return (
     <div>
-      <Modal style ={{borderless: 'true', width: '40%', height: '40%'}} trigger = {<Button>Modal Trigger Node</Button>}>
+      <Modal style ={{borderless: 'true', width: '40%', height: '40%'}} trigger = {<Button>Test Modal</Button>}>
       <Modal.Content style ={{borderless: 'true'}}>
         <Header style = {{fontSize: '2vw', textAlign: 'center', width: '50%', padding: '7%', height: '50%', margin: 'auto'}}>{content}</Header>
         <div style = {{textAlign: 'center', width: '70%', height: '70%', margin: 'auto', padding: '7%',}}>

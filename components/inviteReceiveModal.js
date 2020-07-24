@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { Modal, Button, Header } from 'semantic-ui-react'
 import PropTypes from 'prop-types'
 
-function JoinRequestModal({ content }) {
+function InviteReceiveModal({ content }) {
   const [modalState, toggleModal] = useState(true)
 
   return (
@@ -11,7 +11,7 @@ function JoinRequestModal({ content }) {
         style={{ borderless: 'true', width: '40%', height: '40%' }}
         trigger={
           <Button onClick={() => toggleModal(true)}>
-            receive a join request
+            receive an invite
           </Button>
         }
         open={modalState}
@@ -74,8 +74,8 @@ function JoinRequestModal({ content }) {
   )
 }
 
-JoinRequestModal.propTypes = {
+InviteReceiveModal.propTypes = {
   content: PropTypes.string,
 }
 
-export default JoinRequestModal
+export default InviteReceiveModal

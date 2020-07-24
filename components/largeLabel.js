@@ -5,7 +5,7 @@ import PropTypes from 'prop-types'
 function LargeLabel({content}) {
   return (
     <div>
-      <Label size = 'massive' style = {{fontSize: '2vw', textAlign: 'center', width: '100%', marginBottom: '4%', minWidth: '40px'}}>
+      <Label size = 'massive' style = {{fontSize: '2vw', textAlign: 'center', width: '100%', marginBottom: '4%', minWidth: '41px'}}>
         {content}
       </Label>
     </div>
