@@ -7,11 +7,13 @@ const middleware = require('../../util/middleware')
 
 router.get('/currentEnrolledClasses', middleware.authRequired, (req, res) => {
   let { ClassUsers } = models
-  return ClassUsers.findAll({
-    where: {
-      UserId: req.user.id,
-    },
-  })
+  res.send(
+    ClassUsers.findAll({
+      where: {
+        UserId: req.user.id,
+      },
+    })
+  )
 })
 
 module.exports = router
