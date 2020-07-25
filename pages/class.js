@@ -3,7 +3,6 @@ import Layout from '../components/layout'
 import { Button, Accordion, List } from 'semantic-ui-react'
 import { AuthRequired } from '../components/authProvider'
 import Queue from '../components/queue'
-import Zoom from '../components/zoom'
 
 function ClassPage() {
   return (
@@ -88,7 +87,9 @@ function ClassPage() {
       }
       right={<Queue />}
     >
-      <Zoom />
+      <Button.Group>
+        <Button icon={'headphones'} content="Join Meeting" primary />
+      </Button.Group>
     </Layout>
   )
 }
