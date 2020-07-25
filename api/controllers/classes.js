@@ -6,7 +6,8 @@ const middleware = require('../../util/middleware')
  */
 
 router.get('/currentEnrolledClasses', middleware.authRequired, (req, res) => {
-  return models.ClassUsers.findAll({
+  let { ClassUsers } = models
+  return ClassUsers.findAll({
     where: {
       UserId: req.user.id,
     },
