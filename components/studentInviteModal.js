@@ -20,7 +20,7 @@ function StudentInviteModal({ content, buttonText, placeholder }) {
           <div
             style={{
               textAlign: 'center',
-              padding: '5%',
+              padding: 80,
             }}
           >
             <Search fluid placeholder={placeholder} input={{ fluid: true }} />
@@ -32,7 +32,7 @@ function StudentInviteModal({ content, buttonText, placeholder }) {
               width: '70%',
               height: '70%',
               margin: 'auto',
-              padding: '5%',
+              padding: 30,
             }}
           >
             <Button

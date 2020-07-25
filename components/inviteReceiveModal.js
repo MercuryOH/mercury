@@ -3,7 +3,7 @@ import { Modal, Button, Header } from 'semantic-ui-react'
 import PropTypes from 'prop-types'
 
 function InviteReceiveModal({ content }) {
-  const [modalState, toggleModal] = useState(true)
+  const [modalState, toggleModal] = useState(false)
 
   return (
     <div>
@@ -25,7 +25,7 @@ function InviteReceiveModal({ content }) {
               fontSize: '2vw',
               textAlign: 'center',
               width: '100%',
-              padding: '5%',
+              padding: 50,
               height: '50%',
               margin: 'auto',
             }}
@@ -37,7 +37,7 @@ function InviteReceiveModal({ content }) {
             style={{
               textAlign: 'center',
               marginTop: '5%',
-              padding: '5%',
+              padding: 30,
               flexDirection: 'row',
             }}
           >
