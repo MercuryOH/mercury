@@ -69,6 +69,7 @@ router.post('/login', async (req, res) => {
       token,
     })
   } catch (err) {
+    console.log(err)
     return res.status(400).json({ error: err.message || err })
   }
 })
