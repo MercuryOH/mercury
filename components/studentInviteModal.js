@@ -3,7 +3,7 @@ import { Modal, Button, Header, Search } from 'semantic-ui-react'
 import PropTypes from 'prop-types'
 
 function StudentInviteModal({ content, buttonText, placeholder }) {
-  const [modalState, toggleModal] = useState(true)
+  const [modalState, toggleModal] = useState(false)
 
   return (
     <div>
