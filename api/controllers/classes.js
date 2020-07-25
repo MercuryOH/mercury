@@ -5,10 +5,10 @@ const middleware = require('../../util/middleware')
  * Get the classes that the current user is enrolled into
  */
 
-router.get('/currentEnrolledClasses', middleware.authRequired, (req, res) => {
-  let { ClassUsers } = models
+router.get('/myClasses', middleware.authRequired, async (req, res) => {
+  let { ClassUser } = models
   res.send(
-    ClassUsers.findAll({
+    await ClassUser.findAll({
       where: {
         UserId: req.user.id,
       },

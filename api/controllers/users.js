@@ -74,7 +74,14 @@ router.post('/login', async (req, res) => {
   }
 })
 
-router.get('/me', middleware.authRequired, (req, res) => {
+router.get('/me', middleware.authRequired, async (req, res) => {
+  let { ClassUser } = models
+  let result = await ClassUser.findAll({
+    where: {
+      UserId: req.user.id,
+    },
+  })
+
   return res.json({
     id: req.user.id,
     firstName: req.user.firstName,
