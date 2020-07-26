@@ -24,7 +24,15 @@
   },
   "homepage": "https://github.com/Claude-lu/mercury#readme",
   "dependencies": {
+    "@hapi/joi": "^17.1.1",
+    "@zoomus/websdk": "^1.7.10",
+    "axios": "^0.19.2",
+    "bcrypt": "^5.0.0",
+    "dotenv": "^8.2.0",
     "express": "^4.17.1",
+    "formik": "^2.1.5",
+    "js-cookie": "^2.2.1",
+    "jsonwebtoken": "^8.5.1",
     "next": "^9.4.4",
     "nprogress": "^0.2.0",
     "pg": "^8.3.0",
@@ -35,7 +43,8 @@
     "semantic-ui-css": "^2.4.1",
     "semantic-ui-react": "^0.88.2",
     "sequelize": "^6.3.3",
-    "styled-components": "^5.1.1"
+    "styled-components": "^5.1.1",
+    "yup": "^0.29.1"
   },
   "devDependencies": {
     "eslint": "^7.4.0",
