@@ -1,4 +1,4 @@
-import React, { createContext, useState, useEffect, useContext } from 'react'
+import React, { createContext, useContext, useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
 import Cookies from 'js-cookie'
 import * as api from '../util/mercuryService'
@@ -71,7 +71,5 @@ export function AuthRequired(Component) {
 }
 
 export function useAuth() {
-  const context = useContext(AuthContext)
-
-  return context
+  return useContext(AuthContext)
 }

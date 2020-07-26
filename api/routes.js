@@ -1,7 +1,10 @@
 const router = require('express').Router()
 const users = require('./controllers/users')
-const channels = require('./controllers/channels')
+const classes = require('./controllers/classes')
+const groups = require('./controllers/groups')
 
 router.use('/users', users)
-router.use('/channels', channels)
+router.use('/classes', classes)
+router.use('/classes/:classId/groups', groups)
+
 module.exports = router

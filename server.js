@@ -10,10 +10,6 @@ const server = express()
 const handle = app.getRequestHandler()
 
 server.use(express.json())
-server.use(
-  '/zoom-dist',
-  express.static(path.join(__dirname, 'node_modules/@zoomus/websdk/dist/lib/'))
-)
 
 async function main() {
   await app.prepare()

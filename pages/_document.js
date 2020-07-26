@@ -22,11 +22,6 @@ export default class MyDocument extends Document {
           <Main />
           <NextScript />
         </body>
-        <script
-          src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
-          integrity="sha256-4+XzXVhsDmqanXGHaHvgh1gMQKX40OUvDEBTu8JcmNs="
-          crossOrigin="anonymous"
-        ></script>
       </html>
     )
   }

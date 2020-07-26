@@ -69,11 +69,12 @@ router.post('/login', async (req, res) => {
       token,
     })
   } catch (err) {
+    console.log(err)
     return res.status(400).json({ error: err.message || err })
   }
 })
 
-router.get('/me', middleware.authRequired, (req, res) => {
+router.get('/me', middleware.authRequired, async (req, res) => {
   return res.json({
     id: req.user.id,
     firstName: req.user.firstName,

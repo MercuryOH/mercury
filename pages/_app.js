@@ -2,7 +2,6 @@ import React, { Component } from 'react'
 import Router from 'next/router'
 import NProgress from 'nprogress' //nprogress module
 import { AuthProvider } from '../components/authProvider'
-
 import '../util/globalStyles.css'
 import 'nprogress/nprogress.css' //styles of nprogress
 import 'semantic-ui-css/semantic.min.css'

@@ -14,7 +14,7 @@ exports.createJWT = (payload) => {
 
 /**
  * Verifies a web token.
- * If successfull, returns token's payload; otherwise
+ * If successful, returns token's payload; otherwise
  * throws error
  *
  * @param {string} token json web token to verify
