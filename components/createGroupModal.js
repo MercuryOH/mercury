@@ -2,14 +2,22 @@ import React, { useState } from 'react'
 import { Modal, Button, Header, Search } from 'semantic-ui-react'
 import PropTypes from 'prop-types'
 
-function InviteModal({ content, buttonText, placeholder }) {
+function CreateGroupModal() {
   const [modalState, toggleModal] = useState(false)
 
   return (
     <div>
       <Modal
         style={{ borderless: 'true', width: '40%', height: '40%' }}
-        trigger={<Button onClick={() => toggleModal(true)}>+ New Group</Button>}
+        trigger={
+          <Button
+            color="teal"
+            icon="add"
+            content="New Group"
+            fluid
+            onClick={() => toggleModal(true)}
+          />
+        }
         open={modalState}
         onClose={() => toggleModal(false)}
         closeOnDimmerClick={false}
@@ -26,9 +34,8 @@ function InviteModal({ content, buttonText, placeholder }) {
               height: '50%',
               margin: 'auto',
             }}
-          >
-            {content}
-          </Header>
+            content={"New Private Group"}
+          />
 
           <div
             style={{
@@ -36,7 +43,7 @@ function InviteModal({ content, buttonText, placeholder }) {
               padding: '5%',
             }}
           >
-            <Search fluid placeholder={placeholder} input={{ fluid: true }} />
+            <Search fluid placeholder={"Add students to your group..."} input={{ fluid: true }} />
           </div>
 
           <div
@@ -52,9 +59,8 @@ function InviteModal({ content, buttonText, placeholder }) {
               color="teal"
               style={{ width: '50%', fontSize: '1vw' }}
               onClick={() => toggleModal(false)}
-            >
-              {buttonText}
-            </Button>
+              content={"Create"}
+            />
           </div>
         </Modal.Content>
       </Modal>
@@ -62,10 +68,10 @@ function InviteModal({ content, buttonText, placeholder }) {
   )
 }
 
-InviteModal.propTypes = {
-  content: PropTypes.node,
-  buttonText: PropTypes.string,
-  placeholder: PropTypes.string,
-}
+// InviteModal.propTypes = {
+//   content: PropTypes.node,
+//   buttonText: PropTypes.string,
+//   placeholder: PropTypes.string,
+// }
 
-export default InviteModal
+export default CreateGroupModal

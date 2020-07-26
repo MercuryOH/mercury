@@ -4,6 +4,11 @@ import { Button, Accordion, List } from 'semantic-ui-react'
 import { AuthRequired } from '../components/authProvider'
 import Queue from '../components/queue'
 
+import CreateGroupModal from '../components/createGroupModal'
+import JoinRequestModal from '../components/joinRequestModal'
+import InviteReceiveModal from '../components/inviteReceiveModal'
+import StudentInviteModal from '../components/StudentInviteModal'
+
 function ClassPage() {
   return (
     <Layout
@@ -81,7 +86,7 @@ function ClassPage() {
               bottom: 14,
             }}
           >
-            <Button icon="add" content="Create Meeting" fluid positive />
+            <CreateGroupModal />
           </div>
         </div>
       }
