@@ -29,4 +29,32 @@ router.post('/', middleware.authRequired, async (req, res) => {
   }
 })
 
+router.get('/', middleware.authRequired, async (req, res) => {
+  const { classId: ClassId } = req.params
+
+  const groups = await models.Group.findAll({ where: { ClassId } })
+
+  return res.json(groups)
+})
+
+router.get('/:groupId', middleware.authRequired, async (req, res) => {
+  const { groupId } = req.params
+
+  const group = await models.Group.findByPk(groupId)
+
+  if (!group) {
+    return res.status(404).json({ error: 'Group not found' })
+  }
+
+  return res.json(group)
+})
+
+router.delete('/:groupId', middleware.authRequired, async (req, res) => {
+  const { groupId } = req.params
+
+  await models.Group.destroy({ where: { id: groupId } })
+
+  res.status(204).send()
+})
+
 module.exports = router
