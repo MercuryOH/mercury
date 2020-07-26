@@ -1,21 +1,22 @@
 const { Model } = require('sequelize')
 
 module.exports = (sequelize, DataTypes) => {
-  class Class extends Model {
+  class Group extends Model {
     static associate(models) {
-      Class.belongsToMany(models.User, { through: 'ClassUser' })
-      Class.hasMany(models.Group)
+      Group.belongsTo(models.Class)
     }
   }
 
-  Class.init(
+  Group.init(
     {
       name: DataTypes.STRING,
+      type: DataTypes.STRING,
     },
     {
       sequelize,
-      modelName: 'Class',
+      modelName: 'Group',
     }
   )
-  return Class
+
+  return Group
 }
