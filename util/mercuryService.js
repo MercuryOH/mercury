@@ -29,3 +29,17 @@ export async function getMe() {
     return null
   }
 }
+
+export async function getGroups(classId) {
+  try {
+    const { data } = await axios.get(`/api/classes/${classId}/groups`, {
+      headers: {
+        authorization: token,
+      },
+    })
+
+    return data
+  } catch (e) {
+    return []
+  }
+}

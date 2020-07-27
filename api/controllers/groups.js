@@ -1,7 +1,10 @@
 const router = require('express').Router({ mergeParams: true })
+const OpenTok = require('opentok')
 const joi = require('@hapi/joi')
 const models = require('../../models')
 const middleware = require('../../util/middleware')
+
+const openTok = new OpenTok(process.env.VV_API_KEY, process.env.VV_API_SECRET)
 
 const createGroupSchema = joi.object({
   name: joi.string().required(),
@@ -17,13 +20,16 @@ router.post('/', middleware.authRequired, async (req, res) => {
   }
 
   try {
-    const group = await models.Group.create({
-      name: value.name,
-      type: value.type,
-      ClassId,
-    })
+    openTok.createSession((err, session) => {
+      if (err) throw new Error('Cannot create session')
 
-    return res.json(group)
+      models.Group.create({
+        name: value.name,
+        type: value.type,
+        sessionId: session.sessionId,
+        ClassId,
+      }).then((group) => res.json(group))
+    })
   } catch (err) {
     return res.status(400).json({ error: err.message || err })
   }

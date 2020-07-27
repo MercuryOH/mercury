@@ -34,7 +34,7 @@ function CreateGroupModal() {
               height: '50%',
               margin: 'auto',
             }}
-            content={"New Private Group"}
+            content={'New Private Group'}
           />
 
           <div
@@ -43,7 +43,11 @@ function CreateGroupModal() {
               padding: '5%',
             }}
           >
-            <Search fluid placeholder={"Add students to your group..."} input={{ fluid: true }} />
+            <Search
+              fluid
+              placeholder={'Add students to your group...'}
+              input={{ fluid: true }}
+            />
           </div>
 
           <div
@@ -59,7 +63,7 @@ function CreateGroupModal() {
               color="teal"
               style={{ width: '50%', fontSize: '1vw' }}
               onClick={() => toggleModal(false)}
-              content={"Create"}
+              content={'Create'}
             />
           </div>
         </Modal.Content>
