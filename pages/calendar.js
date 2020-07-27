@@ -4,7 +4,6 @@ import DropDown from '../components/dropDown'
 import Layout from '../components/layout'
 import ModalPop from '../components/modal'
 import { Header, Label } from 'semantic-ui-react'
-import InviteModal from '../components/inviteModal'
 import JoinRequestModal from '../components/joinRequestModal'
 import InviteReceiveModal from '../components/inviteReceiveModal'
 import StudentInviteModal from '../components/StudentInviteModal'
@@ -47,11 +46,7 @@ function Calendar() {
           <LargeLabel content={<p>Classes</p>}></LargeLabel>
           <DropDown></DropDown>
           <ModalPop content={<p>Test</p>}></ModalPop>
-          <InviteModal
-            content={<p>New Private Group</p>}
-            buttonText={'Create'}
-            placeholder={'Add student to your group...'}
-          ></InviteModal>
+          
           <JoinRequestModal content={'[student] requested to join your group'}></JoinRequestModal>
           <InviteReceiveModal content={'[student] invites you to join [group#]'}></InviteReceiveModal>
           <StudentInviteModal buttonText={'Invite'} placeholder={'Add student to your group...'}></StudentInviteModal>
