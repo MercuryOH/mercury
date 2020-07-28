@@ -1,9 +1,8 @@
-const path = require('path')
 const express = require('express')
 const next = require('next')
 const models = require('./models')
 const apiRoutes = require('./api/routes')
-
+const { webSocketServer } = require('./websocket/wss')
 const dev = process.env.NODE_ENV !== 'production'
 const app = next({ dev })
 const server = express()
@@ -13,6 +12,7 @@ server.use(express.json())
 
 async function main() {
   await app.prepare()
+
   await models.sequelize.sync({ alter: true })
 
   server.use('/api', apiRoutes)

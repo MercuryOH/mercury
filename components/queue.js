@@ -19,6 +19,11 @@ export default class Queue extends Component {
     }
   }
 
+  componentDidMount() {
+    const url = 'ws://localhost:8080'
+    new WebSocket(url)
+  }
+
   isStudentDisplayed() {
     let { display } = this.state.displayStudentsStyle
     return display === 'grid'
