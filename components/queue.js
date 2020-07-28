@@ -16,12 +16,27 @@ export default class Queue extends Component {
     this.state = {
       displayStudentsStyle: { display: 'grid' },
       iconToDisplay: 'caret square down outline',
+      connection: null,
     }
   }
 
   componentDidMount() {
     const url = 'ws://localhost:8080'
-    new WebSocket(url)
+    const connection = new WebSocket(url)
+
+    connection.onopen = () => {
+      connection.send('Message From Client')
+    }
+
+    connection.onerror = (error) => {
+      console.log(`WebSocket error: ${error}`)
+    }
+
+    connection.onmessage = (e) => {
+      console.log(e.data)
+    }
+
+    this.setState({ connection })
   }
 
   isStudentDisplayed() {
