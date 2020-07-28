@@ -3,13 +3,9 @@ import { useRouter } from 'next/router'
 import Layout from '../../components/layout'
 import { Button, Accordion, List } from 'semantic-ui-react'
 import { AuthRequired } from '../../components/authProvider'
-import Queue from '../../components/queue'
+import Queue from '../../components/queue/queue'
 import * as api from '../../util/mercuryService'
-
 import CreateGroupModal from '../../components/createGroupModal'
-import JoinRequestModal from '../../components/joinRequestModal'
-import InviteReceiveModal from '../../components/inviteReceiveModal'
-import StudentInviteModal from '../../components/StudentInviteModal'
 
 function ClassPage() {
   const router = useRouter()
