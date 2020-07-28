@@ -10,5 +10,5 @@ webSocketServer.on('connection', (ws) => {
 })
 
 module.exports = {
-  webSocketServer: webSocketServer,
+  webSocketServer,
 }
