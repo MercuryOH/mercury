@@ -12,9 +12,9 @@ server.use(express.json())
 
 async function main() {
   await app.prepare()
-
   await models.sequelize.sync({ alter: true })
 
+  webSocketServer.start()
   server.use('/api', apiRoutes)
   server.all('*', (req, res) => handle(req, res))
 

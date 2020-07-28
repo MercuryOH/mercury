@@ -1,14 +1,21 @@
 const WebSocket = require('ws')
-const webSocketServer = new WebSocket.Server({ port: 8080 || process.env.PORT })
 
-webSocketServer.on('connection', (ws) => {
-  ws.on('message', (message) => {
-    console.log(`Received message => ${message}`)
-  })
+class WebSocketServer {
+  start() {
+    const webSocketServer = new WebSocket.Server({
+      port: 8080 || process.env.PORT,
+    })
 
-  ws.send('Hello! Message From Server!!')
-})
+    webSocketServer.on('connection', (ws) => {
+      ws.on('message', (message) => {
+        console.log(`Received message => ${message}`)
+      })
+
+      ws.send('Hello! Message From Server!!')
+    })
+  }
+}
 
 module.exports = {
-  webSocketServer,
+  webSocketServer: new WebSocketServer(),
 }
