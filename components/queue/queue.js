@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { Label, Button } from 'semantic-ui-react'
 import styled from 'styled-components'
+import QueueWebSocket from './queuews'
 
 const QueueDiv = styled.div`
   grid-gap: 2vh;
@@ -21,21 +22,7 @@ export default class Queue extends Component {
   }
 
   componentDidMount() {
-    const url = 'ws://localhost:8080'
-    const connection = new WebSocket(url)
-
-    connection.onopen = () => {
-      connection.send('Message From Client')
-    }
-
-    connection.onerror = (error) => {
-      console.log(`WebSocket error: ${error}`)
-    }
-
-    connection.onmessage = (e) => {
-      console.log(e.data)
-    }
-
+    const connection = new QueueWebSocket()
     this.setState({ connection })
   }
 
