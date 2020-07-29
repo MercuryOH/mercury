@@ -47,7 +47,7 @@ export default class Queue extends Component {
 
   render() {
     const queueLabels = this.state.studentsInQueue.map((student) => (
-      <QueueLabel>{student}</QueueLabel>
+      <QueueLabel key={student}>{student}</QueueLabel>
     ))
 
     return (
