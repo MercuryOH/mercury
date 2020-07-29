@@ -8,6 +8,10 @@ class WebSocketServer {
     })
 
     webSocketServer.on('connection', (ws) => {
+      /**
+       * Handle messages that are sent by the client
+       */
+
       ws.on('message', (message) => {
         let { msgType, msg } = JSON.parse(message)
 
@@ -24,6 +28,14 @@ class WebSocketServer {
           default:
             throw new Error(`Message ${msg} is incorrectly formatted`)
         }
+      })
+
+      /**
+       * Handle when the client disconnects
+       */
+
+      ws.on('close', () => {
+        console.log('client disconnect')
       })
     })
   }
