@@ -1,5 +1,10 @@
 const url = 'ws://localhost:8080'
 
+/**
+ * QueueWebSocket controls the web socket business logic for the course queue and
+ * functions as a controller for the queue state
+ */
+
 export default class QueueWebSocket {
   constructor(component) {
     this.component = component
@@ -26,7 +31,7 @@ export default class QueueWebSocket {
     const { msgType, msg } = JSON.parse(e.data)
 
     switch (msgType) {
-      case 'queue':
+      case 'queue': // in this case, the server will send a message indicating the current students in the queue
         this.component.setState({ studentsInQueue: msg })
         break
 
