@@ -14,7 +14,6 @@ const QueueLabel = styled(Label)`
 export default class Queue extends Component {
   constructor(props) {
     super(props)
-    this.courseId = -1
     this.state = {
       displayStudentsStyle: { display: 'grid' },
       iconToDisplay: 'caret square down outline',
