@@ -54,6 +54,7 @@ class WebSocketConnectionManager {
     }
   }
 }
+
 module.exports = {
   webSocketConnectionManager: new WebSocketConnectionManager(),
 }
