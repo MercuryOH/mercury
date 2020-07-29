@@ -1,5 +1,5 @@
 const WebSocket = require('ws')
-const { courseQueue } = require('../util/queue')
+const { courseQueue } = require('./queue')
 const { webSocketConnectionManager } = require('./connectionmanager')
 
 class WebSocketServer {
