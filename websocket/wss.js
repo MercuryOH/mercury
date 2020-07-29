@@ -1,5 +1,6 @@
 const WebSocket = require('ws')
 const { courseQueue } = require('../util/queue')
+const { webSocketConnectionManager } = require('./connectionmanager')
 
 class WebSocketServer {
   start() {
@@ -13,14 +14,16 @@ class WebSocketServer {
        */
 
       ws.on('message', (message) => {
-        let { msgType, msg } = JSON.parse(message)
+        let { courseId, msgType, msg } = JSON.parse(message)
 
         switch (msgType) {
-          case 'courseId':
+          case 'greeting':
+            webSocketConnectionManager.addSocketForCourse(courseId, ws)
+
             ws.send(
               this.prepareMessage({
                 msgType: 'queue',
-                msg: courseQueue.getAllStudents(msg),
+                msg: courseQueue.getAllStudents(courseId),
               })
             )
             break
@@ -35,7 +38,7 @@ class WebSocketServer {
        */
 
       ws.on('close', () => {
-        console.log('client disconnect')
+        webSocketConnectionManager.removeSocketFromCourse(ws)
       })
     })
   }

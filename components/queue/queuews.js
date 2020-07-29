@@ -17,7 +17,7 @@ export default class QueueWebSocket {
   processConnectionOpen() {
     this.connection.send(
       this.prepareMessage({
-        msgType: 'courseId',
+        msgType: 'greeting',
         msg: this.component.courseId,
       })
     ) // notify the server which courseId this websocket belongs to
@@ -41,6 +41,8 @@ export default class QueueWebSocket {
   }
 
   prepareMessage(msg) {
-    return JSON.stringify(msg)
+    let courseId = this.component.courseId
+    let enrichedPayload = { ...msg, courseId }
+    return JSON.stringify(enrichedPayload)
   }
 }
