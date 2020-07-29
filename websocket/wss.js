@@ -22,7 +22,7 @@ class WebSocketServer {
             break
 
           default:
-            console.log(msg)
+            throw new Error(`Message ${msg} is incorrectly formatted`)
         }
       })
     })

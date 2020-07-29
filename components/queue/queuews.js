@@ -24,8 +24,6 @@ export default class QueueWebSocket {
 
   processConnectionMessage(e) {
     const { msgType, msg } = JSON.parse(e.data)
-    console.log(msgType)
-    console.log(msg)
 
     switch (msgType) {
       case 'queue':
@@ -33,7 +31,7 @@ export default class QueueWebSocket {
         break
 
       default:
-        console.log(msg)
+        throw new Error(`Message ${msg} is incorrectly formatted`)
     }
   }
 
