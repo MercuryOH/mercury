@@ -1,4 +1,5 @@
 const WebSocket = require('ws')
+const { courseQueue } = require('../util/queue')
 
 class WebSocketServer {
   start() {
@@ -8,11 +9,27 @@ class WebSocketServer {
 
     webSocketServer.on('connection', (ws) => {
       ws.on('message', (message) => {
-        console.log(`Received message => ${message}`)
-      })
+        let { msgType, msg } = JSON.parse(message)
 
-      ws.send('Hello! Message From Server!!')
+        switch (msgType) {
+          case 'courseId':
+            ws.send(
+              this.prepareMessage({
+                msgType: 'queue',
+                msg: courseQueue.getAllStudents(msg),
+              })
+            )
+            break
+
+          default:
+            console.log(msg)
+        }
+      })
     })
+  }
+
+  prepareMessage(msg) {
+    return JSON.stringify(msg)
   }
 }
 

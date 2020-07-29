@@ -18,11 +18,13 @@ export default class Queue extends Component {
       displayStudentsStyle: { display: 'grid' },
       iconToDisplay: 'caret square down outline',
       connection: null,
+      courseId: 2,
+      studentsInQueue: [],
     }
   }
 
   componentDidMount() {
-    const connection = new QueueWebSocket()
+    const connection = new QueueWebSocket(this)
     this.setState({ connection })
   }
 
@@ -44,6 +46,10 @@ export default class Queue extends Component {
   }
 
   render() {
+    const queueLabels = this.state.studentsInQueue.map((student) => (
+      <QueueLabel>{student}</QueueLabel>
+    ))
+
     return (
       <QueueDiv style={{ display: 'grid' }}>
         <Button.Group size="huge" fluid>
@@ -56,10 +62,7 @@ export default class Queue extends Component {
 
         <br></br>
         <QueueDiv style={this.state.displayStudentsStyle}>
-          <QueueLabel>Jonathan Ou</QueueLabel>
-          <QueueLabel>Jonathan Ou</QueueLabel>
-          <QueueLabel>Jonathan Ou</QueueLabel>
-          <QueueLabel>Jonathan Ou</QueueLabel>
+          {queueLabels}
         </QueueDiv>
       </QueueDiv>
     )

@@ -5,6 +5,9 @@
 class Queue {
   constructor() {
     this.map = new Map()
+    this.addStudentToQueue(2, 'Jonathan Ou')
+    this.addStudentToQueue(2, 'Jeffrey Zhang')
+    this.addStudentToQueue(2, 'Camilo')
   }
 
   /**
@@ -40,6 +43,14 @@ class Queue {
       }
 
       throw new Error('Invalid: Queue is empty')
+    }
+
+    throw new Error('Invalid: Course not found')
+  }
+
+  getAllStudents(course) {
+    if (this.map.has(course)) {
+      return this.map.get(course)
     }
 
     throw new Error('Invalid: Course not found')
