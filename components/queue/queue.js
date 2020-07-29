@@ -14,16 +14,18 @@ const QueueLabel = styled(Label)`
 export default class Queue extends Component {
   constructor(props) {
     super(props)
+    this.courseId = -1
     this.state = {
       displayStudentsStyle: { display: 'grid' },
       iconToDisplay: 'caret square down outline',
       connection: null,
-      courseId: 2,
       studentsInQueue: [],
     }
   }
 
   componentDidMount() {
+    let url = window.location.href
+    this.courseId = Number(url.split('/')[4])
     const connection = new QueueWebSocket(this)
     this.setState({ connection })
   }

@@ -18,7 +18,7 @@ export default class QueueWebSocket {
     this.connection.send(
       this.prepareMessage({
         msgType: 'courseId',
-        msg: this.component.state.courseId,
+        msg: this.component.courseId,
       })
     ) // notify the server which courseId this websocket belongs to
   }
