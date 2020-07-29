@@ -47,6 +47,7 @@ class WebSocketConnectionManager {
     }
 
     const courseId = this.socketToCourse.get(socket)
+    this.socketToCourse.delete(socket)
 
     if (this.courseToSockets.has(courseId)) {
       this.courseToSockets.get(courseId).delete(socket)
