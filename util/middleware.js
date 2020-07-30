@@ -15,7 +15,9 @@ exports.authRequired = async (req, res, next) => {
     const payload = crypto.verifyJWT(bearerToken)
     if (!payload.id) throw new Error()
 
-    const user = await models.User.findByPk(payload.id)
+    const user = await models.User.findByPk(payload.id, {
+      include: [{ model: models.Class }],
+    })
     if (!user) throw new Error()
 
     req.user = user
