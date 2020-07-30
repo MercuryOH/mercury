@@ -43,3 +43,16 @@ export async function getGroups(classId) {
     return []
   }
 }
+  export async function getClasses() {
+    try {
+      const { data } = await axios.get(`/api/classes/`, {
+        headers: {
+          authorization: token,
+        },
+      })
+
+      return data
+    } catch (e) {
+      return []
+    }
+}
