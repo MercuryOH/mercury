@@ -43,3 +43,21 @@ export async function getGroups(classId) {
     return []
   }
 }
+
+export async function postGroupToken(classId, groupId) {
+  try {
+    const { data } = await axios.post(
+      `/api/classes/${classId}/groups/${groupId}/token`,
+      {},
+      {
+        headers: {
+          authorization: token,
+        },
+      }
+    )
+
+    return data
+  } catch (e) {
+    return null
+  }
+}

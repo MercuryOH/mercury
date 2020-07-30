@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
+import dynamic from 'next/dynamic'
 import Layout from '../../components/layout'
 import { Button, Accordion, List } from 'semantic-ui-react'
 import { AuthRequired } from '../../components/authProvider'
@@ -7,9 +8,14 @@ import Queue from '../../components/queue/queue'
 import * as api from '../../util/mercuryService'
 import CreateGroupModal from '../../components/createGroupModal'
 
+const Vonage = dynamic(() => import('../../components/vonage'), {
+  ssr: false,
+})
+
 function ClassPage() {
   const router = useRouter()
   const [groups, setGroups] = useState([])
+  const [vonageCred, setVonageCred] = useState(null)
   const { classId } = router.query
 
   useEffect(() => {
@@ -20,6 +26,13 @@ function ClassPage() {
       .then((groups) => setGroups(groups))
       .catch(console.error)
   }, [classId])
+
+  const handleSelectGroup = (group) => {
+    api
+      .postGroupToken(classId, group.id)
+      .then(({ token }) => setVonageCred({ sessionId: group.sessionId, token }))
+      .catch(console.error)
+  }
 
   return (
     <Layout
@@ -44,7 +57,10 @@ function ClassPage() {
                         {groups
                           .filter((group) => group.type === 'discussion')
                           .map((group) => (
-                            <List.Item key={`discussion_${group.id}`}>
+                            <List.Item
+                              key={`discussion_${group.id}`}
+                              onClick={() => handleSelectGroup(group)}
+                            >
                               <List.Icon name="sound" />
                               <List.Content>
                                 <List.Header as="a">{group.name}</List.Header>
@@ -66,7 +82,10 @@ function ClassPage() {
                         {groups
                           .filter((group) => group.type === 'group')
                           .map((group) => (
-                            <List.Item key={`private_group_${group.id}`}>
+                            <List.Item
+                              key={`private_group_${group.id}`}
+                              onClick={() => handleSelectGroup(group)}
+                            >
                               <List.Icon name="lock" />
                               <List.Content>
                                 <List.Header as="a">{group.name}</List.Header>
@@ -93,9 +112,13 @@ function ClassPage() {
       }
       right={<Queue />}
     >
-      <Button.Group>
-        <Button icon={'headphones'} content="Join Meeting" primary />
-      </Button.Group>
+      {vonageCred && (
+        <Vonage
+          sessionId={vonageCred.sessionId}
+          token={vonageCred.token}
+          onLeave={() => setVonageCred(null)}
+        />
+      )}
     </Layout>
   )
 }

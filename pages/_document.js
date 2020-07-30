@@ -18,6 +18,7 @@ export default class MyDocument extends Document {
     return (
       <html>
         <Head>{this.props.styleTags} </Head>
+        <script src="https://static.opentok.com/v2/js/opentok.min.js"></script>
         <body>
           <Main />
           <NextScript />
