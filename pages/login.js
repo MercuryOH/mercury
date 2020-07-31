@@ -21,7 +21,7 @@ function LoginPage() {
     const user = await login(values.email, values.password)
 
     if (user) {
-      router.push('/')
+      router.push('/calendar')
     }
 
     setSubmitting(false)

@@ -18,6 +18,9 @@ module.exports = {
       updatedAt: {
         allowNull: false,
         type: Sequelize.DATE
+      },
+      calendarId:{
+        type: Sequelize.STRING
       }
     });
   },

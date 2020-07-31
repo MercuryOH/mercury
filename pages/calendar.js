@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {useState, useEffect} from 'react'
 import LargeLabel from '../components/largeLabel'
 import DropDown from '../components/dropDown'
 import Layout from '../components/layout'
@@ -6,6 +6,8 @@ import ModalPop from '../components/modal'
 import JoinRequestModal from '../components/joinRequestModal'
 import InviteReceiveModal from '../components/inviteReceiveModal'
 import StudentInviteModal from '../components/StudentInviteModal'
+
+import * as api from '../util/mercuryService'
 
 const friendOptions = [
   {
@@ -38,6 +40,29 @@ const friendOptions = [
 ]
 
 function Calendar() {
+  const [classes, setClasses] = useState([])
+
+      useEffect(() => {
+        api
+          .getClasses()
+          .then((classes) => setClasses(classes))
+          .catch(console.error)
+      })
+
+  // const calendarIds = [
+  //   'avnpisdeelacuaq11un5otu5k8@group.calendar.google.com',
+  //   '4ctv2ua6npuegf05gh00iukd5g@group.calendar.google.com',
+  // ]
+
+  function mergeCal(classList) {
+    var src = 'https://calendar.google.com/calendar/embed?mode=WEEK&showTitle=0'
+    classList.forEach((c) => {
+      src = src + '&src=' + c.calendarId
+    })
+    console.log(classList)
+    return src
+  }
+
   return (
     <Layout
       left={
@@ -60,7 +85,7 @@ function Calendar() {
       }
     >
       <iframe
-        src="https://calendar.google.com/calendar/b/1/embed?height=600&wkst=1&bgcolor=%23ffffff&ctz=America%2FNew_York&src=ZW4udXNhI2hvbGlkYXlAZ3JvdXAudi5jYWxlbmRhci5nb29nbGUuY29t&color=%230B8043&mode=WEEK&showTitle=1"
+        src={mergeCal(classes)}
         style={{ border: '0' }}
         width={'100%'}
         height={'100%'}

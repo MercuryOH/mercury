@@ -5,6 +5,7 @@ router.get('/', middleware.authRequired, async (req, res) => {
   const classes = req.user.Classes.map((c) => ({
     id: c.id,
     name: c.name,
+    calendarId: c.calendarId,
     role: c.ClassUser.role,
   }))
 

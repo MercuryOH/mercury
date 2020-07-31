@@ -11,6 +11,7 @@ module.exports = (sequelize, DataTypes) => {
   Class.init(
     {
       name: DataTypes.STRING,
+      calendarId: DataTypes.STRING,
     },
     {
       sequelize,
