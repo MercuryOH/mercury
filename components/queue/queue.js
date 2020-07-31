@@ -48,21 +48,22 @@ export default class Queue extends Component {
 
   render() {
     const queueLabels = this.state.studentsInQueue.map((student) => (
-      <QueueLabel key={student}>{student}</QueueLabel>
+      <QueueLabel vertical style = {{fontSize: '1.2vw', textAlign: 'center', width: '99%', marginBottom: '2%', minWidth: '41px', marginLeft: '.8%', marginRight: '1%'}} key={student}>{student}</QueueLabel>
     ))
 
     return (
       <QueueDiv style={{ display: 'grid' }}>
-        <Button.Group size="huge" fluid>
-          <Button icon={'angle left'} content="Queue" />
+        <Button.Group size="huge" style = {{marginBottom: 12, width: '100%'}} fluid>
+          <Button icon={'angle left'} content="Queue" style = {{fontSize: '1.5vw', textAlign: 'left', width: '75%', marginBottom: '1%', minWidth: '41px'}} />
           <Button
             icon={this.state.iconToDisplay}
             onClick={this.alterStudentDisplay.bind(this)}
+            style = {{fontSize: '1.5vw', textAlign: 'center', width: '15%', marginBottom: '1%', minWidth: '41px'}}
           />
         </Button.Group>
 
         <br></br>
-        <QueueDiv style={this.state.displayStudentsStyle}>
+        <QueueDiv style={this.state.displayStudentsStyle, {width: '100%', marginBottom: '2%', minWidth: '41px'} }>
           {queueLabels}
         </QueueDiv>
       </QueueDiv>

@@ -6,7 +6,6 @@ import * as api from '../util/mercuryService'
 import Link from 'next/Link'
 
 function DropDown() {
-      const router = useRouter()
       const [classes, setClasses] = useState([])
 
       useEffect(() => {
@@ -75,7 +74,7 @@ function DropDown() {
                       <List.Item key = {`class_${classs.id}`}>
                         <List.Content>
                           <Link href= {`/classes/${classs.id}`}>
-                            <Button style={{fontSize: '1vw', width: '100%', minWidth: '41px'}}>Go To Class</Button>
+                            <Button style={{fontSize: '1vw', width: '100%', minWidth: '41px'}}>{classs.name}</Button>
                           </Link>
                         </List.Content>
                       </List.Item>

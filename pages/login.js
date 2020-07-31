@@ -29,7 +29,7 @@ function LoginPage() {
 
   return (
     <Grid textAlign="center" style={{ height: '100vh' }} verticalAlign="middle">
-      <Grid.Column style={{ maxWidth: 450 }}>
+      <Grid.Column style={{ maxWidth: 450, minWidth: 300}}>
         <Header as="h2" color="teal" textAlign="center">
           Mercury | Login
         </Header>
@@ -48,7 +48,7 @@ function LoginPage() {
             handleSubmit,
           }) => (
             <Form size="large" onSubmit={handleSubmit}>
-              <Segment stacked>
+              <Segment>
                 <Form.Input
                   fluid
                   icon="user"
