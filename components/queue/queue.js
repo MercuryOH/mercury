@@ -102,30 +102,6 @@ class Queue extends Component {
   }
 
   render() {
-<<<<<<< HEAD
-    const queueLabels =
-      this.state.displayStudentsStyle.display == 'none' ? (
-        <></>
-      ) : (
-        this.state.studentsInQueue.map((student) => (
-          <QueueLabel
-            vertical
-            style={{
-              fontSize: '1.2vw',
-              textAlign: 'center',
-              width: '100%',
-              marginBottom: '2%',
-              minWidth: '41px',
-              marginLeft: '.8%',
-              marginRight: '1%',
-            }}
-            key={student}
-          >
-            {student}
-          </QueueLabel>
-        ))
-      )
-=======
     const { connection } = this.state
 
     if (!connection) {
@@ -167,10 +143,28 @@ class Queue extends Component {
       )
     }
 
-    const queueLabels = this.state.studentsInQueue.map((student) => (
-      <QueueLabel key={student}>{student}</QueueLabel>
-    ))
->>>>>>> 9b7f7cf96dc317ee3f6af52c6ee70f7d0eb749c9
+    const queueLabels =
+    this.state.displayStudentsStyle.display == 'none' ? (
+      <></>
+    ) : (
+      this.state.studentsInQueue.map((student) => (
+        <QueueLabel
+          vertical
+          style={{
+            fontSize: '1.2vw',
+            textAlign: 'center',
+            width: '100%',
+            marginBottom: '2%',
+            minWidth: '41px',
+            marginLeft: '.8%',
+            marginRight: '1%',
+          }}
+          key={student}
+        >
+          {student}
+        </QueueLabel>
+      ))
+    )
 
     return (
       <QueueDiv>
