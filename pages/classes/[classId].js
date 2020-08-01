@@ -34,17 +34,19 @@ function ClassPage() {
       .catch(console.error)
   }, [])
 
-function getClassName(classList){
-  var correctClass = ""
-  classList.forEach((c) => {
-    if (c.id === classId){
-      correctClass = c.name
-    }
-  })
-  return correctClass
-}
+  function getClassName(classList) {
+    var correctClass = ''
+    classList.forEach((c) => {
+      if (c.id === classId) {
+        correctClass = c.name
+      }
+    })
+    return correctClass
+  }
 
-//getClassName(classes)
+  const handleBack = () => {
+    router.push('/calendar')
+  }
 
   const handleSelectGroup = (group) => {
     api
@@ -57,15 +59,47 @@ function getClassName(classList){
     <Layout
       left={
         <div style={{ height: '100%' }}>
-          <Button.Group size="huge" style={{ marginBottom: 12, width: '100%' }} fluid>
-            <Button compact icon="angle left" content= "Class.name" style = {{fontSize: '1.5vw', textAlign: 'left', width: '75%', marginBottom: '2%', minWidth: '41px'}}/>
-            <Button compact icon="setting" style = {{fontSize: '1.5vw', textAlign: 'center', width: '15%', marginBottom: '2%', minWidth: '14px'}}/>
+          <Button.Group
+            size="huge"
+            style={{ marginBottom: 12, width: '100%' }}
+            fluid
+          >
+            <Button
+              compact
+              icon="angle left"
+              content="Class.name"
+              style={{
+                fontSize: '1.5vw',
+                textAlign: 'left',
+                width: '75%',
+                marginBottom: '2%',
+                minWidth: '41px',
+              }}
+              onClick={handleBack}
+            />
+            <Button
+              compact
+              icon="setting"
+              style={{
+                fontSize: '1.5vw',
+                textAlign: 'center',
+                width: '15%',
+                marginBottom: '2%',
+                minWidth: '14px',
+              }}
+            />
           </Button.Group>
           <Accordion
             fluid
             exclusive={false}
             defaultActiveIndex={[0, 1]}
-            style = {{fontSize: '1vw', textAlign: 'left', width: '100%', marginBottom: '2%', minWidth: '41px'}}
+            style={{
+              fontSize: '1vw',
+              textAlign: 'left',
+              width: '100%',
+              marginBottom: '2%',
+              minWidth: '41px',
+            }}
             panels={[
               {
                 key: 'discussions',
@@ -80,7 +114,13 @@ function getClassName(classList){
                             <List.Item
                               key={`discussion_${group.id}`}
                               onClick={() => handleSelectGroup(group)}
-                              style = {{fontSize: '1vw', textAlign: 'left', width: '75%', marginBottom: '2%', minWidth: '41px'}}
+                              style={{
+                                fontSize: '1vw',
+                                textAlign: 'left',
+                                width: '75%',
+                                marginBottom: '2%',
+                                minWidth: '41px',
+                              }}
                             >
                               <List.Icon name="sound" />
                               <List.Content>
@@ -106,7 +146,13 @@ function getClassName(classList){
                             <List.Item
                               key={`private_group_${group.id}`}
                               onClick={() => handleSelectGroup(group)}
-                              style = {{fontSize: '1vw', textAlign: 'left', width: '75%', marginBottom: '2%', minWidth: '41px'}}
+                              style={{
+                                fontSize: '1vw',
+                                textAlign: 'left',
+                                width: '75%',
+                                marginBottom: '2%',
+                                minWidth: '41px',
+                              }}
                             >
                               <List.Icon name="lock" />
                               <List.Content>
@@ -128,7 +174,7 @@ function getClassName(classList){
               bottom: 14,
             }}
           >
-            <CreateGroupModal/>
+            <CreateGroupModal />
           </div>
         </div>
       }
