@@ -43,7 +43,6 @@ export async function getGroups(classId) {
     return []
   }
 }
-<<<<<<< HEAD
   export async function getClasses() {
     try {
       const { data } = await axios.get(`/api/classes/`, {
@@ -56,7 +55,7 @@ export async function getGroups(classId) {
     } catch (e) {
       return []
     }
-=======
+  }
 
 export async function postGroupToken(classId, groupId) {
   try {
@@ -74,5 +73,16 @@ export async function postGroupToken(classId, groupId) {
   } catch (e) {
     return null
   }
->>>>>>> 9b7f7cf96dc317ee3f6af52c6ee70f7d0eb749c9
+}
+
+export async function getClasses() {
+  try {
+    const { data } = await axios.get('/api/classes/', {
+      headers: { authorization: token },
+    })
+
+    return data
+  } catch (e) {
+    return null
+  }
 }

@@ -4,7 +4,6 @@ import styled from 'styled-components'
 import QueueWebSocket from './queuews'
 import * as api from '../../util/mercuryService'
 import { AuthRequired } from '../../components/authProvider'
-import Cookies from 'js-cookie'
 
 const QueueDiv = styled.div`
   grid-gap: 2vh;
@@ -13,8 +12,6 @@ const QueueDiv = styled.div`
 const QueueLabel = styled(Label)`
   text-align: center;
 `
-
-const MERCURY_TOKEN = 'mercury-token'
 
 class Queue extends Component {
   constructor(props) {
@@ -25,21 +22,30 @@ class Queue extends Component {
       connection: null,
       studentsInQueue: [],
       me: {},
+      classData: [],
       inQueue: false,
     }
+
+    this.getRoleForClass.bind(this)
   }
 
-  componentDidMount() {
-    const token = Cookies.get(MERCURY_TOKEN)
-
-    if (token) {
-      api.setToken(`Bearer ${token}`)
-    }
-
-    const url = window.location.href
-    this.courseId = Number(url.split('/')[4])
+  async componentDidMount() {
+    this.courseId = Number(window.location.href.split('/')[4])
     const connection = new QueueWebSocket(this)
-    api.getMe().then((me) => this.setState({ connection, me }))
+
+    let me = {}
+    let classData = {}
+
+    api
+      .getMe()
+      .then((meData) => {
+        me = meData
+      })
+      .then(() => api.getClasses())
+      .then((classPayload) => {
+        classData = classPayload
+      })
+      .then(() => this.setState({ me, classData, connection }))
   }
 
   isStudentDisplayed() {
@@ -81,41 +87,84 @@ class Queue extends Component {
     this.state.connection.removeMeFromQueue()
   }
 
+  getRoleForClass() {
+    const { classData } = this.state
+    let userRole = null
+
+    classData.forEach((row) => {
+      let { id, role } = row
+      if (this.courseId === Number(id)) {
+        userRole = role
+      }
+    })
+
+    return userRole
+  }
+
   render() {
-<<<<<<< HEAD
-    const queueLabels =
-      this.state.displayStudentsStyle.display == 'none' ? (
-        <></>
-      ) : (
-        this.state.studentsInQueue.map((student) => (
-          <QueueLabel
-            vertical
-            style={{
-              fontSize: '1.2vw',
-              textAlign: 'center',
-              width: '100%',
-              marginBottom: '2%',
-              minWidth: '41px',
-              marginLeft: '.8%',
-              marginRight: '1%',
-            }}
-            key={student}
-          >
-            {student}
-          </QueueLabel>
-        ))
-      )
-=======
     const { connection } = this.state
 
     if (!connection) {
       return null
     }
 
-    const queueLabels = this.state.studentsInQueue.map((student) => (
-      <QueueLabel key={student}>{student}</QueueLabel>
-    ))
->>>>>>> 9b7f7cf96dc317ee3f6af52c6ee70f7d0eb749c9
+    const userRole = this.getRoleForClass()
+
+    let buttonToDisplay = (
+      <div
+        style={{
+          position: 'absolute',
+          width: 'calc(100% - 38px)',
+          bottom: 14,
+          display: 'inline-flex',
+        }}
+      >
+        <Button onClick={this.addMeToQueue.bind(this)} primary>
+          Join Queue
+        </Button>
+        <Button onClick={this.removeMeFromQueue.bind(this)} secondary>
+          Leave Queue
+        </Button>
+      </div>
+    )
+
+    if (userRole !== 'Student') {
+      buttonToDisplay = (
+        <div
+          style={{
+            position: 'absolute',
+            width: 'calc(100% - 38px)',
+            bottom: 14,
+            display: 'inline-flex',
+          }}
+        >
+          <Button primary>Next</Button>
+        </div>
+      )
+    }
+
+    const queueLabels =
+    this.state.displayStudentsStyle.display == 'none' ? (
+      <></>
+    ) : (
+      this.state.studentsInQueue.map((student) => (
+        <QueueLabel
+          vertical
+          style={{
+            fontSize: '1.2vw',
+            textAlign: 'center',
+            width: '100%',
+            marginBottom: '2%',
+            minWidth: '41px',
+            marginLeft: '.8%',
+            marginRight: '1%',
+          }}
+          key={student}
+        >
+          {student}
+        </QueueLabel>
+      ))
+    )
 
     return (
       <QueueDiv>
@@ -146,21 +195,7 @@ class Queue extends Component {
           {queueLabels}
         </QueueDiv>
 
-        <div
-          style={{
-            position: 'absolute',
-            width: 'calc(100% - 38px)',
-            bottom: 14,
-            display: 'inline-flex',
-          }}
-        >
-          <Button onClick={this.addMeToQueue.bind(this)} primary>
-            Join Queue
-          </Button>
-          <Button onClick={this.removeMeFromQueue.bind(this)} secondary>
-            Leave Queue
-          </Button>
-        </div>
+        {buttonToDisplay}
       </QueueDiv>
     )
   }
