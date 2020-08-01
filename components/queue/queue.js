@@ -4,7 +4,6 @@ import styled from 'styled-components'
 import QueueWebSocket from './queuews'
 import * as api from '../../util/mercuryService'
 import { AuthRequired } from '../../components/authProvider'
-import Cookies from 'js-cookie'
 
 const QueueDiv = styled.div`
   grid-gap: 2vh;
@@ -13,8 +12,6 @@ const QueueDiv = styled.div`
 const QueueLabel = styled(Label)`
   text-align: center;
 `
-
-const MERCURY_TOKEN = 'mercury-token'
 
 class Queue extends Component {
   constructor(props) {
@@ -33,12 +30,6 @@ class Queue extends Component {
   }
 
   async componentDidMount() {
-    const token = Cookies.get(MERCURY_TOKEN)
-
-    if (token) {
-      api.setToken(`Bearer ${token}`)
-    }
-
     this.courseId = Number(window.location.href.split('/')[4])
     const connection = new QueueWebSocket(this)
 
