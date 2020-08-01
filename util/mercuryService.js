@@ -17,7 +17,6 @@ export async function postLogin(email, password) {
 }
 
 export async function getMe() {
-  console.log(token)
   try {
     const { data } = await axios.get('/api/users/me', {
       headers: {
@@ -76,4 +75,16 @@ export async function postGroupToken(classId, groupId) {
     return null
   }
 >>>>>>> 9b7f7cf96dc317ee3f6af52c6ee70f7d0eb749c9
+}
+
+export async function getClasses() {
+  try {
+    const { data } = await axios.get('/api/classes/', {
+      headers: { authorization: token },
+    })
+
+    return data
+  } catch (e) {
+    return null
+  }
 }

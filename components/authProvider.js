@@ -2,6 +2,7 @@ import React, { createContext, useContext, useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
 import Cookies from 'js-cookie'
 import * as api from '../util/mercuryService'
+import { Segment } from 'semantic-ui-react'
 
 const MERCURY_TOKEN = 'mercury-token'
 
@@ -66,7 +67,11 @@ export function AuthRequired(Component) {
       if (!isAuthenticated && !loading) router.push('/login')
     }, [loading, isAuthenticated])
 
-    return <Component {...arguments} />
+    return loading ? (
+      <Segment style={{ height: '100vh' }} loading />
+    ) : (
+      <Component {...arguments} />
+    )
   }
 }
 
