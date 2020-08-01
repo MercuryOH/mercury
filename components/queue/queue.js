@@ -25,7 +25,7 @@ class Queue extends Component {
       connection: null,
       studentsInQueue: [],
       me: {},
-      classData: '',
+      classData: [],
       inQueue: false,
     }
   }
@@ -94,14 +94,28 @@ class Queue extends Component {
     this.state.connection.removeMeFromQueue()
   }
 
+  getRoleForClass() {
+    const { classData } = this.state
+    let userRole = null
+
+    classData.forEach((row) => {
+      let { id, role } = row
+      if (this.courseId === Number(id)) {
+        userRole = role
+      }
+    })
+
+    return userRole
+  }
+
   render() {
-    const { connection, classData } = this.state
+    const { connection } = this.state
 
     if (!connection) {
       return null
     }
 
-    const { role } = classData
+    let userRole = this.getRoleForClass.bind(this)()
 
     let buttonToDisplay = (
       <div
@@ -121,7 +135,7 @@ class Queue extends Component {
       </div>
     )
 
-    if (role !== 'Student') {
+    if (userRole !== 'Student') {
       buttonToDisplay = (
         <div
           style={{
