@@ -2,10 +2,11 @@ import React, {useState, useEffect} from 'react'
 import LargeLabel from '../components/largeLabel'
 import DropDown from '../components/dropDown'
 import Layout from '../components/layout'
-import ModalPop from '../components/modal'
+
 import JoinRequestModal from '../components/joinRequestModal'
 import InviteReceiveModal from '../components/inviteReceiveModal'
 import StudentInviteModal from '../components/StudentInviteModal'
+import YourTurnModal from '../components/YourTurnModal'
 
 import * as api from '../util/mercuryService'
 
@@ -70,7 +71,7 @@ function Calendar() {
         <div style={{ paddingLeft: 20, paddingRight: 20 }}>
           <LargeLabel content={<p>Classes</p>}></LargeLabel>
           <DropDown></DropDown>
-          <ModalPop content={<p>Test</p>}></ModalPop>
+          
 
           <JoinRequestModal
             content={'[student] requested to join your group'}
@@ -82,6 +83,8 @@ function Calendar() {
             buttonText={'Invite'}
             placeholder={'Add student to your group...'}
           ></StudentInviteModal>
+          <YourTurnModal></YourTurnModal>
+
         </div>
       }
     >
