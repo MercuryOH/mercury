@@ -57,6 +57,7 @@ function Calendar() {
   function mergeCal(classList) {
     var src = 'https://calendar.google.com/calendar/embed?mode=WEEK&showTitle=0'
     classList.forEach((c) => {
+      //src = src + '&src=' + c.calendarId + "&color=#" + Math.floor(Math.random()*16777215).toString(16)
       src = src + '&src=' + c.calendarId
     })
     console.log(classList)
