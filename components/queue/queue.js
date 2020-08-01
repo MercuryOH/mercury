@@ -25,7 +25,6 @@ class Queue extends Component {
       connection: null,
       studentsInQueue: [],
       me: {},
-      courseId: -1,
     }
   }
 

@@ -34,7 +34,7 @@ class WebSocketConnectionManager {
 
   broadcast(courseId, message) {
     if (!this.courseToSockets.has(courseId)) {
-      throw new Error(`${courseId} not found`)
+      throw new Error(`courseId ${courseId} not found`)
     }
 
     const connections = this.courseToSockets.get(courseId)

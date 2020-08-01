@@ -15,10 +15,12 @@ export default class QueueWebSocket {
   }
 
   processConnectionOpen() {
+    const { courseId } = this.component
+
     this.connection.send(
       this.prepareMessage({
         msgType: 'greeting',
-        msg: this.component.courseId,
+        msg: courseId,
       })
     ) // notify the server which courseId this websocket belongs to
   }
@@ -41,26 +43,30 @@ export default class QueueWebSocket {
   }
 
   addMeToQueue() {
+    const { me } = this.component.state
+
     this.connection.send(
       this.prepareMessage({
         msgType: 'addToQueue',
-        msg: JSON.stringify(this.component.state.me),
+        msg: JSON.stringify(me),
       })
     )
   }
 
   removeMeFromQueue() {
+    const { me } = this.component.state
+
     this.connection.send(
       this.prepareMessage({
         msgType: 'removeFromQueue',
-        msg: JSON.stringify(this.component.state.me),
+        msg: JSON.stringify(me),
       })
     )
   }
 
   prepareMessage(msg) {
-    let courseId = this.component.courseId
-    let enrichedPayload = { ...msg, courseId }
+    const { courseId } = this.component
+    const enrichedPayload = { ...msg, courseId }
     return JSON.stringify(enrichedPayload)
   }
 }

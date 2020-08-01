@@ -56,6 +56,10 @@ class Queue {
     const currentQueue = this.map.get(course)
     const indexOfStudent = currentQueue.indexOf(student)
 
+    /**
+     * If student is found, remove the student
+     */
+
     if (indexOfStudent >= 0) {
       currentQueue.splice(indexOfStudent, 1)
     }

@@ -19,13 +19,6 @@ class WebSocketServer {
         switch (msgType) {
           case 'greeting':
             webSocketConnectionManager.addSocketForCourse(courseId, ws)
-
-            ws.send(
-              this.prepareMessage({
-                msgType: 'queue',
-                msg: courseQueue.getAllStudents(courseId),
-              })
-            )
             break
 
           case 'addToQueue':
@@ -33,13 +26,6 @@ class WebSocketServer {
             courseQueue.addStudentToQueue(
               courseId,
               `${studentToAdd.firstName} ${studentToAdd.lastName}`
-            )
-
-            ws.send(
-              this.prepareMessage({
-                msgType: 'queue',
-                msg: courseQueue.getAllStudents(courseId),
-              })
             )
             break
 
@@ -49,18 +35,22 @@ class WebSocketServer {
               courseId,
               `${studentToRemove.firstName} ${studentToRemove.lastName}`
             )
-
-            ws.send(
-              this.prepareMessage({
-                msgType: 'queue',
-                msg: courseQueue.getAllStudents(courseId),
-              })
-            )
             break
 
           default:
             throw new Error(`Message ${msg} is incorrectly formatted`)
         }
+
+        /**
+         * Send back the updated queue to the websocket
+         */
+
+        ws.send(
+          this.prepareMessage({
+            msgType: 'queue',
+            msg: courseQueue.getAllStudents(courseId),
+          })
+        )
       })
 
       /**
