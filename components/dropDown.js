@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Accordion, List, Button} from 'semantic-ui-react'
+import { Accordion, List, Button } from 'semantic-ui-react'
 
 export default class DropDown extends Component {
   state = { activeIndexs: [] }
@@ -38,26 +38,24 @@ export default class DropDown extends Component {
       'black',
     ]
 
-    const sClasses = [
-      'CS 2110',
-      'CS 2800',
-      'MATH 2940',
-    ]
+    const sClasses = ['CS 2110', 'CS 2800', 'MATH 2940']
 
-    const taClasses = [
-      'CS 1110',
-    ]
+    const taClasses = ['CS 1110']
 
     function zip() {
-      var args = [].slice.call(arguments);
-      var shortest = args.length==0 ? [] : args.reduce(function(a,b){
-        return a.length<b.length ? a : b
-      });
+      var args = [].slice.call(arguments)
+      var shortest =
+        args.length == 0
+          ? []
+          : args.reduce(function (a, b) {
+              return a.length < b.length ? a : b
+            })
 
-      return shortest.map(function(_,i){
-        return args.map(function(array){return array[i]})
-      });
-
+      return shortest.map(function (_, i) {
+        return args.map(function (array) {
+          return array[i]
+        })
+      })
     }
 
     return (
@@ -116,7 +114,15 @@ export default class DropDown extends Component {
                       {zip(colors, sClasses).map((zipped) => (
                         <List.Item>
                           <List.Content>
-                            <Button color={zipped[0]} content = {zipped[1]} style={{fontSize: '1vw', width: '100%', minWidth: '41px'}}></Button>
+                            <Button
+                              color={zipped[0]}
+                              content={zipped[1]}
+                              style={{
+                                fontSize: '1vw',
+                                width: '100%',
+                                minWidth: '41px',
+                              }}
+                            ></Button>
                           </List.Content>
                         </List.Item>
                       ))}
@@ -132,13 +138,21 @@ export default class DropDown extends Component {
                 content: (
                   <div>
                     <List relaxed>
-                    {zip(colors, taClasses).map((zipped) => (
-                      <List.Item>
-                        <List.Content>
-                          <Button color={zipped[0]} content = {zipped[1]} style={{fontSize: '1vw', width: '100%', minWidth: '41px'}}></Button>
-                        </List.Content>
-                      </List.Item>
-                    ))}
+                      {zip(colors, taClasses).map((zipped) => (
+                        <List.Item>
+                          <List.Content>
+                            <Button
+                              color={zipped[0]}
+                              content={zipped[1]}
+                              style={{
+                                fontSize: '1vw',
+                                width: '100%',
+                                minWidth: '41px',
+                              }}
+                            ></Button>
+                          </List.Content>
+                        </List.Item>
+                      ))}
                     </List>
                   </div>
                 ),

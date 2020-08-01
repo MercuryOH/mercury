@@ -10,9 +10,7 @@ function InviteReceiveModal({ content }) {
       <Modal
         style={{ borderless: 'true', width: '40%', height: '40%' }}
         trigger={
-          <Button onClick={() => toggleModal(true)}>
-            receive an invite
-          </Button>
+          <Button onClick={() => toggleModal(true)}>receive an invite</Button>
         }
         open={modalState}
         onClose={() => toggleModal(false)}
