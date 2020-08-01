@@ -17,7 +17,6 @@ export async function postLogin(email, password) {
 }
 
 export async function getMe() {
-  console.log(token)
   try {
     const { data } = await axios.get('/api/users/me', {
       headers: {
