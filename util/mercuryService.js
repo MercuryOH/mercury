@@ -17,6 +17,7 @@ export async function postLogin(email, password) {
 }
 
 export async function getMe() {
+  console.log(token)
   try {
     const { data } = await axios.get('/api/users/me', {
       headers: {
@@ -43,6 +44,7 @@ export async function getGroups(classId) {
     return []
   }
 }
+<<<<<<< HEAD
   export async function getClasses() {
     try {
       const { data } = await axios.get(`/api/classes/`, {
@@ -55,4 +57,23 @@ export async function getGroups(classId) {
     } catch (e) {
       return []
     }
+=======
+
+export async function postGroupToken(classId, groupId) {
+  try {
+    const { data } = await axios.post(
+      `/api/classes/${classId}/groups/${groupId}/token`,
+      {},
+      {
+        headers: {
+          authorization: token,
+        },
+      }
+    )
+
+    return data
+  } catch (e) {
+    return null
+  }
+>>>>>>> 9b7f7cf96dc317ee3f6af52c6ee70f7d0eb749c9
 }

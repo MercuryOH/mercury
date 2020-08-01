@@ -25,6 +25,7 @@
   "homepage": "https://github.com/Claude-lu/mercury#readme",
   "dependencies": {
     "@hapi/joi": "^17.1.1",
+    "@opentok/client": "^2.17.7",
     "@zoomus/websdk": "^1.7.10",
     "axios": "^0.19.2",
     "bcrypt": "^5.0.0",

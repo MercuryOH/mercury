@@ -35,6 +35,20 @@ router.post('/', middleware.authRequired, async (req, res) => {
   }
 })
 
+router.post('/:groupId/token', middleware.authRequired, async (req, res) => {
+  const { groupId } = req.params
+
+  const group = await models.Group.findByPk(groupId)
+
+  if (!group) {
+    return res.status(404).json({ error: 'Group not found' })
+  }
+
+  const token = openTok.generateToken(group.sessionId)
+
+  return res.json({ token })
+})
+
 router.get('/', middleware.authRequired, async (req, res) => {
   const { classId: ClassId } = req.params
 

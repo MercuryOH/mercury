@@ -6,7 +6,9 @@ const Sequelize = require('sequelize')
 const basename = path.basename(__filename)
 const db = {}
 
-let sequelize = new Sequelize(process.env.POSTGRES_CONNECTION_STRING)
+let sequelize = new Sequelize(process.env.POSTGRES_CONNECTION_STRING, {
+  logging: false,
+})
 
 fs.readdirSync(__dirname)
   .filter((file) => {

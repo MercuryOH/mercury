@@ -12,8 +12,8 @@ class Queue {
 
   /**
    * Add a student to the waiting queue for a course
-   * @param course - the course to be updated
-   * @param student - the student to be added
+   * @param course - the courseId to be updated
+   * @param student - the student (full name) to be added
    */
 
   addStudentToQueue(course, student) {
@@ -22,7 +22,7 @@ class Queue {
       this.map.set(course, []) // set the course value to an empty queue
     }
 
-    let currentQueue = this.map.get(course)
+    const currentQueue = this.map.get(course)
     currentQueue.push(student)
 
     this.map.set(course, currentQueue)
@@ -36,7 +36,7 @@ class Queue {
 
   getNextStudent(course) {
     if (this.map.has(course)) {
-      let currentQueue = this.map.get(course)
+      const currentQueue = this.map.get(course)
 
       if (currentQueue.length > 0) {
         return currentQueue.shift()
@@ -46,6 +46,25 @@ class Queue {
     }
 
     throw new Error('Invalid: Course not found')
+  }
+
+  removeStudentFromQueue(course, student) {
+    if (!this.map.has(course)) {
+      return
+    }
+
+    const currentQueue = this.map.get(course)
+    const indexOfStudent = currentQueue.indexOf(student)
+
+    /**
+     * If student is found, remove the student
+     */
+
+    if (indexOfStudent >= 0) {
+      currentQueue.splice(indexOfStudent, 1)
+    }
+
+    this.map.set(course, currentQueue)
   }
 
   getAllStudents(course) {

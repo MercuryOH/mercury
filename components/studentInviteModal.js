@@ -9,7 +9,9 @@ function StudentInviteModal({ content, buttonText, placeholder }) {
     <div>
       <Modal
         style={{ borderless: 'true', width: '40%', height: '40%' }}
-        trigger={<Button onClick={() => toggleModal(true)}>Invite to Group</Button>}
+        trigger={
+          <Button onClick={() => toggleModal(true)}>Invite to Group</Button>
+        }
         open={modalState}
         onClose={() => toggleModal(false)}
         closeOnDimmerClick={false}
