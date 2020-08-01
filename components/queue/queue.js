@@ -25,6 +25,7 @@ class Queue extends Component {
       connection: null,
       studentsInQueue: [],
       me: {},
+      inQueue: false,
     }
   }
 
@@ -59,10 +60,24 @@ class Queue extends Component {
   }
 
   addMeToQueue() {
+    const { firstName, lastName } = this.state.me
+    const fullName = `${firstName} ${lastName}`
+
+    if (this.state.studentsInQueue.indexOf(fullName) >= 0) {
+      return
+    }
+
     this.state.connection.addMeToQueue()
   }
 
   removeMeFromQueue() {
+    const { firstName, lastName } = this.state.me
+    const fullName = `${firstName} ${lastName}`
+
+    if (this.state.studentsInQueue.indexOf(fullName) < 0) {
+      return
+    }
+
     this.state.connection.removeMeFromQueue()
   }
 
