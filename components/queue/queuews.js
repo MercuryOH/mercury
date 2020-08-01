@@ -40,6 +40,24 @@ export default class QueueWebSocket {
     }
   }
 
+  addMeToQueue() {
+    this.connection.send(
+      this.prepareMessage({
+        msgType: 'addToQueue',
+        msg: JSON.stringify(this.component.state.me),
+      })
+    )
+  }
+
+  removeMeFromQueue() {
+    this.connection.send(
+      this.prepareMessage({
+        msgType: 'removeFromQueue',
+        msg: JSON.stringify(this.component.state.me),
+      })
+    )
+  }
+
   prepareMessage(msg) {
     let courseId = this.component.courseId
     let enrichedPayload = { ...msg, courseId }

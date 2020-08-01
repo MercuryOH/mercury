@@ -2,6 +2,9 @@ import React, { Component } from 'react'
 import { Label, Button } from 'semantic-ui-react'
 import styled from 'styled-components'
 import QueueWebSocket from './queuews'
+import * as api from '../../util/mercuryService'
+import { AuthRequired } from '../../components/authProvider'
+import Cookies from 'js-cookie'
 
 const QueueDiv = styled.div`
   grid-gap: 2vh;
@@ -11,7 +14,9 @@ const QueueLabel = styled(Label)`
   text-align: center;
 `
 
-export default class Queue extends Component {
+const MERCURY_TOKEN = 'mercury-token'
+
+class Queue extends Component {
   constructor(props) {
     super(props)
     this.state = {
@@ -19,14 +24,22 @@ export default class Queue extends Component {
       iconToDisplay: 'caret square down outline',
       connection: null,
       studentsInQueue: [],
+      me: {},
+      courseId: -1,
     }
   }
 
   componentDidMount() {
-    let url = window.location.href
+    const token = Cookies.get(MERCURY_TOKEN)
+
+    if (token) {
+      api.setToken(`Bearer ${token}`)
+    }
+
+    const url = window.location.href
     this.courseId = Number(url.split('/')[4])
     const connection = new QueueWebSocket(this)
-    this.setState({ connection })
+    api.getMe().then((me) => this.setState({ connection, me }))
   }
 
   isStudentDisplayed() {
@@ -46,7 +59,21 @@ export default class Queue extends Component {
     this.setState({ displayStudentsStyle, iconToDisplay })
   }
 
+  addMeToQueue() {
+    this.state.connection.addMeToQueue()
+  }
+
+  removeMeFromQueue() {
+    this.state.connection.removeMeFromQueue()
+  }
+
   render() {
+    const { connection } = this.state
+
+    if (!connection) {
+      return null
+    }
+
     const queueLabels = this.state.studentsInQueue.map((student) => (
       <QueueLabel key={student}>{student}</QueueLabel>
     ))
@@ -65,7 +92,25 @@ export default class Queue extends Component {
         <QueueDiv style={this.state.displayStudentsStyle}>
           {queueLabels}
         </QueueDiv>
+
+        <div
+          style={{
+            position: 'absolute',
+            width: 'calc(100% - 38px)',
+            bottom: 14,
+            display: 'inline-flex',
+          }}
+        >
+          <Button onClick={this.addMeToQueue.bind(this)} primary>
+            Join Queue
+          </Button>
+          <Button onClick={this.removeMeFromQueue.bind(this)} secondary>
+            Leave Queue
+          </Button>
+        </div>
       </QueueDiv>
     )
   }
 }
+
+export default AuthRequired(Queue)

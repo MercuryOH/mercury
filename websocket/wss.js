@@ -28,6 +28,36 @@ class WebSocketServer {
             )
             break
 
+          case 'addToQueue':
+            const studentToAdd = JSON.parse(msg)
+            courseQueue.addStudentToQueue(
+              courseId,
+              `${studentToAdd.firstName} ${studentToAdd.lastName}`
+            )
+
+            ws.send(
+              this.prepareMessage({
+                msgType: 'queue',
+                msg: courseQueue.getAllStudents(courseId),
+              })
+            )
+            break
+
+          case 'removeFromQueue':
+            const studentToRemove = JSON.parse(msg)
+            courseQueue.removeStudentFromQueue(
+              courseId,
+              `${studentToRemove.firstName} ${studentToRemove.lastName}`
+            )
+
+            ws.send(
+              this.prepareMessage({
+                msgType: 'queue',
+                msg: courseQueue.getAllStudents(courseId),
+              })
+            )
+            break
+
           default:
             throw new Error(`Message ${msg} is incorrectly formatted`)
         }
