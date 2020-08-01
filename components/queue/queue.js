@@ -28,6 +28,8 @@ class Queue extends Component {
       classData: [],
       inQueue: false,
     }
+
+    this.getRoleForClass.bind(this)
   }
 
   async componentDidMount() {
@@ -115,7 +117,7 @@ class Queue extends Component {
       return null
     }
 
-    let userRole = this.getRoleForClass.bind(this)()
+    const userRole = this.getRoleForClass()
 
     let buttonToDisplay = (
       <div
