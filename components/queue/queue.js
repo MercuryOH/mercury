@@ -25,21 +25,34 @@ class Queue extends Component {
       connection: null,
       studentsInQueue: [],
       me: {},
+      classData: '',
       inQueue: false,
     }
   }
 
-  componentDidMount() {
+  async componentDidMount() {
     const token = Cookies.get(MERCURY_TOKEN)
 
     if (token) {
       api.setToken(`Bearer ${token}`)
     }
 
-    const url = window.location.href
-    this.courseId = Number(url.split('/')[4])
+    this.courseId = Number(window.location.href.split('/')[4])
     const connection = new QueueWebSocket(this)
-    api.getMe().then((me) => this.setState({ connection, me }))
+
+    let me = {}
+    let classData = {}
+
+    api
+      .getMe()
+      .then((meData) => {
+        me = meData
+      })
+      .then(() => api.getClasses())
+      .then((classPayload) => {
+        classData = classPayload
+      })
+      .then(() => this.setState({ me, classData, connection }))
   }
 
   isStudentDisplayed() {
@@ -82,10 +95,45 @@ class Queue extends Component {
   }
 
   render() {
-    const { connection } = this.state
+    const { connection, classData } = this.state
 
     if (!connection) {
       return null
+    }
+
+    const { role } = classData
+
+    let buttonToDisplay = (
+      <div
+        style={{
+          position: 'absolute',
+          width: 'calc(100% - 38px)',
+          bottom: 14,
+          display: 'inline-flex',
+        }}
+      >
+        <Button onClick={this.addMeToQueue.bind(this)} primary>
+          Join Queue
+        </Button>
+        <Button onClick={this.removeMeFromQueue.bind(this)} secondary>
+          Leave Queue
+        </Button>
+      </div>
+    )
+
+    if (role !== 'Student') {
+      buttonToDisplay = (
+        <div
+          style={{
+            position: 'absolute',
+            width: 'calc(100% - 38px)',
+            bottom: 14,
+            display: 'inline-flex',
+          }}
+        >
+          <Button primary>Next</Button>
+        </div>
+      )
     }
 
     const queueLabels = this.state.studentsInQueue.map((student) => (
@@ -107,21 +155,7 @@ class Queue extends Component {
           {queueLabels}
         </QueueDiv>
 
-        <div
-          style={{
-            position: 'absolute',
-            width: 'calc(100% - 38px)',
-            bottom: 14,
-            display: 'inline-flex',
-          }}
-        >
-          <Button onClick={this.addMeToQueue.bind(this)} primary>
-            Join Queue
-          </Button>
-          <Button onClick={this.removeMeFromQueue.bind(this)} secondary>
-            Leave Queue
-          </Button>
-        </div>
+        {buttonToDisplay}
       </QueueDiv>
     )
   }
