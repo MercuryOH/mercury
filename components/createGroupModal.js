@@ -1,9 +1,17 @@
 import React, { useState } from 'react'
 import { Modal, Button, Header, Search } from 'semantic-ui-react'
+import * as api from '../util/mercuryService'
 import PropTypes from 'prop-types'
 
 function CreateGroupModal() {
   const [modalState, toggleModal] = useState(false)
+
+  async function createGroup(groupName) {
+    console.log(groupName)
+    //post req to group api
+    const postGroupResponse = await api.postGroup(2, 'fastgoers', 'group')
+    console.log(postGroupResponse)
+  }
 
   return (
     <div>
@@ -15,7 +23,7 @@ function CreateGroupModal() {
             icon="add"
             content="New Group"
             fluid
-            style = {{fontSize: '1vw'}}
+            style={{ fontSize: '1vw' }}
             onClick={() => toggleModal(true)}
           />
         }
@@ -63,7 +71,10 @@ function CreateGroupModal() {
             <Button
               color="teal"
               style={{ width: '50%', fontSize: '1vw' }}
-              onClick={() => toggleModal(false)}
+              onClick={() => {
+                toggleModal(false)
+                createGroup('Default')
+              }}
               content={'Create'}
             />
           </div>
