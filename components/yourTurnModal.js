@@ -10,7 +10,6 @@ export default class YourTurnModal extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    console.log('new props')
     this.setState({ modalState: nextProps.isYourTurn })
   }
 
@@ -19,9 +18,6 @@ export default class YourTurnModal extends Component {
       <div>
         <Modal
           style={{ borderless: 'true', width: '40%', height: '40%' }}
-          // trigger={
-          //   <Button onClick={() => toggleModal(true)}>your turn on queue</Button>
-          // }
           open={this.state.modalState}
           onClose={() => this.setState({ modalState: false })}
           closeOnDimmerClick={false}
