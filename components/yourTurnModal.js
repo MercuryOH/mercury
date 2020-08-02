@@ -85,5 +85,4 @@ function YourTurnModal() {
   )
 }
 
-
 export default YourTurnModal

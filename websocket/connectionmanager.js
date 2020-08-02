@@ -1,11 +1,11 @@
 /**
- * WebSocketConnectionManager handles the course-socket mapping and broadcast
+ * WebSocketConnectionManager handles the course-socket mapping, name-socket mapping, and broadcast
  */
 
 class WebSocketConnectionManager {
   constructor() {
     this.courseToSockets = new Map()
-    this.socketToCourse = new Map()
+    this.nameToSocket = new Map()
   }
 
   /**
@@ -18,8 +18,6 @@ class WebSocketConnectionManager {
     if (!this.courseToSockets.has(courseId)) {
       this.courseToSockets.set(courseId, new Set())
     }
-
-    this.socketToCourse.set(socket, courseId)
 
     const currentConnections = this.courseToSockets.get(courseId)
     currentConnections.add(socket)
@@ -34,24 +32,37 @@ class WebSocketConnectionManager {
 
   broadcast(courseId, message) {
     if (!this.courseToSockets.has(courseId)) {
-      throw new Error(`courseId ${courseId} not found`)
+      throw new Error(`courseId ${courseId} not found for broadcast`)
     }
 
     const connections = this.courseToSockets.get(courseId)
     connections.forEach((connection) => connection.send(message))
   }
 
-  removeSocketFromCourse(socket) {
-    if (!this.socketToCourse.has(socket)) {
-      return
+  removeSocket(socket) {
+    this.courseToSockets.forEach((currSocket, courseId) => {
+      if (socket === currSocket) {
+        this.courseToSockets.delete(courseId)
+      }
+    })
+
+    this.nameToSocket.forEach((currSocket, name) => {
+      if (socket === currSocket) {
+        this.nameToSocket.delete(name)
+      }
+    })
+  }
+
+  associateStudentWithSocket(name, socket) {
+    this.nameToSocket.set(name, socket)
+  }
+
+  getSocketOfName(name) {
+    if (this.nameToSocket.has(name)) {
+      return this.nameToSocket.get(name)
     }
 
-    const courseId = this.socketToCourse.get(socket)
-    this.socketToCourse.delete(socket)
-
-    if (this.courseToSockets.has(courseId)) {
-      this.courseToSockets.get(courseId).delete(socket)
-    }
+    return null
   }
 }
 
