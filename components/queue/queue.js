@@ -126,10 +126,10 @@ class Queue extends Component {
           display: 'inline-flex',
         }}
       >
-        <Button onClick={this.addMeToQueue.bind(this)} primary>
+        <Button onClick={this.addMeToQueue.bind(this)} style = {{width: '50%', fontSize: '1vw'}} primary>
           Join Queue
         </Button>
-        <Button onClick={this.removeMeFromQueue.bind(this)} secondary>
+        <Button onClick={this.removeMeFromQueue.bind(this)} style = {{width: '50%', fontSize: '1vw'}} secondary>
           Leave Queue
         </Button>
       </div>
@@ -182,6 +182,7 @@ class Queue extends Component {
           size="huge"
           style={{ marginBottom: 12, width: '100%' }}
           fluid
+          vertical
         >
           <Button
             compact
@@ -192,7 +193,7 @@ class Queue extends Component {
             style={{
               fontSize: '1.5vw',
               textAlign: 'center',
-              width: '75%',
+              width: '100%',
               marginBottom: '2%',
               minWidth: '41px',
             }}

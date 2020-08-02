@@ -62,6 +62,7 @@ function DropDown() {
         fluid
         exclusive={false}
         defaultActiveIndex={[0, 1]}
+        style = {{fontSize: '1vw'}}
         panels={[
           {
             key: 'student',
