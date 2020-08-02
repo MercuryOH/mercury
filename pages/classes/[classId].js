@@ -14,7 +14,8 @@ const Vonage = dynamic(() => import('../../components/vonage'), {
 
 function ClassPage() {
   const router = useRouter()
-  const [groups, setGroups, classes, setClasses] = useState([])
+  const [groups, setGroups] = useState([])
+  const [classes, setClasses] = useState([])
   const [vonageCred, setVonageCred] = useState(null)
   const { classId } = router.query
 
@@ -30,14 +31,14 @@ function ClassPage() {
   useEffect(() => {
     api
       .getClasses()
-      .then((classes) => setClasses(groups))
+      .then((courses) => setClasses(courses))
       .catch(console.error)
   }, [])
 
-  function getClassName(classList) {
-    var correctClass = ''
-    classList.forEach((c) => {
-      if (c.id === classId) {
+  function getClassName() {
+    let correctClass = ''
+    classes.forEach((c) => {
+      if (c.id === Number(classId)) {
         correctClass = c.name
       }
     })
@@ -61,13 +62,13 @@ function ClassPage() {
         <div style={{ height: '100%' }}>
           <Button.Group
             size="huge"
-            style={{ marginBottom: 12, width: '100%' }}
+            style={{ marginBottom: 12, marginLeft: 12, width: '95%' }}
             fluid
           >
             <Button
               compact
               icon="angle left"
-              content="Class.name"
+              content={getClassName()}
               style={{
                 fontSize: '1.5vw',
                 textAlign: 'left',
