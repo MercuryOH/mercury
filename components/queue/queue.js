@@ -31,7 +31,7 @@ class Queue extends Component {
     this.getRoleForClass.bind(this)
   }
 
-  async componentDidMount() {
+  componentDidMount() {
     this.courseId = Number(window.location.href.split('/')[4])
     this.state.connection.start()
 
