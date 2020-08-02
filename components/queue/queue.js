@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Label, Button, Modal, Header } from 'semantic-ui-react'
+import { Label, Button } from 'semantic-ui-react'
 import styled from 'styled-components'
 import QueueWebSocket from './queuews'
 import * as api from '../../util/mercuryService'
