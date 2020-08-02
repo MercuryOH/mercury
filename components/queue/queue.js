@@ -1,11 +1,10 @@
-import React, { Component, useState } from 'react'
+import React, { Component } from 'react'
 import { Label, Button } from 'semantic-ui-react'
 import styled from 'styled-components'
 import QueueWebSocket from './queuews'
 import * as api from '../../util/mercuryService'
 import { AuthRequired } from '../../components/authProvider'
-
-import YourTurnModal from '../YourTurnModal'
+import YourTurnModal from '../yourTurnModal'
 
 const QueueDiv = styled.div`
   grid-gap: 2vh;
@@ -32,7 +31,7 @@ class Queue extends Component {
     this.getRoleForClass.bind(this)
   }
 
-  async componentDidMount() {
+  componentDidMount() {
     this.courseId = Number(window.location.href.split('/')[4])
     this.state.connection.start()
 
@@ -162,7 +161,7 @@ class Queue extends Component {
             style={{
               fontSize: '1.2vw',
               textAlign: 'center',
-              width: '100%',
+              width: '95%',
               marginBottom: '2%',
               minWidth: '41px',
               marginLeft: '.8%',
@@ -177,10 +176,11 @@ class Queue extends Component {
 
     return (
       <QueueDiv>
-        <YourTurnModal isYourTurn={this.isYourTurn}/>
+        <YourTurnModal isYourTurn={this.state.isYourTurn} />
+
         <Button.Group
           size="huge"
-          style={{ marginBottom: 12, width: '100%' }}
+          style={{ marginBottom: 12, width: '95%' }}
           fluid
           vertical
         >

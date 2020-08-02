@@ -6,7 +6,7 @@ import Layout from '../components/layout'
 import JoinRequestModal from '../components/joinRequestModal'
 import InviteReceiveModal from '../components/inviteReceiveModal'
 import StudentInviteModal from '../components/StudentInviteModal'
-import YourTurnModal from '../components/YourTurnModal'
+import YourTurnModal from '../components/yourTurnModal'
 
 import { AuthRequired } from '../components/authProvider'
 
@@ -69,7 +69,7 @@ function Calendar() {
         '&src=' +
         c.calendarId +
         '&color=%23' +
-        colors[(c.id-2) % colors.length] //Is there a reason why class ids start from 2??
+        colors[(c.id - 2) % colors.length] //Is there a reason why class ids start from 2??
     })
 
     return src
