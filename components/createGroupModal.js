@@ -15,6 +15,7 @@ function CreateGroupModal() {
             icon="add"
             content="New Group"
             fluid
+            style = {{fontSize: '1vw'}}
             onClick={() => toggleModal(true)}
           />
         }
