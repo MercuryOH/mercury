@@ -21,7 +21,7 @@ class Queue extends Component {
     this.state = {
       displayStudentsStyle: { display: 'grid' },
       iconToDisplay: 'caret square down outline',
-      connection: null,
+      connection: new QueueWebSocket(this),
       studentsInQueue: [],
       me: {},
       classData: [],
@@ -34,7 +34,7 @@ class Queue extends Component {
 
   async componentDidMount() {
     this.courseId = Number(window.location.href.split('/')[4])
-    const connection = new QueueWebSocket(this)
+    this.state.connection.start()
 
     let me = {}
     let classData = {}
@@ -48,7 +48,7 @@ class Queue extends Component {
       .then((classPayload) => {
         classData = classPayload
       })
-      .then(() => this.setState({ me, classData, connection }))
+      .then(() => this.setState({ me, classData }))
   }
 
   isStudentDisplayed() {
@@ -104,6 +104,10 @@ class Queue extends Component {
     return userRole
   }
 
+  getNextStudentInQueue() {
+    this.state.connection.getNextStudent()
+  }
+
   render() {
     const { connection } = this.state
 
@@ -141,7 +145,9 @@ class Queue extends Component {
             display: 'inline-flex',
           }}
         >
-          <Button primary>Next</Button>
+          <Button onClick={this.getNextStudentInQueue.bind(this)} primary>
+            Next
+          </Button>
         </div>
       )
     }
