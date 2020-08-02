@@ -41,7 +41,7 @@ export default class QueueWebSocket {
         break
 
       case 'nextNotification':
-        this.component.setState({}) // activate the yourTurn modal
+        this.component.setState({ isYourTurn: true }) // activate the yourTurn modal
         break
 
       default:

@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { Modal, Button, Header } from 'semantic-ui-react'
 import PropTypes from 'prop-types'
 
-function YourTurnModal({isYourTurn}) {
+function YourTurnModal({ isYourTurn }) {
   const [modalState, toggleModal] = useState(isYourTurn)
 
   return (
