@@ -31,15 +31,14 @@ function DropDown() {
     'black',
   ]
 
-  const sClasses = classes
-
   /*const sClasses = [
       'CS 2110',
       'CS 2800',
       'MATH 2940',
     ]*/
 
-  const taClasses = ['CS 1110']
+  // const taClasses = ['CS 1110']
+  const taClasses = []
 
   function zip() {
     var args = [].slice.call(arguments)
@@ -72,19 +71,20 @@ function DropDown() {
                 <div>
                   <List relaxed>
                     <>
-                      {classes.map((classs) => (
-                        <List.Item key={`class_${classs.id}`}>
+                      {zip(colors,classes).map((zipped) => (
+                        <List.Item key={`class_${zipped[1].id}`}>
                           <List.Content>
-                            <Link href={`/classes/${classs.id}`}>
+                            <Link href={`/classes/${zipped[1].id}`}>
                               <Button
                                 style={{
                                   fontSize: '1vw',
                                   width: '100%',
                                   minWidth: '41px',
                                 }}
-                              >
-                                {classs.name}
-                              </Button>
+                                color={zipped[0]}
+                                content={zipped[1].name}
+                              />
+
                             </Link>
                           </List.Content>
                         </List.Item>
