@@ -161,7 +161,7 @@ class Queue extends Component {
             style={{
               fontSize: '1.2vw',
               textAlign: 'center',
-              width: '100%',
+              width: '95%',
               marginBottom: '2%',
               minWidth: '41px',
               marginLeft: '.8%',
@@ -180,7 +180,7 @@ class Queue extends Component {
 
         <Button.Group
           size="huge"
-          style={{ marginBottom: 12, width: '100%' }}
+          style={{ marginBottom: 12, width: '95%' }}
           fluid
         >
           <Button
