@@ -144,27 +144,27 @@ class Queue extends Component {
     }
 
     const queueLabels =
-    this.state.displayStudentsStyle.display == 'none' ? (
-      <></>
-    ) : (
-      this.state.studentsInQueue.map((student) => (
-        <QueueLabel
-          vertical
-          style={{
-            fontSize: '1.2vw',
-            textAlign: 'center',
-            width: '100%',
-            marginBottom: '2%',
-            minWidth: '41px',
-            marginLeft: '.8%',
-            marginRight: '1%',
-          }}
-          key={student}
-        >
-          {student}
-        </QueueLabel>
-      ))
-    )
+      this.state.displayStudentsStyle.display == 'none' ? (
+        <></>
+      ) : (
+        this.state.studentsInQueue.map((student) => (
+          <QueueLabel
+            vertical
+            style={{
+              fontSize: '1.2vw',
+              textAlign: 'center',
+              width: '100%',
+              marginBottom: '2%',
+              minWidth: '41px',
+              marginLeft: '.8%',
+              marginRight: '1%',
+            }}
+            key={student}
+          >
+            {student}
+          </QueueLabel>
+        ))
+      )
 
     return (
       <QueueDiv>
