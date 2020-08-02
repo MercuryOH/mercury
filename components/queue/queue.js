@@ -5,6 +5,8 @@ import QueueWebSocket from './queuews'
 import * as api from '../../util/mercuryService'
 import { AuthRequired } from '../../components/authProvider'
 
+import YourTurnModal from '../YourTurnModal'
+
 const QueueDiv = styled.div`
   grid-gap: 2vh;
 `
@@ -24,6 +26,7 @@ class Queue extends Component {
       me: {},
       classData: [],
       inQueue: false,
+      isYourTurn: false,
     }
 
     this.getRoleForClass.bind(this)
@@ -168,6 +171,7 @@ class Queue extends Component {
 
     return (
       <QueueDiv>
+        <YourTurnModal isYourTurn={this.isYourTurn}/>
         <Button.Group
           size="huge"
           style={{ marginBottom: 12, width: '100%' }}

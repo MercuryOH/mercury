@@ -2,16 +2,16 @@ import React, { useState } from 'react'
 import { Modal, Button, Header } from 'semantic-ui-react'
 import PropTypes from 'prop-types'
 
-function YourTurnModal() {
-  const [modalState, toggleModal] = useState(false)
+function YourTurnModal({isYourTurn}) {
+  const [modalState, toggleModal] = useState(isYourTurn)
 
   return (
     <div>
       <Modal
         style={{ borderless: 'true', width: '40%', height: '40%' }}
-        trigger={
-          <Button onClick={() => toggleModal(true)}>your turn on queue</Button>
-        }
+        // trigger={
+        //   <Button onClick={() => toggleModal(true)}>your turn on queue</Button>
+        // }
         open={modalState}
         onClose={() => toggleModal(false)}
         closeOnDimmerClick={false}
@@ -85,5 +85,8 @@ function YourTurnModal() {
   )
 }
 
+YourTurnModal.propTypes = {
+  isYourTurn: PropTypes.bool,
+}
 
 export default YourTurnModal
