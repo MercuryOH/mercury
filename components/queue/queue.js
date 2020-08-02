@@ -4,6 +4,7 @@ import styled from 'styled-components'
 import QueueWebSocket from './queuews'
 import * as api from '../../util/mercuryService'
 import { AuthRequired } from '../../components/authProvider'
+import YourTurnModal from '../yourTurnModal'
 
 const QueueDiv = styled.div`
   grid-gap: 2vh;
@@ -175,81 +176,7 @@ class Queue extends Component {
 
     return (
       <QueueDiv>
-        {/* BEGIN: The YourTurnModal */}
-
-        <Modal
-          style={{ borderless: 'true', width: '40%', height: '40%' }}
-          open={this.state.isYourTurn}
-          onClose={() => this.setState({ isYourTurn: false })}
-          closeOnDimmerClick={false}
-          closeOnEscape={false}
-        >
-          <Modal.Content style={{ borderless: 'true' }}>
-            <Header
-              style={{
-                fontSize: '2vw',
-                textAlign: 'center',
-                width: '100%',
-                padding: 50,
-                height: '50%',
-                margin: 'auto',
-              }}
-            >
-              Your turn!
-            </Header>
-
-            <div
-              style={{
-                textAlign: 'center',
-                marginTop: '5%',
-                padding: 30,
-                flexDirection: 'row',
-              }}
-            >
-              <Button
-                color="green"
-                onClick={() => toggleModal(false)}
-                style={{
-                  fontSize: '1vw',
-                  textAlign: 'center',
-                  width: '25%',
-                  marginRight: '5%',
-                  flex: 1,
-                }}
-              >
-                Join TA
-              </Button>
-              <Button
-                color="teal"
-                onClick={() => toggleModal(false)}
-                style={{
-                  fontSize: '1vw',
-                  textAlign: 'center',
-                  width: '25%',
-                  marginRight: '5%',
-                  flex: 1,
-                }}
-              >
-                Invite TA
-              </Button>
-              <Button
-                color="red"
-                onClick={() => toggleModal(false)}
-                style={{
-                  fontSize: '1vw',
-                  textAlign: 'center',
-                  width: '25%',
-                  //marginLeft: '5%',
-                  flex: 1,
-                }}
-              >
-                Decline
-              </Button>
-            </div>
-          </Modal.Content>
-        </Modal>
-
-        {/* END: The YourTurnModal */}
+        <YourTurnModal isYourTurn={this.state.isYourTurn} />
 
         <Button.Group
           size="huge"
