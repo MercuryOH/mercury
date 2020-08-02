@@ -8,6 +8,8 @@ import InviteReceiveModal from '../components/inviteReceiveModal'
 import StudentInviteModal from '../components/StudentInviteModal'
 import YourTurnModal from '../components/YourTurnModal'
 
+import { AuthRequired } from '../components/authProvider'
+
 import * as api from '../util/mercuryService'
 
 const friendOptions = [
@@ -106,4 +108,4 @@ function Calendar() {
   )
 }
 
-export default Calendar
+export default AuthRequired(Calendar)
