@@ -30,6 +30,20 @@ export async function getMe() {
   }
 }
 
+export async function getClassNG(classId) {
+  try {
+    const { data } = await axios.get(`/api/classes/${classId}`, {
+      headers: {
+        authorization: token,
+      },
+    })
+
+    return data
+  } catch (e) {
+    return null
+  }
+}
+
 export async function getGroups(classId) {
   try {
     const { data } = await axios.get(`/api/classes/${classId}/groups`, {
@@ -74,5 +88,3 @@ export async function postGroupToken(classId, groupId) {
     return null
   }
 }
-
-

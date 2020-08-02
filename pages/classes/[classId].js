@@ -14,7 +14,8 @@ const Vonage = dynamic(() => import('../../components/vonage'), {
 
 function ClassPage() {
   const router = useRouter()
-  const [groups, setGroups, classes, setClasses] = useState([])
+  const [groups, setGroups] = useState([])
+  const [currentClass, setCurrentClass] = useState({id: "", name: "bob", Groups: []})
   const [vonageCred, setVonageCred] = useState(null)
   const { classId } = router.query
 
@@ -22,27 +23,10 @@ function ClassPage() {
     if (!classId) return
 
     api
-      .getGroups(classId)
-      .then((groups) => setGroups(groups))
+      .getClassNG(classId)
+      .then((currentClass) => setCurrentClass(currentClass))
       .catch(console.error)
   }, [classId])
-
-  useEffect(() => {
-    api
-      .getClasses()
-      .then((classes) => setClasses(groups))
-      .catch(console.error)
-  }, [])
-
-  function getClassName(classList) {
-    var correctClass = ''
-    classList.forEach((c) => {
-      if (c.id === classId) {
-        correctClass = c.name
-      }
-    })
-    return correctClass
-  }
 
   const handleBack = () => {
     router.push('/calendar')
@@ -58,16 +42,16 @@ function ClassPage() {
   return (
     <Layout
       left={
-        <div style={{ height: '100%' }}>
+        <div style={{ height: '100%', marginLeft: '2.5%' }}>
           <Button.Group
             size="huge"
-            style={{ marginBottom: 12, width: '100%' }}
+            style={{ marginBottom: 12, width: '100%'}}
             fluid
           >
             <Button
               compact
               icon="angle left"
-              content="Class.name"
+              content= {currentClass.name}
               style={{
                 fontSize: '1.5vw',
                 textAlign: 'left',
@@ -108,14 +92,14 @@ function ClassPage() {
                   content: (
                     <div style={{ paddingLeft: 20 }}>
                       <List relaxed>
-                        {groups
+                        {currentClass.Groups
                           .filter((group) => group.type === 'discussion')
                           .map((group) => (
                             <List.Item
                               key={`discussion_${group.id}`}
                               onClick={() => handleSelectGroup(group)}
                               style={{
-                                fontSize: '1vw',
+                                fontSize: '.8vw',
                                 textAlign: 'left',
                                 width: '75%',
                                 marginBottom: '2%',
@@ -140,14 +124,14 @@ function ClassPage() {
                   content: (
                     <div style={{ paddingLeft: 20 }}>
                       <List relaxed>
-                        {groups
+                        {currentClass.Groups
                           .filter((group) => group.type === 'group')
                           .map((group) => (
                             <List.Item
                               key={`private_group_${group.id}`}
                               onClick={() => handleSelectGroup(group)}
                               style={{
-                                fontSize: '1vw',
+                                fontSize: '.8vw',
                                 textAlign: 'left',
                                 width: '75%',
                                 marginBottom: '2%',
