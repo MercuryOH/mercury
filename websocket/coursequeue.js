@@ -48,6 +48,14 @@ class Queue {
     throw new Error('Invalid: Course not found')
   }
 
+  size(course) {
+    if (this.map.has(course)) {
+      return this.map.get(course).length
+    }
+
+    return 0
+  }
+
   removeStudentFromQueue(course, student) {
     if (!this.map.has(course)) {
       return
@@ -72,7 +80,7 @@ class Queue {
       return this.map.get(course)
     }
 
-    throw new Error('Invalid: Course not found')
+    return []
   }
 }
 

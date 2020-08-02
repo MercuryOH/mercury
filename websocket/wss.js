@@ -18,15 +18,19 @@ class WebSocketServer {
 
         switch (msgType) {
           case 'greeting':
-            webSocketConnectionManager.addSocketForCourse(courseId, ws)
+            webSocketConnectionManager.addSocketForCourse(courseId, ws) // this websocket is now associated with the course
             break
 
           case 'addToQueue':
             const studentToAdd = JSON.parse(msg)
-            courseQueue.addStudentToQueue(
-              courseId,
-              `${studentToAdd.firstName} ${studentToAdd.lastName}`
+            const studentToAddName = `${studentToAdd.firstName} ${studentToAdd.lastName}`
+            courseQueue.addStudentToQueue(courseId, studentToAddName)
+
+            webSocketConnectionManager.associateStudentWithSocket(
+              studentToAddName,
+              ws
             )
+
             break
 
           case 'removeFromQueue':
@@ -37,15 +41,39 @@ class WebSocketServer {
             )
             break
 
+          case 'next':
+            let socketToSend = null
+
+            while (courseQueue.size(courseId) > 0 && socketToSend === null) {
+              // keep searching for the next web socket
+
+              const nextStudent = courseQueue.getNextStudent(courseId)
+              socketToSend = webSocketConnectionManager.getSocketOfName(
+                nextStudent
+              )
+            }
+
+            if (socketToSend !== null) {
+              socketToSend.send(
+                this.prepareMessage({
+                  msgType: 'nextNotification',
+                  msg: 'nextNotification',
+                })
+              )
+            }
+
+            break
+
           default:
-            throw new Error(`Message ${msg} is incorrectly formatted`)
+            throw new Error(`Message Type ${msgType} is not recognized`)
         }
 
         /**
          * Send back the updated queue to the websocket
          */
 
-        ws.send(
+        webSocketConnectionManager.broadcast(
+          courseId,
           this.prepareMessage({
             msgType: 'queue',
             msg: courseQueue.getAllStudents(courseId),
@@ -58,7 +86,7 @@ class WebSocketServer {
        */
 
       ws.on('close', () => {
-        webSocketConnectionManager.removeSocketFromCourse(ws)
+        webSocketConnectionManager.removeSocket(ws)
       })
     })
   }

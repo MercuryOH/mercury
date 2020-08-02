@@ -1,9 +1,10 @@
-import React, { Component, useState } from 'react'
+import React, { Component } from 'react'
 import { Label, Button } from 'semantic-ui-react'
 import styled from 'styled-components'
 import QueueWebSocket from './queuews'
 import * as api from '../../util/mercuryService'
 import { AuthRequired } from '../../components/authProvider'
+import YourTurnModal from '../yourTurnModal'
 
 const QueueDiv = styled.div`
   grid-gap: 2vh;
@@ -19,19 +20,20 @@ class Queue extends Component {
     this.state = {
       displayStudentsStyle: { display: 'grid' },
       iconToDisplay: 'caret square down outline',
-      connection: null,
+      connection: new QueueWebSocket(this),
       studentsInQueue: [],
       me: {},
       classData: [],
       inQueue: false,
+      isYourTurn: false,
     }
 
     this.getRoleForClass.bind(this)
   }
 
-  async componentDidMount() {
+  componentDidMount() {
     this.courseId = Number(window.location.href.split('/')[4])
-    const connection = new QueueWebSocket(this)
+    this.state.connection.start()
 
     let me = {}
     let classData = {}
@@ -45,7 +47,7 @@ class Queue extends Component {
       .then((classPayload) => {
         classData = classPayload
       })
-      .then(() => this.setState({ me, classData, connection }))
+      .then(() => this.setState({ me, classData }))
   }
 
   isStudentDisplayed() {
@@ -101,6 +103,10 @@ class Queue extends Component {
     return userRole
   }
 
+  getNextStudentInQueue() {
+    this.state.connection.getNextStudent()
+  }
+
   render() {
     const { connection } = this.state
 
@@ -138,39 +144,43 @@ class Queue extends Component {
             display: 'inline-flex',
           }}
         >
-          <Button primary>Next</Button>
+          <Button onClick={this.getNextStudentInQueue.bind(this)} primary>
+            Next
+          </Button>
         </div>
       )
     }
 
     const queueLabels =
-    this.state.displayStudentsStyle.display == 'none' ? (
-      <></>
-    ) : (
-      this.state.studentsInQueue.map((student) => (
-        <QueueLabel
-          vertical
-          style={{
-            fontSize: '1.2vw',
-            textAlign: 'center',
-            width: '100%',
-            marginBottom: '2%',
-            minWidth: '41px',
-            marginLeft: '.8%',
-            marginRight: '1%',
-          }}
-          key={student}
-        >
-          {student}
-        </QueueLabel>
-      ))
-    )
+      this.state.displayStudentsStyle.display == 'none' ? (
+        <></>
+      ) : (
+        this.state.studentsInQueue.map((student) => (
+          <QueueLabel
+            vertical
+            style={{
+              fontSize: '1.2vw',
+              textAlign: 'center',
+              width: '95%',
+              marginBottom: '2%',
+              minWidth: '41px',
+              marginLeft: '.8%',
+              marginRight: '1%',
+            }}
+            key={student}
+          >
+            {student}
+          </QueueLabel>
+        ))
+      )
 
     return (
       <QueueDiv>
+        <YourTurnModal isYourTurn={this.state.isYourTurn} />
+
         <Button.Group
           size="huge"
-          style={{ marginBottom: 12, width: '100%' }}
+          style={{ marginBottom: 12, width: '95%' }}
           fluid
         >
           <Button

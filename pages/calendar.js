@@ -1,11 +1,14 @@
-import React, {useState, useEffect} from 'react'
+import React, { useState, useEffect } from 'react'
 import LargeLabel from '../components/largeLabel'
 import DropDown from '../components/dropDown'
 import Layout from '../components/layout'
-import ModalPop from '../components/modal'
+
 import JoinRequestModal from '../components/joinRequestModal'
 import InviteReceiveModal from '../components/inviteReceiveModal'
 import StudentInviteModal from '../components/StudentInviteModal'
+import YourTurnModal from '../components/yourTurnModal'
+
+import { AuthRequired } from '../components/authProvider'
 
 import * as api from '../util/mercuryService'
 
@@ -42,25 +45,33 @@ const friendOptions = [
 function Calendar() {
   const [classes, setClasses] = useState([])
 
-      useEffect(() => {
-        api
-          .getClasses()
-          .then((classes) => setClasses(classes))
-          .catch(console.error)
-      })
+  useEffect(() => {
+    api
+      .getClasses()
+      .then((classes) => setClasses(classes))
+      .catch(console.error)
+  }, [])
 
   // const calendarIds = [
   //   'avnpisdeelacuaq11un5otu5k8@group.calendar.google.com',
   //   '4ctv2ua6npuegf05gh00iukd5g@group.calendar.google.com',
   // ]
 
+  // var randomColor = "000000".replace(/0/g,function(){return (~~(Math.random()*16)).toString(16);});
+  const colors = ['D50000', 'F4511E', 'F6BF26', 'C0CA33', '0B8043', '009688']
+
   function mergeCal(classList) {
     var src = 'https://calendar.google.com/calendar/embed?mode=WEEK&showTitle=0'
     classList.forEach((c) => {
       //src = src + '&src=' + c.calendarId + "&color=#" + Math.floor(Math.random()*16777215).toString(16)
-      src = src + '&src=' + c.calendarId
+      src =
+        src +
+        '&src=' +
+        c.calendarId +
+        '&color=%23' +
+        colors[(c.id - 2) % colors.length] //Is there a reason why class ids start from 2??
     })
-    console.log(classList)
+
     return src
   }
 
@@ -70,7 +81,6 @@ function Calendar() {
         <div style={{ paddingLeft: 20, paddingRight: 20 }}>
           <LargeLabel content={<p>Classes</p>}></LargeLabel>
           <DropDown></DropDown>
-          <ModalPop content={<p>Test</p>}></ModalPop>
 
           <JoinRequestModal
             content={'[student] requested to join your group'}
@@ -82,6 +92,7 @@ function Calendar() {
             buttonText={'Invite'}
             placeholder={'Add student to your group...'}
           ></StudentInviteModal>
+          <YourTurnModal></YourTurnModal>
         </div>
       }
     >
@@ -97,4 +108,4 @@ function Calendar() {
   )
 }
 
-export default Calendar
+export default AuthRequired(Calendar)

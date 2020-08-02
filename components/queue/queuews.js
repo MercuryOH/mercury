@@ -8,6 +8,9 @@ const url = 'ws://localhost:8080'
 export default class QueueWebSocket {
   constructor(component) {
     this.component = component
+  }
+
+  start() {
     this.connection = new WebSocket(url)
     this.connection.onopen = this.processConnectionOpen.bind(this)
     this.connection.onerror = this.processConnectionError.bind(this)
@@ -37,6 +40,10 @@ export default class QueueWebSocket {
         this.component.setState({ studentsInQueue: msg })
         break
 
+      case 'nextNotification':
+        this.component.setState({ isYourTurn: true }) // activate the yourTurn modal
+        break
+
       default:
         throw new Error(`Message ${msg} is incorrectly formatted`)
     }
@@ -60,6 +67,15 @@ export default class QueueWebSocket {
       this.prepareMessage({
         msgType: 'removeFromQueue',
         msg: JSON.stringify(me),
+      })
+    )
+  }
+
+  getNextStudent() {
+    this.connection.send(
+      this.prepareMessage({
+        msgType: 'next',
+        msg: 'next',
       })
     )
   }
