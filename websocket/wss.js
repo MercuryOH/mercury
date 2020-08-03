@@ -56,8 +56,15 @@ class WebSocketServer {
             if (socketToSend !== null) {
               socketToSend.send(
                 this.prepareMessage({
-                  msgType: 'nextNotification',
-                  msg: 'nextNotification',
+                  msgType: 'yourTurn',
+                  msg: 'yourTurn',
+                })
+              )
+
+              ws.send(
+                this.prepareMessage({
+                  msgType: 'nextStudentNotified',
+                  msg: 'nextStudentNotified',
                 })
               )
             }

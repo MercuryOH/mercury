@@ -45,7 +45,6 @@ export default class TaWaitingModal extends Component {
                 flexDirection: 'row',
               }}
             >
-
               <Button
                 color="red"
                 onClick={() => this.setState({ modalState: false })}

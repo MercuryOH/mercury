@@ -107,7 +107,6 @@ class Queue extends Component {
 
   getNextStudentInQueue() {
     this.state.connection.getNextStudent()
-    this.state.inviteNextStudent = true
   }
 
   getButtonToDisplay() {
@@ -167,6 +166,14 @@ class Queue extends Component {
     return null
   }
 
+  getTAWaitingModal() {
+    if (this.getRoleForClass() !== 'Student') {
+      return <TaWaitingModal inviteNextStudent={this.state.inviteNextStudent} />
+    }
+
+    return null
+  }
+
   createQueueLabel(student) {
     return (
       <QueueLabel
@@ -188,6 +195,7 @@ class Queue extends Component {
   }
 
   render() {
+    console.log(`Next Student: ${this.state.inviteNextStudent}`)
     const { connection } = this.state
 
     if (!connection) {
@@ -203,8 +211,7 @@ class Queue extends Component {
 
     return (
       <QueueDiv>
-        <YourTurnModal isYourTurn={this.state.isYourTurn} />
-        <TaWaitingModal inviteNextStudent={this.state.inviteNextStudent}/>
+        {this.getTAWaitingModal()}
         {this.getYourTurnModal()}
 
         <Button.Group

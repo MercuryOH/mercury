@@ -40,8 +40,12 @@ export default class QueueWebSocket {
         this.component.setState({ studentsInQueue: msg })
         break
 
-      case 'nextNotification':
+      case 'yourTurn':
         this.component.setState({ isYourTurn: true }) // activate the yourTurn modal
+        break
+
+      case 'nextStudentNotified':
+        this.component.setState({ inviteNextStudent: true })
         break
 
       default:
