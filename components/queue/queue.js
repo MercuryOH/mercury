@@ -110,35 +110,11 @@ class Queue extends Component {
     this.state.inviteNextStudent = true
   }
 
-  render() {
-    const { connection } = this.state
-
-    if (!connection) {
-      return null
-    }
-
+  getButtonToDisplay() {
     const userRole = this.getRoleForClass()
 
-    let buttonToDisplay = (
-      <div
-        style={{
-          position: 'absolute',
-          width: 'calc(100% - 38px)',
-          bottom: 14,
-          display: 'inline-flex',
-        }}
-      >
-        <Button onClick={this.addMeToQueue.bind(this)} primary>
-          Join Queue
-        </Button>
-        <Button onClick={this.removeMeFromQueue.bind(this)} secondary>
-          Leave Queue
-        </Button>
-      </div>
-    )
-
-    if (userRole !== 'Student') {
-      buttonToDisplay = (
+    if (userRole === 'Student') {
+      return (
         <div
           style={{
             position: 'absolute',
@@ -147,45 +123,95 @@ class Queue extends Component {
             display: 'inline-flex',
           }}
         >
-          <Button onClick={this.getNextStudentInQueue.bind(this)} primary>
-            Next
+          <Button
+            onClick={this.addMeToQueue.bind(this)}
+            style={{ width: '50%', fontSize: '1vw' }}
+            primary
+          >
+            Join Queue
+          </Button>
+          <Button
+            onClick={this.removeMeFromQueue.bind(this)}
+            style={{ width: '50%', fontSize: '1vw' }}
+            secondary
+          >
+            Leave Queue
           </Button>
         </div>
       )
+    }
+
+    return (
+      <div
+        style={{
+          position: 'absolute',
+          width: 'calc(100% - 38px)',
+          bottom: 14,
+          display: 'inline-flex',
+        }}
+      >
+        <Button onClick={this.getNextStudentInQueue.bind(this)} primary>
+          Next
+        </Button>
+      </div>
+    )
+  }
+
+  getYourTurnModal() {
+    const userRole = this.getRoleForClass()
+
+    if (userRole === 'Student') {
+      return <YourTurnModal isYourTurn={this.state.isYourTurn} />
+    }
+
+    return null
+  }
+
+  createQueueLabel(student) {
+    return (
+      <QueueLabel
+        vertical
+        style={{
+          fontSize: '1.2vw',
+          textAlign: 'center',
+          width: '95%',
+          marginBottom: '2%',
+          minWidth: '41px',
+          marginLeft: '.8%',
+          marginRight: '1%',
+        }}
+        key={student}
+      >
+        {student}
+      </QueueLabel>
+    )
+  }
+
+  render() {
+    const { connection } = this.state
+
+    if (!connection) {
+      return null
     }
 
     const queueLabels =
       this.state.displayStudentsStyle.display == 'none' ? (
         <></>
       ) : (
-        this.state.studentsInQueue.map((student) => (
-          <QueueLabel
-            vertical
-            style={{
-              fontSize: '1.2vw',
-              textAlign: 'center',
-              width: '95%',
-              marginBottom: '2%',
-              minWidth: '41px',
-              marginLeft: '.8%',
-              marginRight: '1%',
-            }}
-            key={student}
-          >
-            {student}
-          </QueueLabel>
-        ))
+        this.state.studentsInQueue.map(this.createQueueLabel)
       )
 
     return (
       <QueueDiv>
         <YourTurnModal isYourTurn={this.state.isYourTurn} />
         <TaWaitingModal inviteNextStudent={this.state.inviteNextStudent}/>
+        {this.getYourTurnModal()}
 
         <Button.Group
           size="huge"
           style={{ marginBottom: 12, width: '95%' }}
           fluid
+          vertical
         >
           <Button
             compact
@@ -196,7 +222,7 @@ class Queue extends Component {
             style={{
               fontSize: '1.5vw',
               textAlign: 'center',
-              width: '75%',
+              width: '100%',
               marginBottom: '2%',
               minWidth: '41px',
             }}
@@ -209,7 +235,7 @@ class Queue extends Component {
           {queueLabels}
         </QueueDiv>
 
-        {buttonToDisplay}
+        {this.getButtonToDisplay()}
       </QueueDiv>
     )
   }
