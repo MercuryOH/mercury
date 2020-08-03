@@ -253,4 +253,4 @@ class Queue extends Component {
   }
 }
 
-export default AuthRequired(Queue)
+export default Queue
