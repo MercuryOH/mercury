@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import { Modal, Button, Header } from 'semantic-ui-react'
+import next from 'next'
 
 export default class TaWaitingModal extends Component {
   constructor(props) {
@@ -9,12 +10,11 @@ export default class TaWaitingModal extends Component {
       studentName: this.props.studentName,
     }
   }
-
-  componentWillReceiveProps(nextProps) {
-    this.setState({
+  static getDerivedStateFromProps(nextProps, _state) {
+    return {
       modalState: nextProps.inviteNextStudent,
       studentName: nextProps.studentName,
-    })
+    }
   }
 
   render() {

@@ -9,8 +9,8 @@ export default class YourTurnModal extends Component {
     }
   }
 
-  componentWillReceiveProps(nextProps) {
-    this.setState({ modalState: nextProps.isYourTurn })
+  static getDerivedStateFromProps(nextProps, _state) {
+    return { modalState: nextProps.isYourTurn }
   }
 
   render() {
