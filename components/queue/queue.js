@@ -5,6 +5,7 @@ import QueueWebSocket from './queuews'
 import * as api from '../../util/mercuryService'
 import { AuthRequired } from '../../components/authProvider'
 import YourTurnModal from '../yourTurnModal'
+import TaWaitingModal from '../taWaitingModal'
 
 const QueueDiv = styled.div`
   grid-gap: 2vh;
@@ -26,6 +27,7 @@ class Queue extends Component {
       classData: [],
       inQueue: false,
       isYourTurn: false,
+      inviteNextStudent: false,
     }
 
     this.getRoleForClass.bind(this)
@@ -105,6 +107,7 @@ class Queue extends Component {
 
   getNextStudentInQueue() {
     this.state.connection.getNextStudent()
+    this.state.inviteNextStudent = true
   }
 
   render() {
@@ -177,6 +180,7 @@ class Queue extends Component {
     return (
       <QueueDiv>
         <YourTurnModal isYourTurn={this.state.isYourTurn} />
+        <TaWaitingModal inviteNextStudent={this.state.inviteNextStudent}/>
 
         <Button.Group
           size="huge"

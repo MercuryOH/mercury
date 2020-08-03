@@ -6,7 +6,8 @@ import Layout from '../components/layout'
 import JoinRequestModal from '../components/joinRequestModal'
 import InviteReceiveModal from '../components/inviteReceiveModal'
 import StudentInviteModal from '../components/StudentInviteModal'
-import YourTurnModal from '../components/yourTurnModal'
+
+
 
 import { AuthRequired } from '../components/authProvider'
 
@@ -92,7 +93,7 @@ function Calendar() {
             buttonText={'Invite'}
             placeholder={'Add student to your group...'}
           ></StudentInviteModal>
-          <YourTurnModal></YourTurnModal>
+          {/* <TaWaitingModal isYourTurn = {true}> </TaWaitingModal> */}
         </div>
       }
     >
