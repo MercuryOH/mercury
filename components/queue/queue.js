@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { Label, Button } from 'semantic-ui-react'
 import styled from 'styled-components'
-import QueueWebSocket from './queuews'
+import QueueWebSocketController from './queuews'
 import * as api from '../../util/mercuryService'
 import { AuthRequired } from '../../components/authProvider'
 import YourTurnModal from '../yourTurnModal'
@@ -21,7 +21,7 @@ class Queue extends Component {
     this.state = {
       displayStudentsStyle: { display: 'grid' },
       iconToDisplay: 'caret square down outline',
-      connection: new QueueWebSocket(this),
+      queueWebSocketController: new QueueWebSocketController(this),
       studentsInQueue: [],
       me: {},
       classData: [],
@@ -36,7 +36,7 @@ class Queue extends Component {
 
   componentDidMount() {
     this.courseId = Number(window.location.href.split('/')[4])
-    this.state.connection.start()
+    this.state.queueWebSocketController.start()
 
     let me = {}
     let classData = {}
@@ -78,7 +78,7 @@ class Queue extends Component {
       return
     }
 
-    this.state.connection.addMeToQueue()
+    this.state.queueWebSocketController.addMeToQueue()
   }
 
   removeMeFromQueue() {
@@ -89,7 +89,7 @@ class Queue extends Component {
       return
     }
 
-    this.state.connection.removeMeFromQueue()
+    this.state.queueWebSocketController.removeMeFromQueue()
   }
 
   getRoleForClass() {
@@ -107,7 +107,7 @@ class Queue extends Component {
   }
 
   getNextStudentInQueue() {
-    this.state.connection.getNextStudent()
+    this.state.queueWebSocketController.getNextStudent()
   }
 
   getButtonToDisplay() {
@@ -202,7 +202,7 @@ class Queue extends Component {
 
   render() {
     console.log(`Next Student: ${this.state.inviteNextStudent}`)
-    const { connection } = this.state
+    const { queueWebSocketController: connection } = this.state
 
     if (!connection) {
       return null

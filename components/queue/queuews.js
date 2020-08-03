@@ -5,7 +5,7 @@ const url = 'ws://localhost:8080'
  * functions as a controller for the queue state
  */
 
-export default class QueueWebSocket {
+export default class QueueWebSocketController {
   constructor(component) {
     this.component = component
   }
