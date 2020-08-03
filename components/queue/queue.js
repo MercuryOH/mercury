@@ -183,7 +183,6 @@ class Queue extends Component {
   createQueueLabel(student) {
     return (
       <QueueLabel
-        vertical
         style={{
           fontSize: '1.2vw',
           textAlign: 'center',
