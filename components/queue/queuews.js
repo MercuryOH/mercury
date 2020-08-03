@@ -8,6 +8,7 @@ const url = 'ws://localhost:8080'
 export default class QueueWebSocketController {
   constructor(component) {
     this.component = component
+    this.started = false
   }
 
   start() {
@@ -15,6 +16,11 @@ export default class QueueWebSocketController {
     this.connection.onopen = this.processConnectionOpen.bind(this)
     this.connection.onerror = this.processConnectionError.bind(this)
     this.connection.onmessage = this.processConnectionMessage.bind(this)
+    this.started = true
+  }
+
+  hasStarted() {
+    return this.started
   }
 
   processConnectionOpen() {

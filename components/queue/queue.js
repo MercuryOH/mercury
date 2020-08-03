@@ -110,6 +110,10 @@ class Queue extends Component {
   }
 
   getButtonToDisplay() {
+    if (this.getRoleForClass() === null) {
+      return null
+    }
+
     if (this.isStudent()) {
       const buttonToDisplay = this.state.inQueue ? (
         <Button
@@ -205,9 +209,9 @@ class Queue extends Component {
 
   render() {
     console.log(`Next Student: ${this.state.inviteNextStudent}`)
-    const { queueWebSocketController: connection } = this.state
+    const { queueWebSocketController } = this.state
 
-    if (!connection) {
+    if (!queueWebSocketController.hasStarted()) {
       return null
     }
 
