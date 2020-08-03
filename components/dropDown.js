@@ -31,15 +31,6 @@ function DropDown() {
     'black',
   ]
 
-  /*const sClasses = [
-      'CS 2110',
-      'CS 2800',
-      'MATH 2940',
-    ]*/
-
-  // const taClasses = ['CS 1110']
-  const taClasses = []
-
   function zip() {
     var args = [].slice.call(arguments)
     var shortest =
@@ -72,24 +63,23 @@ function DropDown() {
                 <div>
                   <List relaxed>
                     <>
-                      {zip(colors,classes).map((zipped) => (
-                        <List.Item key={`class_${zipped[1].id}`}>
-                          <List.Content>
-                            <Link href={`/classes/${zipped[1].id}`}>
-                              <Button
-                                style={{
-                                  fontSize: '1vw',
-                                  width: '100%',
-                                  minWidth: '41px',
-                                }}
-                                color={zipped[0]}
-                                content={zipped[1].name}
-                              />
-
-                            </Link>
-                          </List.Content>
-                        </List.Item>
-                      ))}
+                    {zip(colors,classes).filter((zipped) => zipped[1].role === 'Student').map((zipped) => (
+                      <List.Item key={`class_${zipped[1].id}`}>
+                        <List.Content>
+                          <Link href={`/classes/${zipped[1].id}`}>
+                            <Button
+                              style={{
+                                fontSize: '1vw',
+                                width: '100%',
+                                minWidth: '41px',
+                              }}
+                              color={zipped[0]}
+                              content={zipped[1].name}
+                            />
+                          </Link>
+                        </List.Content>
+                      </List.Item>
+                    ))}
                     </>
                   </List>
                 </div>
@@ -103,21 +93,23 @@ function DropDown() {
               content: (
                 <div>
                   <List relaxed>
-                    {zip(colors, taClasses).map((zipped) => (
-                      <List.Item>
-                        <List.Content>
+                  {zip(colors,classes).filter((zipped) => zipped[1].role === 'Professor').map((zipped) => (
+                    <List.Item key={`class_${zipped[1].id}`}>
+                      <List.Content>
+                        <Link href={`/classes/${zipped[1].id}`}>
                           <Button
-                            color={zipped[0]}
-                            content={zipped[1]}
                             style={{
                               fontSize: '1vw',
                               width: '100%',
                               minWidth: '41px',
                             }}
-                          ></Button>
-                        </List.Content>
-                      </List.Item>
-                    ))}
+                            color={zipped[0]}
+                            content={zipped[1].name}
+                          />
+                        </Link>
+                      </List.Content>
+                    </List.Item>
+                  ))}
                   </List>
                 </div>
               ),
