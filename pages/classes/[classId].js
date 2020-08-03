@@ -15,7 +15,11 @@ const Vonage = dynamic(() => import('../../components/vonage'), {
 function ClassPage() {
   const router = useRouter()
   const [groups, setGroups] = useState([])
-  const [currentClass, setCurrentClass] = useState({id: "", name: "bob", Groups: []})
+  const [currentClass, setCurrentClass] = useState({
+    id: '',
+    name: 'bob',
+    Groups: [],
+  })
   const [vonageCred, setVonageCred] = useState(null)
   const { classId } = router.query
 
@@ -28,8 +32,8 @@ function ClassPage() {
       .catch(console.error)
   }, [classId])
 
-  const handleBack = () => {
-    router.push('/calendar')
+  const handleBack = async () => {
+    await router.push('/calendar')
   }
 
   const handleSelectGroup = (group) => {
@@ -45,13 +49,13 @@ function ClassPage() {
         <div style={{ height: '100%', marginLeft: '2.5%' }}>
           <Button.Group
             size="huge"
-            style={{ marginBottom: 12, width: '100%'}}
+            style={{ marginBottom: 12, width: '100%' }}
             fluid
           >
             <Button
               compact
               icon="angle left"
-              content= {currentClass.name}
+              content={currentClass.name}
               style={{
                 fontSize: '1.5vw',
                 textAlign: 'left',
@@ -92,26 +96,26 @@ function ClassPage() {
                   content: (
                     <div style={{ paddingLeft: 20 }}>
                       <List relaxed>
-                        {currentClass.Groups
-                          .filter((group) => group.type === 'discussion')
-                          .map((group) => (
-                            <List.Item
-                              key={`discussion_${group.id}`}
-                              onClick={() => handleSelectGroup(group)}
-                              style={{
-                                fontSize: '.8vw',
-                                textAlign: 'left',
-                                width: '75%',
-                                marginBottom: '2%',
-                                minWidth: '41px',
-                              }}
-                            >
-                              <List.Icon name="sound" />
-                              <List.Content>
-                                <List.Header as="a">{group.name}</List.Header>
-                              </List.Content>
-                            </List.Item>
-                          ))}
+                        {currentClass.Groups.filter(
+                          (group) => group.type === 'discussion'
+                        ).map((group) => (
+                          <List.Item
+                            key={`discussion_${group.id}`}
+                            onClick={() => handleSelectGroup(group)}
+                            style={{
+                              fontSize: '.8vw',
+                              textAlign: 'left',
+                              width: '75%',
+                              marginBottom: '2%',
+                              minWidth: '41px',
+                            }}
+                          >
+                            <List.Icon name="sound" />
+                            <List.Content>
+                              <List.Header as="a">{group.name}</List.Header>
+                            </List.Content>
+                          </List.Item>
+                        ))}
                       </List>
                     </div>
                   ),
@@ -124,26 +128,26 @@ function ClassPage() {
                   content: (
                     <div style={{ paddingLeft: 20 }}>
                       <List relaxed>
-                        {currentClass.Groups
-                          .filter((group) => group.type === 'group')
-                          .map((group) => (
-                            <List.Item
-                              key={`private_group_${group.id}`}
-                              onClick={() => handleSelectGroup(group)}
-                              style={{
-                                fontSize: '.8vw',
-                                textAlign: 'left',
-                                width: '75%',
-                                marginBottom: '2%',
-                                minWidth: '41px',
-                              }}
-                            >
-                              <List.Icon name="lock" />
-                              <List.Content>
-                                <List.Header as="a">{group.name}</List.Header>
-                              </List.Content>
-                            </List.Item>
-                          ))}
+                        {currentClass.Groups.filter(
+                          (group) => group.type === 'group'
+                        ).map((group) => (
+                          <List.Item
+                            key={`private_group_${group.id}`}
+                            onClick={() => handleSelectGroup(group)}
+                            style={{
+                              fontSize: '.8vw',
+                              textAlign: 'left',
+                              width: '75%',
+                              marginBottom: '2%',
+                              minWidth: '41px',
+                            }}
+                          >
+                            <List.Icon name="lock" />
+                            <List.Content>
+                              <List.Header as="a">{group.name}</List.Header>
+                            </List.Content>
+                          </List.Item>
+                        ))}
                       </List>
                     </div>
                   ),

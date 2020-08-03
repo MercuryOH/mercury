@@ -21,7 +21,7 @@ function LoginPage() {
     const user = await login(values.email, values.password)
 
     if (user) {
-      router.push('/calendar')
+      await router.push('/calendar')
     }
 
     setSubmitting(false)
@@ -29,7 +29,7 @@ function LoginPage() {
 
   return (
     <Grid textAlign="center" style={{ height: '100vh' }} verticalAlign="middle">
-      <Grid.Column style={{ maxWidth: 450, minWidth: 300}}>
+      <Grid.Column style={{ maxWidth: 450, minWidth: 300 }}>
         <Header as="h2" color="teal" textAlign="center">
           Mercury | Login
         </Header>

@@ -46,7 +46,7 @@ export function AuthProvider({ children }) {
   const logout = async () => {
     Cookies.remove(MERCURY_TOKEN)
     setUser(null)
-    router.push('/login')
+    await router.push('/login')
   }
 
   return (
