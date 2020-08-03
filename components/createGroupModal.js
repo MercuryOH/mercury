@@ -1,15 +1,17 @@
 import React, { useState } from 'react'
-import { Modal, Button, Header, Search } from 'semantic-ui-react'
+import { Modal, Button, Header, Search, TextArea } from 'semantic-ui-react'
 import * as api from '../util/mercuryService'
 import PropTypes from 'prop-types'
 
 function CreateGroupModal() {
   const [modalState, toggleModal] = useState(false)
 
-  async function createGroup(groupName) {
-    console.log(groupName)
-    //post req to group api
-    const postGroupResponse = await api.postGroup(2, 'fastgoers', 'group')
+  async function createGroup() {
+    var groupName = 'Private Group'
+    const groupNameField = document.getElementById('groupName').value
+    if (groupNameField != '') groupName = groupNameField
+
+    const postGroupResponse = await api.postGroup(2, groupName, 'group')
     console.log(postGroupResponse)
   }
 
@@ -52,6 +54,12 @@ function CreateGroupModal() {
               padding: '5%',
             }}
           >
+            <div class="ui input">
+              <input type="text" placeholder="Group name" id="groupName" />
+            </div>
+
+            <br></br>
+            <br></br>
             <Search
               fluid
               placeholder={'Add students to your group...'}
