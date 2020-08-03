@@ -52,6 +52,7 @@ export default class QueueWebSocket {
 
     switch (msgType) {
       case 'queue': // in this case, the server will send a message indicating the current students in the queue
+        // msg - the new queue
         this.updateStudentsInQueue(msg)
         break
 
@@ -59,7 +60,8 @@ export default class QueueWebSocket {
         this.activateYourTurnModal()
         break
 
-      case 'nextStudentNotified':
+      case 'nextStudentNotified': // in this case, the server lets the TA know that the student has been notified
+        // msg - the name of the student who was notified
         this.activateTAWaitingModal(msg)
         break
 
