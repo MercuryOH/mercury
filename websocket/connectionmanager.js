@@ -58,6 +58,9 @@ class WebSocketConnectionManager {
   }
 
   getSocketOfName(name) {
+    if (name == null) {
+      throw new Error('null socket name')
+    }
     if (this.nameToSocket.has(name)) {
       return this.nameToSocket.get(name)
     }

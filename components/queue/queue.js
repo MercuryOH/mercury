@@ -28,6 +28,7 @@ class Queue extends Component {
       inQueue: false,
       isYourTurn: false,
       inviteNextStudent: false,
+      nextStudentName: '',
     }
 
     this.getRoleForClass.bind(this)
@@ -110,9 +111,7 @@ class Queue extends Component {
   }
 
   getButtonToDisplay() {
-    const userRole = this.getRoleForClass()
-
-    if (userRole === 'Student') {
+    if (this.isStudent()) {
       return (
         <div
           style={{
@@ -156,10 +155,12 @@ class Queue extends Component {
     )
   }
 
-  getYourTurnModal() {
-    const userRole = this.getRoleForClass()
+  isStudent() {
+    return this.getRoleForClass() === 'Student'
+  }
 
-    if (userRole === 'Student') {
+  getYourTurnModal() {
+    if (this.isStudent()) {
       return <YourTurnModal isYourTurn={this.state.isYourTurn} />
     }
 
@@ -167,8 +168,13 @@ class Queue extends Component {
   }
 
   getTAWaitingModal() {
-    if (this.getRoleForClass() !== 'Student') {
-      return <TaWaitingModal inviteNextStudent={this.state.inviteNextStudent} />
+    if (!this.isStudent()) {
+      return (
+        <TaWaitingModal
+          inviteNextStudent={this.state.inviteNextStudent}
+          studentName={this.state.nextStudentName}
+        />
+      )
     }
 
     return null

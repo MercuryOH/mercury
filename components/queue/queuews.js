@@ -32,20 +32,35 @@ export default class QueueWebSocket {
     console.log(`WebSocket error: ${error}`)
   }
 
+  activateYourTurnModal() {
+    this.component.setState({ isYourTurn: true })
+  }
+
+  activateTAWaitingModal(studentName) {
+    this.component.setState({
+      inviteNextStudent: true,
+      nextStudentName: studentName,
+    })
+  }
+
+  updateStudentsInQueue(msg) {
+    this.component.setState({ studentsInQueue: msg })
+  }
+
   processConnectionMessage(e) {
     const { msgType, msg } = JSON.parse(e.data)
 
     switch (msgType) {
       case 'queue': // in this case, the server will send a message indicating the current students in the queue
-        this.component.setState({ studentsInQueue: msg })
+        this.updateStudentsInQueue(msg)
         break
 
-      case 'yourTurn':
-        this.component.setState({ isYourTurn: true }) // activate the yourTurn modal
+      case 'yourTurn': // in this case, which os only if you arw a student, the server notifies that it is your turn
+        this.activateYourTurnModal()
         break
 
       case 'nextStudentNotified':
-        this.component.setState({ inviteNextStudent: true })
+        this.activateTAWaitingModal(msg)
         break
 
       default:

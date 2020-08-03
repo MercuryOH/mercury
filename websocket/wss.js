@@ -1,6 +1,7 @@
 const WebSocket = require('ws')
 const { courseQueue } = require('./coursequeue')
 const { webSocketConnectionManager } = require('./connectionmanager')
+const { default: next } = require('next')
 
 class WebSocketServer {
   start() {
@@ -43,11 +44,12 @@ class WebSocketServer {
 
           case 'next':
             let socketToSend = null
+            let nextStudent = null
 
             while (courseQueue.size(courseId) > 0 && socketToSend === null) {
               // keep searching for the next web socket
 
-              const nextStudent = courseQueue.getNextStudent(courseId)
+              nextStudent = courseQueue.getNextStudent(courseId)
               socketToSend = webSocketConnectionManager.getSocketOfName(
                 nextStudent
               )
@@ -64,7 +66,7 @@ class WebSocketServer {
               ws.send(
                 this.prepareMessage({
                   msgType: 'nextStudentNotified',
-                  msg: 'nextStudentNotified',
+                  msg: nextStudent,
                 })
               )
             }

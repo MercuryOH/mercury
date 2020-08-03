@@ -6,11 +6,15 @@ export default class TaWaitingModal extends Component {
     super(props)
     this.state = {
       modalState: this.props.inviteNextStudent,
+      studentName: this.props.studentName,
     }
   }
 
   componentWillReceiveProps(nextProps) {
-    this.setState({ modalState: nextProps.inviteNextStudent })
+    this.setState({
+      modalState: nextProps.inviteNextStudent,
+      studentName: nextProps.studentName,
+    })
   }
 
   render() {
@@ -34,7 +38,7 @@ export default class TaWaitingModal extends Component {
                 margin: 'auto',
               }}
             >
-              Waiting for the student to respond...
+              {`Waiting for ${this.state.studentName} to respond...`}
             </Header>
 
             <div
