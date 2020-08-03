@@ -13,6 +13,9 @@ function Navbar() {
   const [users, setUsers] = useState([])
   const router = useRouter()
 
+  var name = ''
+  var email = ''
+
   useEffect(() => {
     api
       .getMe()
@@ -21,6 +24,11 @@ function Navbar() {
       })
       .catch(console.error)
   })
+
+  if (users) {
+    name = users.firstName + ' ' + users.lastName
+    email = users.email
+  }
 
   return (
     <Menu size="massive" style={{ marginBottom: 0, zIndex: 1 }} borderless>
@@ -38,8 +46,8 @@ function Navbar() {
             }
           >
             <Dropdown.Menu>
-              <Dropdown.Item text={users.firstName + ' ' + users.lastName} />
-              <Dropdown.Item text={users.email} />
+              <Dropdown.Item text={name} />
+              <Dropdown.Item text={email} />
               <Dropdown.Item
                 text="Logout"
                 onClick={() => router.push('/login')}
