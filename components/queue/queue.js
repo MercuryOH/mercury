@@ -3,7 +3,6 @@ import { Label, Button } from 'semantic-ui-react'
 import styled from 'styled-components'
 import QueueWebSocketController from './queuews'
 import * as api from '../../util/mercuryService'
-import { AuthRequired } from '../../components/authProvider'
 import YourTurnModal from './yourTurnModal'
 import TaWaitingModal from './taWaitingModal'
 
@@ -112,6 +111,24 @@ class Queue extends Component {
 
   getButtonToDisplay() {
     if (this.isStudent()) {
+      const buttonToDisplay = this.state.inQueue ? (
+        <Button
+          onClick={this.removeMeFromQueue.bind(this)}
+          style={{ width: '50%', fontSize: '1vw' }}
+          secondary
+        >
+          Leave Queue
+        </Button>
+      ) : (
+        <Button
+          onClick={this.addMeToQueue.bind(this)}
+          style={{ width: '50%', fontSize: '1vw' }}
+          primary
+        >
+          Join Queue
+        </Button>
+      )
+
       return (
         <div
           style={{
@@ -121,20 +138,7 @@ class Queue extends Component {
             display: 'inline-flex',
           }}
         >
-          <Button
-            onClick={this.addMeToQueue.bind(this)}
-            style={{ width: '50%', fontSize: '1vw' }}
-            primary
-          >
-            Join Queue
-          </Button>
-          <Button
-            onClick={this.removeMeFromQueue.bind(this)}
-            style={{ width: '50%', fontSize: '1vw' }}
-            secondary
-          >
-            Leave Queue
-          </Button>
+          {buttonToDisplay}
         </div>
       )
     }

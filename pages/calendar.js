@@ -7,8 +7,6 @@ import JoinRequestModal from '../components/joinRequestModal'
 import InviteReceiveModal from '../components/inviteReceiveModal'
 import StudentInviteModal from '../components/StudentInviteModal'
 
-
-
 import { AuthRequired } from '../components/authProvider'
 
 import * as api from '../util/mercuryService'

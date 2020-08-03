@@ -79,6 +79,8 @@ export default class QueueWebSocketController {
         msg: JSON.stringify(me),
       })
     )
+
+    this.component.setState({ inQueue: true })
   }
 
   removeMeFromQueue() {
@@ -90,6 +92,8 @@ export default class QueueWebSocketController {
         msg: JSON.stringify(me),
       })
     )
+
+    this.component.setState({ inQueue: false })
   }
 
   getNextStudent() {
