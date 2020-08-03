@@ -1,6 +1,8 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import styled from 'styled-components'
+import { useRouter } from 'next/router'
 import { Menu, Image, Label, Dropdown } from 'semantic-ui-react'
+import * as api from '../util/mercuryService'
 
 const ProfileContainer = styled.div`
   display: flex;
@@ -8,6 +10,18 @@ const ProfileContainer = styled.div`
 `
 
 function Navbar() {
+  const [users, setUsers] = useState([])
+  const router = useRouter()
+
+  useEffect(() => {
+    api
+      .getMe()
+      .then(function (users) {
+        setUsers(users)
+      })
+      .catch(console.error)
+  })
+
   return (
     <Menu size="massive" style={{ marginBottom: 0, zIndex: 1 }} borderless>
       <Menu.Item header>Mercury</Menu.Item>
@@ -24,9 +38,12 @@ function Navbar() {
             }
           >
             <Dropdown.Menu>
-              <Dropdown.Item text="Name" />
-              <Dropdown.Item text="Email" />
-              <Dropdown.Item text="Logout" />
+              <Dropdown.Item text={users.firstName + ' ' + users.lastName} />
+              <Dropdown.Item text={users.email} />
+              <Dropdown.Item
+                text="Logout"
+                onClick={() => router.push('/login')}
+              />
             </Dropdown.Menu>
           </Dropdown>
         </ProfileContainer>
