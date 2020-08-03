@@ -4,8 +4,8 @@ import styled from 'styled-components'
 import QueueWebSocketController from './queuews'
 import * as api from '../../util/mercuryService'
 import { AuthRequired } from '../../components/authProvider'
-import YourTurnModal from '../yourTurnModal'
-import TaWaitingModal from '../taWaitingModal'
+import YourTurnModal from './yourTurnModal'
+import TaWaitingModal from './taWaitingModal'
 
 const QueueDiv = styled.div`
   grid-gap: 2vh;

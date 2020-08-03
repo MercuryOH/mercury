@@ -1,6 +1,5 @@
 import React, { Component } from 'react'
 import { Modal, Button, Header } from 'semantic-ui-react'
-import next from 'next'
 
 export default class TaWaitingModal extends Component {
   constructor(props) {
