@@ -9,11 +9,11 @@ export default class TaWaitingModal extends Component {
       studentName: this.props.studentName,
     }
   }
-  static getDerivedStateFromProps(nextProps, _state) {
-    return {
+  componentWillReceiveProps(nextProps) {
+    this.setState({
       modalState: nextProps.inviteNextStudent,
       studentName: nextProps.studentName,
-    }
+    })
   }
 
   render() {
