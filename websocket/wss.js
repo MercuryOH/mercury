@@ -15,7 +15,7 @@ class WebSocketServer {
        */
 
       ws.on('message', (message) => {
-        let { courseId, msgType, msg } = JSON.parse(message)
+        const { courseId, msgType, msg } = JSON.parse(message)
 
         switch (msgType) {
           case 'greeting':
