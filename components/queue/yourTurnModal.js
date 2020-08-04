@@ -4,23 +4,28 @@ import { Modal, Button, Header } from 'semantic-ui-react'
 export default class YourTurnModal extends Component {
   constructor(props) {
     super(props)
+    this.queueComponent = this.props.queueComponent
+
     this.state = {
       modalState: this.props.isYourTurn,
       timerRunning: false,
+      TAName: this.props.TAName,
     }
   }
 
   componentWillReceiveProps(nextProps) {
-    const { isYourTurn } = nextProps
+    const { isYourTurn, TAName } = nextProps
     const { timerRunning } = this.state
 
     if (isYourTurn && !timerRunning) {
       this.setState(
-        { modalState: nextProps.isYourTurn, timerRunning: true },
+        { modalState: nextProps.isYourTurn, timerRunning: true, TAName },
         this.startTimer
       )
+      return
     }
-    this.setState({ modalState: nextProps.isYourTurn })
+
+    this.setState({ modalState: nextProps.isYourTurn, TAName })
   }
 
   startTimer() {
@@ -28,7 +33,12 @@ export default class YourTurnModal extends Component {
   }
 
   handleTimerEnd() {
+    const { TAName } = this.state
+    const { queueWebSocketController } = this.queueComponent.state
+    queueWebSocketController.signalStudentTimeout(TAName)
+
     this.setState({ modalState: false, timerRunning: false })
+    this.queueComponent.setState({ isYourTurn: false, inQueue: false })
   }
 
   render() {
