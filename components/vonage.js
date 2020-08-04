@@ -1,7 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { OTSession, OTPublisher, OTStreams, OTSubscriber } from 'opentok-react'
-import { Button } from 'semantic-ui-react'
+import { Button, List } from 'semantic-ui-react'
 
 class Vonage extends React.Component {
   constructor(props) {
@@ -32,6 +32,8 @@ class Vonage extends React.Component {
 
   handleSubscribe = () => {
     console.log('Subscribed!')
+    this.parentNode.style.display = 'inline-flex'
+    this.parentNode.parentNode.style.display = 'inline-flex'
   }
 
   handleSessionError = (error) => {
@@ -51,12 +53,6 @@ class Vonage extends React.Component {
 
     return (
       <div>
-        <Button
-          onClick={onLeave}
-          color="red"
-          icon="close"
-          content="Leave call"
-        />
         <OTSession
           apiKey={process.env.NEXT_PUBLIC_VV_API_KEY}
           sessionId={sessionId}
@@ -65,18 +61,24 @@ class Vonage extends React.Component {
           onError={this.handleSessionError}
         >
           <OTPublisher
-            properties={{ publishAudio: true, width: 250, height: 250 }}
+            properties={{ publishAudio: true, width: '100%', height: '40vh'}}
             onPublish={this.handlePublish}
             eventHandlers={this.publishEventHandlers}
             onError={this.handlePublishError}
           />
-          <OTStreams>
+          <OTStreams style = {{display: 'inline-flex'}}>
             <OTSubscriber
-              properties={{ width: 400, height: 400 }}
+              properties={{ width: '100%', height: '40vh' }}
               onSubscribe={this.handleSubscribe}
               onError={this.handleSubscribeError}
             />
           </OTStreams>
+          <Button
+            onClick={onLeave}
+            color="red"
+            icon="close"
+            content="Leave call"
+          />
         </OTSession>
       </div>
     )

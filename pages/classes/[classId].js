@@ -13,8 +13,10 @@ const Vonage = dynamic(() => import('../../components/vonage'), {
 })
 
 function ClassPage() {
+  const [users, setUsers] = useState([])
   const router = useRouter()
   const [currGroup, setCurrGroup] = useState('bs')
+  const [classUsers, setClassUsers] = useState([])
 
   const [groups, setGroups] = useState([])
   const [classes, setClasses] = useState([])
@@ -26,17 +28,42 @@ function ClassPage() {
   const [vonageCred, setVonageCred] = useState(null)
   const { classId } = router.query
 
-  const fetchCurrentClass = () => {
-    api
-      .getClassNG(classId)
-      .then((currentClass) => setCurrentClass(currentClass))
-      .catch(console.error)
-  }
+  const fetchCurrentClass = async () => {
+    var test = api.getClassNG(classId)
+    if (test === null){
+      await router.push('/login')
+    }
+    else {
+      test.then((currentClass) => setCurrentClass(currentClass)).catch(console.error)
+      }
+    }
+
+    useEffect(() => {
+      api
+        .getMe()
+        .then((users) => setUsers(users))
+        .catch(console.error)
+    })
+
+    const checkUser = async () => {
+      var inclass = ""
+      var classUsersList = api.getClassUsers(classId)
+      classUsersList.then((classUsers) => setClassUsers(classUsers)).catch(console.error)
+      /*Array.from(classUsersList).forEach((c) => {
+        if (c.UserId === api.getMe().id){
+          inclass = "true"
+        }
+      }
+    )
+      if (inclass === ""){
+        await router.push('/calendar')
+      }*/
+    }
 
   useEffect(() => {
     if (!classId) return
-
     fetchCurrentClass()
+    //checkUser()
   }, [classId])
 
   useEffect(() => {

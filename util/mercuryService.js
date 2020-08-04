@@ -62,6 +62,20 @@ export async function getClassNG(classId) {
   }
 }
 
+export async function getClassUsers(classId) {
+  try {
+    const { data } = await axios.get(`/api/users/${classId}`, {
+      headers: {
+        authorization: token,
+      },
+    })
+
+    return data
+  } catch (e) {
+    return null
+  }
+}
+
 export async function getGroups(classId) {
   try {
     const { data } = await axios.get(`/api/classes/${classId}/groups`, {
