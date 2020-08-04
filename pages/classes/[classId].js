@@ -14,6 +14,8 @@ const Vonage = dynamic(() => import('../../components/vonage'), {
 
 function ClassPage() {
   const router = useRouter()
+  const [currGroup, setCurrGroup] = useState('bs')
+
   const [groups, setGroups] = useState([])
   const [currentClass, setCurrentClass] = useState({
     id: '',
@@ -51,6 +53,26 @@ function ClassPage() {
     await api.postGroup(classId, group.name, group.type)
 
     fetchCurrentClass()
+  }
+
+  const changeColor = (groupId) => {
+    setCurrGroup(groupId)
+  }
+
+  const unClickedGroupsStyle = {
+    fontSize: '.8vw',
+    textAlign: 'left',
+    width: '75%',
+    marginBottom: '2%',
+    minWidth: '41px',
+  }
+  const clickedGroupsStyle = {
+    fontSize: '.8vw',
+    textAlign: 'left',
+    width: '75%',
+    marginBottom: '2%',
+    minWidth: '41px',
+    background: '#e0e1e2',
   }
 
   return (
@@ -111,14 +133,15 @@ function ClassPage() {
                         ).map((group) => (
                           <List.Item
                             key={`discussion_${group.id}`}
-                            onClick={() => handleSelectGroup(group)}
-                            style={{
-                              fontSize: '.8vw',
-                              textAlign: 'left',
-                              width: '75%',
-                              marginBottom: '2%',
-                              minWidth: '41px',
+                            onClick={() => {
+                              handleSelectGroup(group)
+                              changeColor(group.id)
                             }}
+                            style={
+                              currGroup == group.id
+                                ? clickedGroupsStyle
+                                : unClickedGroupsStyle
+                            }
                           >
                             <List.Icon name="sound" />
                             <List.Content>
@@ -143,14 +166,15 @@ function ClassPage() {
                         ).map((group) => (
                           <List.Item
                             key={`private_group_${group.id}`}
-                            onClick={() => handleSelectGroup(group)}
-                            style={{
-                              fontSize: '.8vw',
-                              textAlign: 'left',
-                              width: '75%',
-                              marginBottom: '2%',
-                              minWidth: '41px',
+                            onClick={() => {
+                              handleSelectGroup(group)
+                              changeColor(group.id)
                             }}
+                            style={
+                              currGroup == group.id
+                                ? clickedGroupsStyle
+                                : unClickedGroupsStyle
+                            }
                           >
                             <List.Icon name="lock" />
                             <List.Content>
