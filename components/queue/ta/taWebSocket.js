@@ -5,7 +5,7 @@ const url = 'ws://localhost:8080'
  * functions as a controller for the queue state
  */
 
-export default class QueueWebSocketController {
+export default class TAWebSocketController {
   constructor(component) {
     this.component = component
     this.started = false
@@ -39,10 +39,6 @@ export default class QueueWebSocketController {
     console.log(`WebSocket error: ${error}`)
   }
 
-  activateYourTurnModal(TAName) {
-    this.component.setState({ isYourTurn: true, TAName })
-  }
-
   activateTAWaitingModal(studentName) {
     this.component.setState({
       inviteNextStudent: true,
@@ -70,11 +66,6 @@ export default class QueueWebSocketController {
         this.updateStudentsInQueue(msg)
         break
 
-      case 'yourTurn': // in this case, which os only if you arw a student, the server notifies that it is your turn
-        // msg - the TA that notifies you
-        this.activateYourTurnModal(msg)
-        break
-
       case 'nextStudentNotified': // in this case, the server lets the TA know that the student has been notified
         // msg - the name of the student who was notified
         this.activateTAWaitingModal(msg)
@@ -88,46 +79,11 @@ export default class QueueWebSocketController {
     }
   }
 
-  addMeToQueue() {
-    const { me } = this.component.state
-
-    this.connection.send(
-      this.prepareMessage({
-        msgType: 'addToQueue',
-        msg: JSON.stringify(me),
-      })
-    )
-
-    this.component.setState({ inQueue: true })
-  }
-
-  removeMeFromQueue() {
-    const { me } = this.component.state
-
-    this.connection.send(
-      this.prepareMessage({
-        msgType: 'removeFromQueue',
-        msg: JSON.stringify(me),
-      })
-    )
-
-    this.component.setState({ inQueue: false })
-  }
-
   getNextStudent() {
     this.connection.send(
       this.prepareMessage({
         msgType: 'next',
         msg: this.fullName,
-      })
-    )
-  }
-
-  signalStudentTimeout(TAName) {
-    this.connection.send(
-      this.prepareMessage({
-        msgType: 'studentTimeout',
-        msg: TAName,
       })
     )
   }
