@@ -23,17 +23,11 @@ class WebSocketServer {
             break
 
           case 'addToQueue':
-            const studentToAdd = JSON.parse(msg)
-            const studentToAddName = `${studentToAdd.firstName} ${studentToAdd.lastName}`
-            courseQueue.addStudentToQueue(courseId, studentToAddName)
+            courseQueue.addStudentToQueue(courseId, msg)
             break
 
           case 'removeFromQueue':
-            const studentToRemove = JSON.parse(msg)
-            courseQueue.removeStudentFromQueue(
-              courseId,
-              `${studentToRemove.firstName} ${studentToRemove.lastName}`
-            )
+            courseQueue.removeStudentFromQueue(courseId, msg)
             break
 
           case 'studentTimeout':
@@ -50,7 +44,8 @@ class WebSocketServer {
 
             break
 
-          case 'next':
+          case 'next': // the TA has requested for the next student to be notified
+            // msg - the TA's name
             let socketToSend = null
             let nextStudent = null
 

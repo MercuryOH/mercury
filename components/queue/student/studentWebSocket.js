@@ -64,12 +64,10 @@ export default class StudentWebSocketController {
   }
 
   addMeToQueue() {
-    const { me } = this.component.state
-
     this.connection.send(
       this.prepareMessage({
         msgType: 'addToQueue',
-        msg: JSON.stringify(me),
+        msg: this.fullName,
       })
     )
 
@@ -77,12 +75,10 @@ export default class StudentWebSocketController {
   }
 
   removeMeFromQueue() {
-    const { me } = this.component.state
-
     this.connection.send(
       this.prepareMessage({
         msgType: 'removeFromQueue',
-        msg: JSON.stringify(me),
+        msg: this.fullName,
       })
     )
 
