@@ -23,13 +23,17 @@ function ClassPage() {
   const [vonageCred, setVonageCred] = useState(null)
   const { classId } = router.query
 
-  useEffect(() => {
-    if (!classId) return
-
+  const fetchCurrentClass = () => {
     api
       .getClassNG(classId)
       .then((currentClass) => setCurrentClass(currentClass))
       .catch(console.error)
+  }
+
+  useEffect(() => {
+    if (!classId) return
+
+    fetchCurrentClass()
   }, [classId])
 
   const handleBack = async () => {
@@ -41,6 +45,12 @@ function ClassPage() {
       .postGroupToken(classId, group.id)
       .then(({ token }) => setVonageCred({ sessionId: group.sessionId, token }))
       .catch(console.error)
+  }
+
+  const handleCreateGroup = async (group) => {
+    await api.postGroup(classId, group.name, group.type)
+
+    fetchCurrentClass()
   }
 
   return (
@@ -162,7 +172,7 @@ function ClassPage() {
               bottom: 14,
             }}
           >
-            <CreateGroupModal />
+            <CreateGroupModal onCreate={handleCreateGroup} />
           </div>
         </div>
       }
