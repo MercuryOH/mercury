@@ -1,6 +1,7 @@
 const { courseQueue } = require('../util/coursequeue')
 const { webSocketConnectionManager } = require('../util/connectionmanager')
 const { prepareMessage } = require('../util/util')
+
 /**
  * Handles web socket messages sent by a student user
  */
