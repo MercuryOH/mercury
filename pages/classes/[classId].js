@@ -53,7 +53,10 @@ function ClassPage() {
   const handleSelectGroup = (group) => {
     api
       .postGroupToken(classId, group.id)
-      .then(({ token }) => setVonageCred({ sessionId: group.sessionId, token }))
+      .then(({ token }) => {
+        setVonageCred(null)
+        setVonageCred({ sessionId: group.sessionId, token })
+      })
       .catch(console.error)
   }
 
@@ -76,7 +79,7 @@ function ClassPage() {
     }
 
     if (getRole() === 'Student') {
-      return <CreateGroupModal onCreate={handleCreateGroup}/>
+      return <CreateGroupModal onCreate={handleCreateGroup} />
     } else {
       return (
         <Button
@@ -98,14 +101,15 @@ function ClassPage() {
               (group) => (
                 <List.Item
                   key={`office`}
-                  onClick={() => handleSelectGroup(group)}
-                  style={{
-                    fontSize: '.8vw',
-                    textAlign: 'left',
-                    width: '75%',
-                    marginBottom: '2%',
-                    minWidth: '41px',
+                  onClick={() => {
+                    handleSelectGroup(group)
+                    changeColor(group.id)
                   }}
+                  style={
+                    currGroup == group.id && vonageCred !== null
+                      ? clickedGroupsStyle
+                      : unClickedGroupsStyle
+                  }
                 >
                   <List.Icon name="graduation cap" />
                   <List.Content>
@@ -144,6 +148,9 @@ function ClassPage() {
     marginBottom: '2%',
     minWidth: '41px',
     background: '#e0e1e2',
+    borderRadius: 10,
+    borderWidth: 1,
+    borderColor: '#fff',
   }
 
   return (
@@ -210,7 +217,7 @@ function ClassPage() {
                               changeColor(group.id)
                             }}
                             style={
-                              currGroup == group.id
+                              currGroup == group.id && vonageCred !== null
                                 ? clickedGroupsStyle
                                 : unClickedGroupsStyle
                             }
@@ -243,7 +250,7 @@ function ClassPage() {
                               changeColor(group.id)
                             }}
                             style={
-                              currGroup == group.id
+                              currGroup == group.id && vonageCred !== null
                                 ? clickedGroupsStyle
                                 : unClickedGroupsStyle
                             }
