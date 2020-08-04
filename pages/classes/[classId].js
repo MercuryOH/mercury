@@ -57,8 +57,8 @@ function ClassPage() {
       .catch(console.error)
   }
 
-function getRole(){
-  let userRole = null
+  function getRole() {
+    let userRole = null
 
     classes.forEach((row) => {
       let { id, role } = row
@@ -68,17 +68,15 @@ function getRole(){
     })
 
     return userRole
-}
+  }
 
   function getButtonToDisplay() {
-    
-
     if (getRole() === null) {
       return null
     }
-    
+
     if (getRole() === 'Student') {
-      return <CreateGroupModal />
+      return <CreateGroupModal onCreate={handleCreateGroup}/>
     } else {
       return (
         <Button
@@ -91,43 +89,36 @@ function getRole(){
     }
   }
 
-  function showOffice(){
-    if (getRole() === null) {
-      return null
-    }
-    
-    if (getRole() === 'Student'||getRole() === null) {
-      return null
-    } else {
+  function showOffice() {
+    if (getRole() !== 'Student' && getRole() !== null) {
       return (
         <div style={{ paddingLeft: 20 }}>
-            <List relaxed>
-              
-            {currentClass.Groups.filter(
-                          (group) => group.type === 'office'
-                        ).map((group) => (
-                          <List.Item
-                            key={`office`}
-                            onClick={() => handleSelectGroup(group)}
-                            style={{
-                              fontSize: '.8vw',
-                              textAlign: 'left',
-                              width: '75%',
-                              marginBottom: '2%',
-                              minWidth: '41px',
-                            }}
-                          >
-                            <List.Icon name="graduation cap" />
-                            <List.Content>
-                              <List.Header as="a">TA Office</List.Header>
-                            </List.Content>
-                          </List.Item>
-                        ))}
-             
-            </List>
-          </div>
+          <List relaxed>
+            {currentClass.Groups.filter((group) => group.type === 'office').map(
+              (group) => (
+                <List.Item
+                  key={`office`}
+                  onClick={() => handleSelectGroup(group)}
+                  style={{
+                    fontSize: '.8vw',
+                    textAlign: 'left',
+                    width: '75%',
+                    marginBottom: '2%',
+                    minWidth: '41px',
+                  }}
+                >
+                  <List.Icon name="graduation cap" />
+                  <List.Content>
+                    <List.Header as="a">TA Office</List.Header>
+                  </List.Content>
+                </List.Item>
+              )
+            )}
+          </List>
+        </div>
       )
     }
+    return null
   }
   const handleCreateGroup = async (group) => {
     await api.postGroup(classId, group.name, group.type)
