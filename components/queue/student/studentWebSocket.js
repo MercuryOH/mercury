@@ -86,11 +86,11 @@ export default class StudentWebSocketController {
     this.component.setState({ inQueue: false })
   }
 
-  signalStudentTimeout(TAName) {
+  signalStudentTimeout() {
     this.connection.send(
       this.prepareMessage({
         msgType: 'studentTimeout',
-        msg: TAName,
+        msg: this.component.state.TAName,
       })
     )
   }

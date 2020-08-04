@@ -11,7 +11,6 @@ export default class YourTurnModal extends Component {
     this.state = {
       modalState: this.props.isYourTurn,
       timerRunning: false,
-      TAName: this.props.TAName,
     }
   }
 
@@ -35,12 +34,11 @@ export default class YourTurnModal extends Component {
   }
 
   handleTimerEnd() {
-    const { TAName } = this.state
     const { queueWebSocketController } = this.queueComponent.state
-    queueWebSocketController.signalStudentTimeout(TAName)
+    queueWebSocketController.signalStudentTimeout()
 
     this.setState({ modalState: false, timerRunning: false })
-    this.queueComponent.setState({ isYourTurn: false })
+    this.queueComponent.setState({ isYourTurn: false, TAName: '' })
   }
 
   render() {

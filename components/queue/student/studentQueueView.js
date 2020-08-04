@@ -149,7 +149,6 @@ export default class StudentQueueView extends Component {
         <YourTurnModal
           isYourTurn={this.state.isYourTurn}
           queueComponent={this}
-          TAName={this.state.TAName}
         />
 
         <Button.Group
