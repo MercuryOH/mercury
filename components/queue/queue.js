@@ -28,6 +28,7 @@ class Queue extends Component {
       isYourTurn: false,
       inviteNextStudent: false,
       nextStudentName: '',
+      TAName: '',
     }
 
     this.getRoleForClass.bind(this)
@@ -35,7 +36,6 @@ class Queue extends Component {
 
   componentDidMount() {
     this.courseId = Number(window.location.href.split('/')[4])
-    this.state.queueWebSocketController.start()
 
     let me = {}
     let classData = {}
@@ -44,6 +44,9 @@ class Queue extends Component {
       .getMe()
       .then((meData) => {
         me = meData
+        const { firstName, lastName } = meData
+        const fullName = `${firstName} ${lastName}`
+        this.state.queueWebSocketController.start(fullName)
       })
       .then(() => api.getClasses())
       .then((classPayload) => {
@@ -169,7 +172,13 @@ class Queue extends Component {
 
   getYourTurnModal() {
     if (this.isStudent()) {
-      return <YourTurnModal isYourTurn={this.state.isYourTurn} />
+      return (
+        <YourTurnModal
+          isYourTurn={this.state.isYourTurn}
+          queueComponent={this}
+          TAName={this.state.TAName}
+        />
+      )
     }
 
     return null
@@ -208,7 +217,6 @@ class Queue extends Component {
   }
 
   render() {
-    console.log(`Next Student: ${this.state.inviteNextStudent}`)
     const { queueWebSocketController } = this.state
 
     if (!queueWebSocketController.hasStarted()) {

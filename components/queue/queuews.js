@@ -11,7 +11,8 @@ export default class QueueWebSocketController {
     this.started = false
   }
 
-  start() {
+  start(fullName) {
+    this.fullName = fullName
     this.connection = new WebSocket(url)
     this.connection.onopen = this.processConnectionOpen.bind(this)
     this.connection.onerror = this.processConnectionError.bind(this)
@@ -24,12 +25,12 @@ export default class QueueWebSocketController {
   }
 
   processConnectionOpen() {
-    const { courseId } = this.component
+    const { fullName } = this
 
     this.connection.send(
       this.prepareMessage({
         msgType: 'greeting',
-        msg: courseId,
+        msg: fullName,
       })
     ) // notify the server which courseId this websocket belongs to
   }
@@ -38,14 +39,21 @@ export default class QueueWebSocketController {
     console.log(`WebSocket error: ${error}`)
   }
 
-  activateYourTurnModal() {
-    this.component.setState({ isYourTurn: true })
+  activateYourTurnModal(TAName) {
+    this.component.setState({ isYourTurn: true, TAName })
   }
 
   activateTAWaitingModal(studentName) {
     this.component.setState({
       inviteNextStudent: true,
       nextStudentName: studentName,
+    })
+  }
+
+  removeTAWaitingModal() {
+    this.component.setState({
+      inviteNextStudent: false,
+      nextStudentName: '',
     })
   }
 
@@ -63,7 +71,8 @@ export default class QueueWebSocketController {
         break
 
       case 'yourTurn': // in this case, which os only if you arw a student, the server notifies that it is your turn
-        this.activateYourTurnModal()
+        // msg - the TA that notifies you
+        this.activateYourTurnModal(msg)
         break
 
       case 'nextStudentNotified': // in this case, the server lets the TA know that the student has been notified
@@ -71,6 +80,9 @@ export default class QueueWebSocketController {
         this.activateTAWaitingModal(msg)
         break
 
+      case 'studentTimeout': // in this case, the server lets the TA know that the student has timed out
+        this.removeTAWaitingModal()
+        break
       default:
         throw new Error(`Message ${msg} is incorrectly formatted`)
     }
@@ -106,7 +118,16 @@ export default class QueueWebSocketController {
     this.connection.send(
       this.prepareMessage({
         msgType: 'next',
-        msg: 'next',
+        msg: this.fullName,
+      })
+    )
+  }
+
+  signalStudentTimeout(TAName) {
+    this.connection.send(
+      this.prepareMessage({
+        msgType: 'studentTimeout',
+        msg: TAName,
       })
     )
   }

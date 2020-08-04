@@ -1,7 +1,6 @@
 const WebSocket = require('ws')
 const { courseQueue } = require('./coursequeue')
 const { webSocketConnectionManager } = require('./connectionmanager')
-const { default: next } = require('next')
 
 class WebSocketServer {
   start() {
@@ -20,18 +19,13 @@ class WebSocketServer {
         switch (msgType) {
           case 'greeting':
             webSocketConnectionManager.addSocketForCourse(courseId, ws) // this websocket is now associated with the course
+            webSocketConnectionManager.associateUserWithSocket(msg, ws)
             break
 
           case 'addToQueue':
             const studentToAdd = JSON.parse(msg)
             const studentToAddName = `${studentToAdd.firstName} ${studentToAdd.lastName}`
             courseQueue.addStudentToQueue(courseId, studentToAddName)
-
-            webSocketConnectionManager.associateStudentWithSocket(
-              studentToAddName,
-              ws
-            )
-
             break
 
           case 'removeFromQueue':
@@ -40,6 +34,20 @@ class WebSocketServer {
               courseId,
               `${studentToRemove.firstName} ${studentToRemove.lastName}`
             )
+            break
+
+          case 'studentTimeout':
+            let correspondingTA = webSocketConnectionManager.getSocketOfName(
+              msg
+            )
+
+            correspondingTA.send(
+              this.prepareMessage({
+                msgType: 'studentTimeout',
+                msg: 'studentTimeout',
+              })
+            )
+
             break
 
           case 'next':
@@ -59,7 +67,7 @@ class WebSocketServer {
               socketToSend.send(
                 this.prepareMessage({
                   msgType: 'yourTurn',
-                  msg: 'yourTurn',
+                  msg,
                 })
               )
 
@@ -70,7 +78,6 @@ class WebSocketServer {
                 })
               )
             }
-
             break
 
           default:

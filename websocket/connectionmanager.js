@@ -53,7 +53,7 @@ class WebSocketConnectionManager {
     })
   }
 
-  associateStudentWithSocket(name, socket) {
+  associateUserWithSocket(name, socket) {
     this.nameToSocket.set(name, socket)
   }
 
