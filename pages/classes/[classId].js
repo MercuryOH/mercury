@@ -15,6 +15,7 @@ const Vonage = dynamic(() => import('../../components/vonage'), {
 function ClassPage() {
   const router = useRouter()
   const [groups, setGroups] = useState([])
+  const [classes, setClasses] = useState([])
   const [currentClass, setCurrentClass] = useState({
     id: '',
     name: 'bob',
@@ -32,6 +33,13 @@ function ClassPage() {
       .catch(console.error)
   }, [classId])
 
+  useEffect(() => {
+    api
+      .getClasses()
+      .then((classes) => setClasses(classes))
+      .catch(console.error)
+  }, [])
+
   const handleBack = async () => {
     await router.push('/calendar')
   }
@@ -41,6 +49,34 @@ function ClassPage() {
       .postGroupToken(classId, group.id)
       .then(({ token }) => setVonageCred({ sessionId: group.sessionId, token }))
       .catch(console.error)
+  }
+
+  function getButtonToDisplay() {
+    let userRole = null
+
+    classes.forEach((row) => {
+      let { id, role } = row
+      if (currentClass.id === Number(id)) {
+        userRole = role
+      }
+    })
+
+    if (userRole === null) {
+      return null
+    }
+    console.log(userRole)
+    if (userRole === 'Student') {
+      return <CreateGroupModal />
+    } else {
+      return (
+        <Button
+          color="teal"
+          content="Modify Discussions"
+          fluid
+          style={{ fontSize: '1vw' }}
+        />
+      )
+    }
   }
 
   return (
@@ -162,7 +198,8 @@ function ClassPage() {
               bottom: 14,
             }}
           >
-            <CreateGroupModal />
+            {/* <CreateGroupModal /> */}
+            {getButtonToDisplay()}
           </div>
         </div>
       }

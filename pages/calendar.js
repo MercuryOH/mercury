@@ -11,35 +11,6 @@ import { AuthRequired } from '../components/authProvider'
 
 import * as api from '../util/mercuryService'
 
-const friendOptions = [
-  {
-    key: 'Jenny Hess',
-    text: 'Jenny Hess',
-    value: 'Jenny Hess',
-    image: {
-      avatar: true,
-      src: 'https://react.semantic-ui.com/images/avatar/small/jenny.jpg',
-    },
-  },
-  {
-    key: 'Elliot Fu',
-    text: 'Elliot Fu',
-    value: 'Elliot Fu',
-    image: {
-      avatar: true,
-      src: 'https://react.semantic-ui.com/images/avatar/small/elliot.jpg',
-    },
-  },
-  {
-    key: 'Stevie Feliciano',
-    text: 'Stevie Feliciano',
-    value: 'Stevie Feliciano',
-    image: {
-      avatar: true,
-      src: 'https://react.semantic-ui.com/images/avatar/small/stevie.jpg',
-    },
-  },
-]
 
 function Calendar() {
   const [classes, setClasses] = useState([])
@@ -81,7 +52,7 @@ function Calendar() {
           <LargeLabel content={<p>Classes</p>}></LargeLabel>
           <DropDown></DropDown>
 
-          <JoinRequestModal
+          {/* <JoinRequestModal
             content={'[student] requested to join your group'}
           ></JoinRequestModal>
           <InviteReceiveModal
@@ -90,7 +61,7 @@ function Calendar() {
           <StudentInviteModal
             buttonText={'Invite'}
             placeholder={'Add student to your group...'}
-          ></StudentInviteModal>
+          ></StudentInviteModal> */}
           {/* <TaWaitingModal isYourTurn = {true}> </TaWaitingModal> */}
         </div>
       }
