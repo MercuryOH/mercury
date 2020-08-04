@@ -1,18 +1,16 @@
 import React, { useState } from 'react'
-import { Modal, Button, Header, Search, TextArea } from 'semantic-ui-react'
-import * as api from '../util/mercuryService'
 import PropTypes from 'prop-types'
+import { Modal, Button, Header, Search, Input } from 'semantic-ui-react'
 
-function CreateGroupModal() {
+function CreateGroupModal({ onCreate }) {
+  const [name, setGroupName] = useState('')
   const [modalState, toggleModal] = useState(false)
 
   async function createGroup() {
-    var groupName = 'Private Group'
-    const groupNameField = document.getElementById('groupName').value
-    if (groupNameField != '') groupName = groupNameField
+    if (!name) return
 
-    const postGroupResponse = await api.postGroup(2, groupName, 'group')
-    console.log(postGroupResponse)
+    toggleModal(false)
+    onCreate({ name, type: 'group' })
   }
 
   return (
@@ -54,12 +52,14 @@ function CreateGroupModal() {
               padding: '5%',
             }}
           >
-            <div class="ui input">
-              <input type="text" placeholder="Group name" id="groupName" />
-            </div>
-
-            <br></br>
-            <br></br>
+            <Input
+              placeholder="Group name"
+              name="name"
+              value={name}
+              onChange={(e) => setGroupName(e.target.value)}
+            />
+            <br />
+            <br />
             <Search
               fluid
               placeholder={'Add students to your group...'}
@@ -79,10 +79,7 @@ function CreateGroupModal() {
             <Button
               color="teal"
               style={{ width: '50%', fontSize: '1vw' }}
-              onClick={() => {
-                toggleModal(false)
-                createGroup('Default')
-              }}
+              onClick={createGroup}
               content={'Create'}
             />
           </div>
@@ -92,10 +89,8 @@ function CreateGroupModal() {
   )
 }
 
-// InviteModal.propTypes = {
-//   content: PropTypes.node,
-//   buttonText: PropTypes.string,
-//   placeholder: PropTypes.string,
-// }
+CreateGroupModal.propTypes = {
+  onCreate: PropTypes.func.isRequired,
+}
 
 export default CreateGroupModal

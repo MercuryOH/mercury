@@ -14,6 +14,8 @@ const Vonage = dynamic(() => import('../../components/vonage'), {
 
 function ClassPage() {
   const router = useRouter()
+  const [currGroup, setCurrGroup] = useState('bs')
+
   const [groups, setGroups] = useState([])
   const [classes, setClasses] = useState([])
   const [currentClass, setCurrentClass] = useState({
@@ -24,13 +26,17 @@ function ClassPage() {
   const [vonageCred, setVonageCred] = useState(null)
   const { classId } = router.query
 
-  useEffect(() => {
-    if (!classId) return
-
+  const fetchCurrentClass = () => {
     api
       .getClassNG(classId)
       .then((currentClass) => setCurrentClass(currentClass))
       .catch(console.error)
+  }
+
+  useEffect(() => {
+    if (!classId) return
+
+    fetchCurrentClass()
   }, [classId])
 
   useEffect(() => {
@@ -123,6 +129,31 @@ function getRole(){
       )
     }
   }
+  const handleCreateGroup = async (group) => {
+    await api.postGroup(classId, group.name, group.type)
+
+    fetchCurrentClass()
+  }
+
+  const changeColor = (groupId) => {
+    setCurrGroup(groupId)
+  }
+
+  const unClickedGroupsStyle = {
+    fontSize: '.8vw',
+    textAlign: 'left',
+    width: '75%',
+    marginBottom: '2%',
+    minWidth: '41px',
+  }
+  const clickedGroupsStyle = {
+    fontSize: '.8vw',
+    textAlign: 'left',
+    width: '75%',
+    marginBottom: '2%',
+    minWidth: '41px',
+    background: '#e0e1e2',
+  }
 
   return (
     <Layout
@@ -183,14 +214,15 @@ function getRole(){
                         ).map((group) => (
                           <List.Item
                             key={`discussion_${group.id}`}
-                            onClick={() => handleSelectGroup(group)}
-                            style={{
-                              fontSize: '.8vw',
-                              textAlign: 'left',
-                              width: '75%',
-                              marginBottom: '2%',
-                              minWidth: '41px',
+                            onClick={() => {
+                              handleSelectGroup(group)
+                              changeColor(group.id)
                             }}
+                            style={
+                              currGroup == group.id
+                                ? clickedGroupsStyle
+                                : unClickedGroupsStyle
+                            }
                           >
                             <List.Icon name="sound" />
                             <List.Content>
@@ -215,14 +247,15 @@ function getRole(){
                         ).map((group) => (
                           <List.Item
                             key={`private_group_${group.id}`}
-                            onClick={() => handleSelectGroup(group)}
-                            style={{
-                              fontSize: '.8vw',
-                              textAlign: 'left',
-                              width: '75%',
-                              marginBottom: '2%',
-                              minWidth: '41px',
+                            onClick={() => {
+                              handleSelectGroup(group)
+                              changeColor(group.id)
                             }}
+                            style={
+                              currGroup == group.id
+                                ? clickedGroupsStyle
+                                : unClickedGroupsStyle
+                            }
                           >
                             <List.Icon name="lock" />
                             <List.Content>
@@ -244,7 +277,6 @@ function getRole(){
               bottom: 14,
             }}
           >
-            {/* <CreateGroupModal /> */}
             {getButtonToDisplay()}
           </div>
         </div>
