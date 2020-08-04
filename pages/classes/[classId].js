@@ -51,8 +51,8 @@ function ClassPage() {
       .catch(console.error)
   }
 
-  function getButtonToDisplay() {
-    let userRole = null
+function getRole(){
+  let userRole = null
 
     classes.forEach((row) => {
       let { id, role } = row
@@ -61,11 +61,17 @@ function ClassPage() {
       }
     })
 
-    if (userRole === null) {
+    return userRole
+}
+
+  function getButtonToDisplay() {
+    
+
+    if (getRole() === null) {
       return null
     }
-    console.log(userRole)
-    if (userRole === 'Student') {
+    
+    if (getRole() === 'Student') {
       return <CreateGroupModal />
     } else {
       return (
@@ -75,6 +81,45 @@ function ClassPage() {
           fluid
           style={{ fontSize: '1vw' }}
         />
+      )
+    }
+  }
+
+  function showOffice(){
+    if (getRole() === null) {
+      return null
+    }
+    
+    if (getRole() === 'Student'||getRole() === null) {
+      return null
+    } else {
+      return (
+        <div style={{ paddingLeft: 20 }}>
+            <List relaxed>
+              
+            {currentClass.Groups.filter(
+                          (group) => group.type === 'office'
+                        ).map((group) => (
+                          <List.Item
+                            key={`office`}
+                            onClick={() => handleSelectGroup(group)}
+                            style={{
+                              fontSize: '.8vw',
+                              textAlign: 'left',
+                              width: '75%',
+                              marginBottom: '2%',
+                              minWidth: '41px',
+                            }}
+                          >
+                            <List.Icon name="graduation cap" />
+                            <List.Content>
+                              <List.Header as="a">TA Office</List.Header>
+                            </List.Content>
+                          </List.Item>
+                        ))}
+             
+            </List>
+          </div>
       )
     }
   }
@@ -113,6 +158,7 @@ function ClassPage() {
               }}
             />
           </Button.Group>
+          {showOffice()}
           <Accordion
             fluid
             exclusive={false}

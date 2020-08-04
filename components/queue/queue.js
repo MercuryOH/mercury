@@ -118,7 +118,7 @@ class Queue extends Component {
       const buttonToDisplay = this.state.inQueue ? (
         <Button
           onClick={this.removeMeFromQueue.bind(this)}
-          style={{ width: '50%', fontSize: '1vw' }}
+          style={{ width: '100%', fontSize: '1vw' }}
           secondary
         >
           Leave Queue
@@ -126,7 +126,7 @@ class Queue extends Component {
       ) : (
         <Button
           onClick={this.addMeToQueue.bind(this)}
-          style={{ width: '50%', fontSize: '1vw' }}
+          style={{ width: '100%', fontSize: '1vw' }}
           primary
         >
           Join Queue
@@ -156,7 +156,8 @@ class Queue extends Component {
           display: 'inline-flex',
         }}
       >
-        <Button onClick={this.getNextStudentInQueue.bind(this)} primary>
+        <Button style={{ width: '100%', fontSize: '1vw' }}
+        onClick={this.getNextStudentInQueue.bind(this)} primary>
           Next
         </Button>
       </div>
