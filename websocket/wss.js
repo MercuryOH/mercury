@@ -1,7 +1,7 @@
 const WebSocket = require('ws')
-const { webSocketConnectionManager } = require('./connectionmanager')
-const { handleInstructorMessage } = require('./instructorHandler')
-const { handleStudentMessage } = require('./studentHandler')
+const { webSocketConnectionManager } = require('./util/connectionmanager')
+const { handleInstructorMessage } = require('./instructor/instructorHandler')
+const { handleStudentMessage } = require('./student/studentHandler')
 
 class WebSocketServer {
   start() {
