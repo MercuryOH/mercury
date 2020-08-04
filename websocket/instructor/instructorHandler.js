@@ -13,6 +13,7 @@ const handleInstructorMessage = (ws, message) => {
     case 'greeting':
       webSocketConnectionManager.addSocketForCourse(courseId, ws) // this websocket is now associated with the course
       webSocketConnectionManager.associateUserWithSocket(msg, ws)
+
       ws.send(
         prepareMessage({
           msgType: 'queue',
