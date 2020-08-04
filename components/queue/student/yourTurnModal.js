@@ -36,8 +36,8 @@ export default class YourTurnModal extends Component {
   handleTimerEnd() {
     const { queueWebSocketController } = this.queueComponent.state
     queueWebSocketController.signalStudentTimeout()
-
     this.setState({ modalState: false, timerRunning: false })
+    this.queueComponent.createTimeoutNotification()
     this.queueComponent.setState({ isYourTurn: false, TAName: '' })
   }
 

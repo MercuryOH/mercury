@@ -3,6 +3,7 @@ import styled from 'styled-components'
 import YourTurnModal from './yourTurnModal'
 import StudentWebSocketController from './studentWebSocket'
 import { Label, Button } from 'semantic-ui-react'
+import { NotificationContainer, NotificationManager } from 'react-notifications'
 
 const QueueDiv = styled.div`
   grid-gap: 2vh;
@@ -32,6 +33,10 @@ export default class StudentQueueView extends Component {
       TAName: '',
       isReadyToRender: false,
     }
+  }
+
+  createTimeoutNotification() {
+    NotificationManager.info('Your Invitation Has Expired')
   }
 
   isStudentDisplayed() {
@@ -178,15 +183,9 @@ export default class StudentQueueView extends Component {
         >
           {queueLabels}
         </QueueDiv>
-        <div
-          style={{
-            position: 'absolute',
-            width: 'calc(100% - 38px)',
-            bottom: 14,
-          }}
-        >
-          {this.getButtonToDisplay()}
-        </div>
+        {this.getButtonToDisplay()}
+
+        <NotificationContainer />
       </QueueDiv>
     )
   }

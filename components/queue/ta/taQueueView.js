@@ -3,6 +3,7 @@ import { Label, Button } from 'semantic-ui-react'
 import styled from 'styled-components'
 import TaWaitingModal from './taWaitingModal'
 import TAWebSocketController from './taWebSocket'
+import { NotificationContainer, NotificationManager } from 'react-notifications'
 
 const QueueDiv = styled.div`
   grid-gap: 2vh;
@@ -26,6 +27,10 @@ export default class TAQueueView extends Component {
       nextStudentName: '',
       isReadyToRender: false,
     }
+  }
+
+  createTimeoutNotification(studentName) {
+    NotificationManager.info(`${studentName}'s Invitation Has Expired`)
   }
 
   componentDidMount() {
@@ -146,6 +151,8 @@ export default class TAQueueView extends Component {
         </QueueDiv>
 
         {this.getButtonToDisplay()}
+
+        <NotificationContainer />
       </QueueDiv>
     )
   }

@@ -46,6 +46,9 @@ export default class TAWebSocketController {
   }
 
   removeTAWaitingModal() {
+    const { nextStudentName } = this.component.state
+    this.component.createTimeoutNotification(nextStudentName)
+
     this.component.setState({
       inviteNextStudent: false,
       nextStudentName: '',
