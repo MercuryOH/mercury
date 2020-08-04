@@ -11,17 +11,15 @@ export default class TAWebSocketController {
     this.started = false
   }
 
-  start(fullName) {
-    this.fullName = fullName
+  start() {
+    const { me } = this.component.state
+    const { firstName, lastName } = me
+    this.fullName = `${firstName} ${lastName}`
+
     this.connection = new WebSocket(url)
     this.connection.onopen = this.processConnectionOpen.bind(this)
     this.connection.onerror = this.processConnectionError.bind(this)
     this.connection.onmessage = this.processConnectionMessage.bind(this)
-    this.started = true
-  }
-
-  hasStarted() {
-    return this.started
   }
 
   processConnectionOpen() {

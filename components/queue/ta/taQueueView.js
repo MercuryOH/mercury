@@ -30,11 +30,8 @@ export default class TAQueueView extends Component {
 
   componentDidMount() {
     this.courseId = Number(window.location.href.split('/')[4])
-    const { me, queueWebSocketController } = this.state
-    const { firstName, lastName } = me
-    const fullName = `${firstName} ${lastName}`
-
-    queueWebSocketController.start(fullName)
+    const { queueWebSocketController } = this.state
+    queueWebSocketController.start()
     this.setState({ isReadyToRender: true })
   }
 
@@ -100,9 +97,9 @@ export default class TAQueueView extends Component {
   }
 
   render() {
-    const { queueWebSocketController } = this.state
+    const { isReadyToRender } = this.state
 
-    if (!queueWebSocketController.hasStarted()) {
+    if (!isReadyToRender) {
       return null
     }
 

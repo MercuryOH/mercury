@@ -108,11 +108,8 @@ export default class StudentQueueView extends Component {
 
   componentDidMount() {
     this.courseId = Number(window.location.href.split('/')[4])
-    const { me, queueWebSocketController } = this.state
-    const { firstName, lastName } = me
-    const fullName = `${firstName} ${lastName}`
-
-    queueWebSocketController.start(fullName)
+    const { queueWebSocketController } = this.state
+    queueWebSocketController.start()
     this.setState({ isReadyToRender: true })
   }
 
@@ -143,11 +140,9 @@ export default class StudentQueueView extends Component {
     }
 
     const queueLabels =
-      this.state.displayStudentsStyle.display == 'none' ? (
-        <></>
-      ) : (
-        this.state.studentsInQueue.map(this.createQueueLabel)
-      )
+      this.state.displayStudentsStyle.display == 'none'
+        ? []
+        : this.state.studentsInQueue.map(this.createQueueLabel)
 
     return (
       <QueueDiv>

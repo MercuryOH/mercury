@@ -10,16 +10,15 @@ export default class StudentWebSocketController {
     this.component = component
   }
 
-  start(fullName) {
-    this.fullName = fullName
+  start() {
+    const { me } = this.component.state
+    const { firstName, lastName } = me
+    this.fullName = `${firstName} ${lastName}`
+
     this.connection = new WebSocket(url)
     this.connection.onopen = this.processConnectionOpen.bind(this)
     this.connection.onerror = this.processConnectionError.bind(this)
     this.connection.onmessage = this.processConnectionMessage.bind(this)
-  }
-
-  hasStarted() {
-    return this.started
   }
 
   processConnectionOpen() {
@@ -38,7 +37,7 @@ export default class StudentWebSocketController {
   }
 
   activateYourTurnModal(TAName) {
-    this.component.setState({ isYourTurn: true, TAName })
+    this.component.setState({ isYourTurn: true, TAName, inQueue: false })
   }
 
   updateStudentsInQueue(msg) {

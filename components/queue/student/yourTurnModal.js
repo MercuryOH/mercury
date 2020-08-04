@@ -1,6 +1,8 @@
 import React, { Component } from 'react'
 import { Modal, Button, Header } from 'semantic-ui-react'
 
+const timeOutTime = 3000
+
 export default class YourTurnModal extends Component {
   constructor(props) {
     super(props)
@@ -29,7 +31,7 @@ export default class YourTurnModal extends Component {
   }
 
   startTimer() {
-    setTimeout(this.handleTimerEnd.bind(this), 3000)
+    setTimeout(this.handleTimerEnd.bind(this), timeOutTime)
   }
 
   handleTimerEnd() {
@@ -38,7 +40,7 @@ export default class YourTurnModal extends Component {
     queueWebSocketController.signalStudentTimeout(TAName)
 
     this.setState({ modalState: false, timerRunning: false })
-    this.queueComponent.setState({ isYourTurn: false, inQueue: false })
+    this.queueComponent.setState({ isYourTurn: false })
   }
 
   render() {
