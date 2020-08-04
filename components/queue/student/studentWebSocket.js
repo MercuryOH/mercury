@@ -1,4 +1,5 @@
 const url = 'ws://localhost:8080'
+const role = 'Student'
 
 /**
  * QueueWebSocket controls the web socket business logic for the course queue and
@@ -96,7 +97,7 @@ export default class StudentWebSocketController {
 
   prepareMessage(msg) {
     const { courseId } = this.component
-    const enrichedPayload = { ...msg, courseId }
+    const enrichedPayload = { ...msg, courseId, role }
     return JSON.stringify(enrichedPayload)
   }
 }
