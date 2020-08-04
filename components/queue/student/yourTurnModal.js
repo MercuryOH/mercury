@@ -15,18 +15,18 @@ export default class YourTurnModal extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    const { isYourTurn, TAName } = nextProps
+    const { isYourTurn } = nextProps
     const { timerRunning } = this.state
 
     if (isYourTurn && !timerRunning) {
       this.setState(
-        { modalState: nextProps.isYourTurn, timerRunning: true, TAName },
+        { modalState: nextProps.isYourTurn, timerRunning: true },
         this.startTimer
       )
       return
     }
 
-    this.setState({ modalState: nextProps.isYourTurn, TAName })
+    this.setState({ modalState: nextProps.isYourTurn })
   }
 
   startTimer() {
