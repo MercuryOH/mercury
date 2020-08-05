@@ -12,6 +12,7 @@ class Queue extends Component {
       me: {},
       classData: [],
       office: {},
+      currentGroup: this.props.currentGroup
     }
   }
 
@@ -40,6 +41,10 @@ class Queue extends Component {
       .then(() => this.setState({ me, classData, office, isDataLoaded: true }))
   }
 
+  componentWillReceiveProps(nextProps) {
+    this.setState({ currentGroup: nextProps.currentGroup});  
+  }
+
   getRoleForClass() {
     const { classData } = this.state
     let userRole = null
@@ -56,18 +61,21 @@ class Queue extends Component {
 
   render() {
     const { isDataLoaded, me, classData, office } = this.state
-
     if (!isDataLoaded) {
       return null
     }
 
     if (this.getRoleForClass() === 'Student') {
+      console.log(this.state.currentGroup)
       return (
+       
         <StudentQueueView
           me={me}
           classData={classData}
           onJoin={this.props.onJoin}
           office={office}
+         // onInvite={this.props.onInvite}
+          currentGroup ={this.state.currentGroup}
         />
       )
     }

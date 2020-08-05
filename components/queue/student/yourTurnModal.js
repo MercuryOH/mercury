@@ -11,9 +11,10 @@ class YourTurnModal extends Component {
     this.queueComponent = this.props.queueComponent
 
     this.state = {
-      group: this.props.group,
+      office: this.props.office,
       modalState: this.props.isYourTurn,
       timerRunning: false,
+      currentGroup: this.props.currentGroup,
     }
   }
 
@@ -21,9 +22,11 @@ class YourTurnModal extends Component {
     const { isYourTurn } = nextProps
     const { timerRunning } = this.state
 
+    this.setState({ currentGroup: nextProps.currentGroup})
+
     if (isYourTurn && !timerRunning) {
       this.setState(
-        { modalState: nextProps.isYourTurn, timerRunning: true },
+        { modalState: nextProps.isYourTurn, timerRunning: true},
         this.startTimer
       )
       return
@@ -49,8 +52,17 @@ class YourTurnModal extends Component {
     clearTimeout(timeOut)
     this.queueComponent.setState({ isYourTurn: false, inQueue: false })
     this.setState({ modalState: false, timerRunning: false })
-    queueWebSocketController.signalJoinTA(this.state.group)
-    this.props.onJoin(this.state.group)
+    queueWebSocketController.signalJoinTA(this.state.office)
+    this.props.onJoin(this.state.office)
+  }
+
+  handleInvite = () => {
+    const { queueWebSocketController } = this.queueComponent.state
+    clearTimeout(timeOut)
+    this.queueComponent.setState({ isYourTurn: false, inQueue: false })
+    this.setState({ modalState: false, timerRunning: false })
+    queueWebSocketController.signalJoinTA(this.state.currentGroup)
+    this.props.onJoin(this.state.currentGroup)
   }
 
   render() {
@@ -100,7 +112,7 @@ class YourTurnModal extends Component {
               </Button>
               <Button
                 color="teal"
-                onClick={() => this.setState({ modalState: false })}
+                onClick={this.handleInvite}
                 style={{
                   fontSize: '1vw',
                   textAlign: 'center',
@@ -133,7 +145,7 @@ class YourTurnModal extends Component {
 }
 
 YourTurnModal.propTypes = {
-  group: PropTypes.object.isRequired,
+  office: PropTypes.object.isRequired,
   onJoin: PropTypes.func.isRequired,
 }
 

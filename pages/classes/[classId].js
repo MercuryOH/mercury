@@ -65,6 +65,7 @@ function ClassPage() {
 
   const handleJoinTA = (group) => {
     handleSelectGroup(group)
+    setCurrentGroup(group)
   }
 
   function getButtonToDisplay() {
@@ -82,7 +83,7 @@ function ClassPage() {
 
   function showOffice() {
     return (
-      currentClass.role === 'Student' && (
+      currentClass.role !== 'Student' && (
         <div style={{ paddingLeft: 20 }}>
           <List relaxed>
             {currentClass.groups
@@ -249,7 +250,12 @@ function ClassPage() {
           </div>
         </div>
       }
-      right={<Queue onJoin={handleJoinTA} />}
+      right={
+        <Queue
+          onJoin={handleJoinTA}
+          currentGroup={currentGroup}
+        />
+      }
     >
       {vonageCred && (
         <Vonage
