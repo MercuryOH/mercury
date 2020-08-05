@@ -7,6 +7,7 @@ import { AuthRequired, useAuth } from '../../components/authProvider'
 import Queue from '../../components/queue/queue'
 import * as api from '../../util/mercuryService'
 import CreateGroupModal from '../../components/createGroupModal'
+import ModifyDiscussionModal from '../../components/modifyDiscussionModal'
 
 const Vonage = dynamic(() => import('../../components/vonage'), {
   ssr: false,
@@ -72,12 +73,7 @@ function ClassPage() {
     return currentClass.role === 'Student' ? (
       <CreateGroupModal onCreate={handleCreateGroup} />
     ) : (
-      <Button
-        color="teal"
-        content="Modify Discussions"
-        fluid
-        style={{ fontSize: '1vw' }}
-      />
+      <ModifyDiscussionModal onCreate={handleCreateGroup} />
     )
   }
 
