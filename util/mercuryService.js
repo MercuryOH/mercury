@@ -116,3 +116,21 @@ export async function postGroupToken(classId, groupId) {
     return null
   }
 }
+
+export async function deleteGroup(classId, groupId) {
+  try {
+    await axios.delete(
+      `/api/classes/${classId}/groups/${groupId}`,
+      {},
+      {
+        headers: {
+          authorization: token,
+        },
+      }
+    )
+
+    return null
+  } catch (e) {
+    return null
+  }
+}

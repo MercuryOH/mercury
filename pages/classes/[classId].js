@@ -301,6 +301,9 @@ function ClassPage() {
                             marginBottom: '2%',
                             minWidth: '10px',
                             backgroundColor: 'transparent',
+                          }}
+                          onClick={ () => {
+                            api.deleteGroup(classId, group.id)
                           }}>
                             <Icon name = 'delete' color = 'red' />
                           </Button>
@@ -420,141 +423,8 @@ function ClassPage() {
 
   return (
     <Layout
-      left={ leftDisplay()
-        /*<div style={{ height: '100%', marginLeft: '2.5%' }}>
-          <Button.Group
-            size="huge"
-            style={{ marginBottom: 12, width: '100%' }}
-            fluid
-          >
-            <Button
-              compact
-              icon="angle left"
-              content={currentClass.name}
-              style={{
-                fontSize: '1.5vw',
-                textAlign: 'left',
-                width: '75%',
-                marginBottom: '2%',
-                minWidth: '41px',
-              }}
-              onClick={handleBack}
-            />
-            <Button
-              compact
-              icon="setting"
-              style={{
-                fontSize: '1.5vw',
-                textAlign: 'center',
-                width: '15%',
-                marginBottom: '2%',
-                minWidth: '14px',
-              }}
-            />
-          </Button.Group>
-          {showOffice()}
-          <Accordion
-            fluid
-            exclusive={false}
-            defaultActiveIndex={[0, 1]}
-            style={{
-              fontSize: '1vw',
-              textAlign: 'left',
-              width: '100%',
-              marginBottom: '2%',
-              minWidth: '41px',
-            }}
-            panels={[
-              {
-                key: 'discussions',
-                title: 'Discussions',
-                content: {
-                  content: (
-                    <div style={{ paddingLeft: 20 }}>
-                      <List relaxed selection verticalAlign="middle">
-                        {currentClass.groups
-                          .filter((group) => group.type === 'discussion')
-                          .map((group) => (
-                            <List.Item
-                              key={`discussion_${group.id}`}
-                              onClick={() => {
-                                if (currentGroup.id !== group.id) {
-                                  handleSelectGroup(group)
-                                  setCurrentGroup(group)
-                                } else {
-                                  setInviteModal(true)
-                                }
-                              }}
-                              style={
-                                currentGroup.id == group.id &&
-                                vonageCred !== null
-                                  ? clickedGroupsStyle
-                                  : unClickedGroupsStyle
-                              }
-                            >
-                              <List.Icon name="sound" />
-                              <List.Content>
-                                <List.Header as="a">{group.name}</List.Header>
-                              </List.Content>
-                              {showInviteButton(group)}
-                            </List.Item>
-                          ))}
-                      </List>
-                    </div>
-                  ),
-                },
-              },
-              {
-                key: 'private-groups',
-                title: 'Private Groups',
-                content: {
-                  content: (
-                    <div style={{ paddingLeft: 20 }}>
-                      <List relaxed selection verticalAlign="middle">
-                        {currentClass.groups
-                          .filter((group) => group.type === 'group')
-                          .map((group) => (
-                            <List.Item
-                              key={`private_group_${group.id}`}
-                              onClick={() => {
-                                if (currentGroup.id !== group.id) {
-                                  handleSelectGroup(group)
-                                  setCurrentGroup(group)
-                                } else {
-                                  setInviteModal(true)
-                                }
-                              }}
-                              style={
-                                currentGroup.id == group.id &&
-                                vonageCred !== null
-                                  ? clickedGroupsStyle
-                                  : unClickedGroupsStyle
-                              }
-                            >
-                              <List.Icon name="lock" />
-                              <List.Content>
-                                <List.Header as="a">{group.name}</List.Header>
-                              </List.Content>
-                              {showInviteButton(group)}
-                            </List.Item>
-                          ))}
-                      </List>
-                    </div>
-                  ),
-                },
-              },
-            ]}
-          />
-          <div
-            style={{
-              position: 'absolute',
-              width: 'calc(100% - 38px)',
-              bottom: 14,
-            }}
-          >
-            {getButtonToDisplay()}
-          </div>
-        </div>*/
+      left={
+        leftDisplay()
       }
       right={<Queue onJoin={handleJoinTA} currentGroup={currentGroup} />}
     >
