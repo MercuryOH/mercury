@@ -48,18 +48,14 @@ export async function getMe() {
   }
 }
 
-export async function getClassNG(classId) {
-  try {
-    const { data } = await axios.get(`/api/classes/${classId}`, {
-      headers: {
-        authorization: token,
-      },
-    })
+export async function getClass(classId) {
+  const { data } = await axios.get(`/api/classes/${classId}`, {
+    headers: {
+      authorization: token,
+    },
+  })
 
-    return data
-  } catch (e) {
-    return null
-  }
+  return data
 }
 
 export async function getClassUsers(classId) {
