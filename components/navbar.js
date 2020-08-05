@@ -29,8 +29,10 @@ function Navbar() {
             }
           >
             <Dropdown.Menu>
-              <Dropdown.Item text={`${user.firstName} ${user.lastName}`} />
-              <Dropdown.Item text={user.email} />
+              <Dropdown.Item
+                text={user && `${user.firstName} ${user.lastName}`}
+              />
+              <Dropdown.Item text={user && user.email} />
               <Dropdown.Item
                 text="Logout"
                 onClick={() => router.push('/login')}
