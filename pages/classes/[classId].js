@@ -26,6 +26,13 @@ function ClassPage() {
   const [vonageCred, setVonageCred] = useState(null)
   const { classId } = router.query
 
+  const fetchCurrentClass = () => {
+    api
+      .getClass(classId)
+      .then((currentClass) => setCurrentClass(currentClass))
+      .catch(console.error)
+  }
+
   useEffect(() => {
     if (!classId) return
 
