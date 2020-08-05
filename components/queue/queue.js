@@ -12,7 +12,7 @@ class Queue extends Component {
       me: {},
       classData: [],
       office: {},
-      currentGroup: this.props.currentGroup
+      currentGroup: this.props.currentGroup,
     }
   }
 
@@ -42,7 +42,7 @@ class Queue extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    this.setState({ currentGroup: nextProps.currentGroup});  
+    this.setState({ currentGroup: nextProps.currentGroup })
   }
 
   getRoleForClass() {
@@ -66,16 +66,13 @@ class Queue extends Component {
     }
 
     if (this.getRoleForClass() === 'Student') {
-      console.log(this.state.currentGroup)
       return (
-       
         <StudentQueueView
           me={me}
           classData={classData}
           onJoin={this.props.onJoin}
           office={office}
-         // onInvite={this.props.onInvite}
-          currentGroup ={this.state.currentGroup}
+          currentGroup={this.state.currentGroup}
         />
       )
     }

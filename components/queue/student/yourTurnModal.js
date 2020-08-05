@@ -66,7 +66,6 @@ class YourTurnModal extends Component {
   }
 
   enableInviteTA() {
-    console.log(this.state.currentGroup)
     return (
       this.state.currentGroup.id !== '' && (
         <Button

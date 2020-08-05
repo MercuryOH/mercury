@@ -34,12 +34,12 @@ class StudentQueueView extends Component {
       TAName: '',
       isReadyToRender: false,
       office: this.props.office,
-      currentGroup: this.props.currentGroup
+      currentGroup: this.props.currentGroup,
     }
   }
 
   componentWillReceiveProps(nextProps) {
-    this.setState({ currentGroup: nextProps.currentGroup});  
+    this.setState({ currentGroup: nextProps.currentGroup })
   }
 
   createTimeoutNotification() {

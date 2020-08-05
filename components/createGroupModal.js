@@ -53,6 +53,7 @@ function CreateGroupModal({ onCreate }) {
             }}
           >
             <Input
+              fluid
               placeholder="Group name"
               name="name"
               value={name}
