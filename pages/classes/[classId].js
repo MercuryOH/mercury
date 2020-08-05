@@ -83,7 +83,7 @@ function ClassPage() {
 
   function showOffice() {
     return (
-      currentClass.role !== 'Student' && (
+      (currentClass.role !== 'Student' || currentGroup.type === 'office') && (
         <div style={{ paddingLeft: 20 }}>
           <List relaxed>
             {currentClass.groups
