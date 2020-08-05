@@ -28,44 +28,45 @@ function ClassPage() {
   const { classId } = router.query
 
   useEffect(() => {
-  api
-    .getMe()
-    .then((users) => setUsers(users))
-    .catch(console.error)
-})
+    api
+      .getMe()
+      .then((users) => setUsers(users))
+      .catch(console.error)
+  })
 
-var inclass = ''
-var userids = []
+  var inclass = ''
+  var userids = []
 
   const fetchCurrentClass = async () => {
     var test = api.getClassNG(classId)
-    if (test === null){
+    if (test === null) {
       await router.push('/login')
+    } else {
+      test
+        .then((currentClass) => setCurrentClass(currentClass))
+        .catch(console.error)
     }
-    else {
-      test.then((currentClass) => setCurrentClass(currentClass)).catch(console.error)
-      }
-    }
+  }
 
   useEffect(() => {
     api
       .getClassUsers(classId)
       .then((classUsers) => setClassUsers(classUsers))
       .catch(console.error)
-      classUsers.forEach((c) => {
-        userids.push(c.UserId)
-        inclass = userids.includes(users.id)
-        //console.log(userids)
-        //console.log(users.id)
-        //console.log(inclass)
-      })
+    classUsers.forEach((c) => {
+      userids.push(c.UserId)
+      inclass = userids.includes(users.id)
+      //console.log(userids)
+      //console.log(users.id)
+      //console.log(inclass)
+    })
   }, [])
 
-    const checkUser = async () => {
-      if (inclass === 'false') {
-        await router.push('/calendar')
-      }
+  const checkUser = async () => {
+    if (inclass === 'false') {
+      await router.push('/calendar')
     }
+  }
 
   useEffect(() => {
     if (!classId) return
