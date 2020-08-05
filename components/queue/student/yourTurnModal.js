@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import { Modal, Button, Header } from 'semantic-ui-react'
 
-const timeOutTime = 3000
+const timeOutTime = 20000
 
 class YourTurnModal extends Component {
   constructor(props) {

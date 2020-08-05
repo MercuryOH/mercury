@@ -32,15 +32,9 @@ class Queue extends Component {
         classData = classPayload
       })
       
-      .then(() => api.getClassNG(this.courseId))
+      .then(() => api.getClass(this.courseId))
       .then((cclass) => {
-        console.log(cclass)
-        cclass.Groups.forEach((group) => {
-          if (group.type === 'office') {
-            console.log(group)
-            office = group
-          }
-        })
+        office = cclass.groups.find((group) => group.type === 'office')
       })
 
       .then(() => this.setState({ me, classData, office, isDataLoaded: true }))
