@@ -3,14 +3,9 @@ import LargeLabel from '../components/largeLabel'
 import DropDown from '../components/dropDown'
 import Layout from '../components/layout'
 
-import JoinRequestModal from '../components/joinRequestModal'
-import InviteReceiveModal from '../components/inviteReceiveModal'
-import StudentInviteModal from '../components/StudentInviteModal'
-
 import { AuthRequired } from '../components/authProvider'
 
 import * as api from '../util/mercuryService'
-
 
 function Calendar() {
   const [classes, setClasses] = useState([])
@@ -51,18 +46,6 @@ function Calendar() {
         <div style={{ paddingLeft: 20, paddingRight: 20 }}>
           <LargeLabel content={<p>Classes</p>}></LargeLabel>
           <DropDown></DropDown>
-
-          {/* <JoinRequestModal
-            content={'[student] requested to join your group'}
-          ></JoinRequestModal>
-          <InviteReceiveModal
-            content={'[student] invites you to join [group#]'}
-          ></InviteReceiveModal>
-          <StudentInviteModal
-            buttonText={'Invite'}
-            placeholder={'Add student to your group...'}
-          ></StudentInviteModal> */}
-          {/* <TaWaitingModal isYourTurn = {true}> </TaWaitingModal> */}
         </div>
       }
     >

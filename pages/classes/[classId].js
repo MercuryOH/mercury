@@ -7,6 +7,7 @@ import { AuthRequired, useAuth } from '../../components/authProvider'
 import Queue from '../../components/queue/queue'
 import * as api from '../../util/mercuryService'
 import CreateGroupModal from '../../components/createGroupModal'
+import StudentInviteModal from '../../components/studentInviteModal'
 import ModifyDiscussionModal from '../../components/modifyDiscussionModal'
 
 const Vonage = dynamic(() => import('../../components/vonage'), {
@@ -25,6 +26,7 @@ function ClassPage() {
     role: 'Student',
   })
   const [vonageCred, setVonageCred] = useState(null)
+  const [openInviteModal, setInviteModal] = useState(false)
   const { classId } = router.query
   const plusIcon = <List.Icon name="user plus" size="med" />
   const noPlusIcon = <div></div>
@@ -32,7 +34,12 @@ function ClassPage() {
   const fetchCurrentClass = () => {
     api
       .getClass(classId)
-      .then((currentClass) => setCurrentClass(currentClass))
+      .then((c) => {
+        const userRole = c.users.find((u) => u.id === user.id)
+        if (!userRole) router.push('/calendar')
+
+        setCurrentClass({ ...c, role: userRole.role })
+      })
       .catch(console.error)
   }
 
@@ -48,7 +55,7 @@ function ClassPage() {
         setCurrentClass({ ...c, role: userRole.role })
       })
       .catch(console.error)
-  }, [classId])
+  })
 
   const handleBack = async () => {
     await router.push('/calendar')
@@ -360,7 +367,7 @@ function ClassPage() {
     return (
       (currentClass.role !== 'Student' || currentGroup.type === 'office') && (
         <div style={{ paddingLeft: 20 }}>
-          <List relaxed selection>
+          <List relaxed selection verticalAlign="middle">
             {currentClass.groups
               .filter((group) => group.type === 'office')
               .map((group) => (
@@ -370,6 +377,8 @@ function ClassPage() {
                     if (currentGroup.id !== group.id) {
                       handleSelectGroup(group)
                       setCurrentGroup(group)
+                    } else {
+                      setInviteModal(true)
                     }
                   }}
                   style={
@@ -392,15 +401,21 @@ function ClassPage() {
   }
 
   const handleCreateGroup = async (group) => {
-    await api.postGroup(classId, group.name, group.type)
-
-    fetchCurrentClass()
+    await api.postGroup(classId, group.name, group.type).then((group) => {
+      fetchCurrentClass()
+      handleSelectGroup(group)
+      setCurrentGroup(group)
+    })
   }
 
   function showInviteButton(group) {
     return currentGroup.id == group.id && vonageCred !== null
       ? plusIcon
       : noPlusIcon
+  }
+
+  const handleInvite = () => {
+    setInviteModal(false)
   }
 
   return (
@@ -456,7 +471,7 @@ function ClassPage() {
                 content: {
                   content: (
                     <div style={{ paddingLeft: 20 }}>
-                      <List relaxed selection>
+                      <List relaxed selection verticalAlign="middle">
                         {currentClass.groups
                           .filter((group) => group.type === 'discussion')
                           .map((group) => (
@@ -466,6 +481,8 @@ function ClassPage() {
                                 if (currentGroup.id !== group.id) {
                                   handleSelectGroup(group)
                                   setCurrentGroup(group)
+                                } else {
+                                  setInviteModal(true)
                                 }
                               }}
                               style={
@@ -493,7 +510,7 @@ function ClassPage() {
                 content: {
                   content: (
                     <div style={{ paddingLeft: 20 }}>
-                      <List relaxed selection>
+                      <List relaxed selection verticalAlign="middle">
                         {currentClass.groups
                           .filter((group) => group.type === 'group')
                           .map((group) => (
@@ -503,6 +520,8 @@ function ClassPage() {
                                 if (currentGroup.id !== group.id) {
                                   handleSelectGroup(group)
                                   setCurrentGroup(group)
+                                } else {
+                                  setInviteModal(true)
                                 }
                               }}
                               style={
@@ -549,6 +568,7 @@ function ClassPage() {
           }}
         />
       )}
+      <StudentInviteModal isOpen={openInviteModal} onInvite={handleInvite} />
     </Layout>
   )
 }

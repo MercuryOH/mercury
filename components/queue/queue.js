@@ -66,14 +66,12 @@ class Queue extends Component {
     }
 
     if (this.getRoleForClass() === 'Student') {
-      console.log(this.state.currentGroup)
       return (
         <StudentQueueView
           me={me}
           classData={classData}
           onJoin={this.props.onJoin}
           office={office}
-          // onInvite={this.props.onInvite}
           currentGroup={this.state.currentGroup}
         />
       )
