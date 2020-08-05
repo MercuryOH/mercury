@@ -22,11 +22,11 @@ class YourTurnModal extends Component {
     const { isYourTurn } = nextProps
     const { timerRunning } = this.state
 
-    this.setState({ currentGroup: nextProps.currentGroup})
+    this.setState({ currentGroup: nextProps.currentGroup })
 
     if (isYourTurn && !timerRunning) {
       this.setState(
-        { modalState: nextProps.isYourTurn, timerRunning: true},
+        { modalState: nextProps.isYourTurn, timerRunning: true },
         this.startTimer
       )
       return
@@ -63,6 +63,27 @@ class YourTurnModal extends Component {
     this.setState({ modalState: false, timerRunning: false })
     queueWebSocketController.signalJoinTA(this.state.currentGroup)
     this.props.onJoin(this.state.currentGroup)
+  }
+
+  enableInviteTA() {
+    console.log(this.state.currentGroup)
+    return (
+      this.state.currentGroup.id !== '' && (
+        <Button
+          color="teal"
+          onClick={this.handleInvite}
+          style={{
+            fontSize: '1vw',
+            textAlign: 'center',
+            width: '25%',
+            marginRight: '5%',
+            flex: 1,
+          }}
+        >
+          Invite TA
+        </Button>
+      )
+    )
   }
 
   render() {
@@ -110,19 +131,7 @@ class YourTurnModal extends Component {
               >
                 Join TA
               </Button>
-              <Button
-                color="teal"
-                onClick={this.handleInvite}
-                style={{
-                  fontSize: '1vw',
-                  textAlign: 'center',
-                  width: '25%',
-                  marginRight: '5%',
-                  flex: 1,
-                }}
-              >
-                Invite TA
-              </Button>
+              {this.enableInviteTA()}
               <Button
                 color="red"
                 onClick={() => this.setState({ modalState: false })}

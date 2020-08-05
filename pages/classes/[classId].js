@@ -261,7 +261,7 @@ function ClassPage() {
         <Vonage
           sessionId={vonageCred.sessionId}
           token={vonageCred.token}
-          onLeave={() => setVonageCred(null)}
+          onLeave={() => {setVonageCred(null); setCurrentGroup({ id: '', name: '' })}}
         />
       )}
     </Layout>
