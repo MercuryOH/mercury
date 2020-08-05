@@ -45,10 +45,17 @@ export default class TAWebSocketController {
     })
   }
 
-  removeTAWaitingModal() {
+  removeTAWaitingModalOnTimeout() {
     const { nextStudentName } = this.component.state
     this.component.createTimeoutNotification(nextStudentName)
 
+    this.component.setState({
+      inviteNextStudent: false,
+      nextStudentName: '',
+    })
+  }
+
+  removeTAWaitingModal() {
     this.component.setState({
       inviteNextStudent: false,
       nextStudentName: '',
@@ -74,7 +81,7 @@ export default class TAWebSocketController {
         break
 
       case 'studentTimeout': // in this case, the server lets the TA know that the student has timed out
-        this.removeTAWaitingModal()
+        this.removeTAWaitingModalOnTimeout()
         break
 
       case 'studentJoin': // in this case, the TA's invitation to join has been accepted
