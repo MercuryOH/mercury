@@ -11,15 +11,18 @@ class YourTurnModal extends Component {
     this.queueComponent = this.props.queueComponent
 
     this.state = {
-      group: this.props.group,
+      office: this.props.office,
       modalState: this.props.isYourTurn,
       timerRunning: false,
+      currentGroup: this.props.currentGroup,
     }
   }
 
   componentWillReceiveProps(nextProps) {
     const { isYourTurn } = nextProps
     const { timerRunning } = this.state
+
+    this.setState({ currentGroup: nextProps.currentGroup })
 
     if (isYourTurn && !timerRunning) {
       this.setState(
@@ -49,8 +52,38 @@ class YourTurnModal extends Component {
     clearTimeout(timeOut)
     this.queueComponent.setState({ isYourTurn: false, inQueue: false })
     this.setState({ modalState: false, timerRunning: false })
-    queueWebSocketController.signalJoinTA(this.state.group)
-    this.props.onJoin(this.state.group)
+    queueWebSocketController.signalJoinTA(this.state.office)
+    this.props.onJoin(this.state.office)
+  }
+
+  handleInvite = () => {
+    const { queueWebSocketController } = this.queueComponent.state
+    clearTimeout(timeOut)
+    this.queueComponent.setState({ isYourTurn: false, inQueue: false })
+    this.setState({ modalState: false, timerRunning: false })
+    queueWebSocketController.signalJoinTA(this.state.currentGroup)
+    this.props.onJoin(this.state.currentGroup)
+  }
+
+  enableInviteTA() {
+    console.log(this.state.currentGroup)
+    return (
+      this.state.currentGroup.id !== '' && (
+        <Button
+          color="teal"
+          onClick={this.handleInvite}
+          style={{
+            fontSize: '1vw',
+            textAlign: 'center',
+            width: '25%',
+            marginRight: '5%',
+            flex: 1,
+          }}
+        >
+          Invite TA
+        </Button>
+      )
+    )
   }
 
   render() {
@@ -98,19 +131,7 @@ class YourTurnModal extends Component {
               >
                 Join TA
               </Button>
-              <Button
-                color="teal"
-                onClick={() => this.setState({ modalState: false })}
-                style={{
-                  fontSize: '1vw',
-                  textAlign: 'center',
-                  width: '25%',
-                  marginRight: '5%',
-                  flex: 1,
-                }}
-              >
-                Invite TA
-              </Button>
+              {this.enableInviteTA()}
               <Button
                 color="red"
                 onClick={() => this.setState({ modalState: false })}
@@ -133,7 +154,7 @@ class YourTurnModal extends Component {
 }
 
 YourTurnModal.propTypes = {
-  group: PropTypes.object.isRequired,
+  office: PropTypes.object.isRequired,
   onJoin: PropTypes.func.isRequired,
 }
 

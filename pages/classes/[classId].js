@@ -65,6 +65,7 @@ function ClassPage() {
 
   const handleJoinTA = (group) => {
     handleSelectGroup(group)
+    setCurrentGroup(group)
   }
 
   function getButtonToDisplay() {
@@ -82,17 +83,19 @@ function ClassPage() {
 
   function showOffice() {
     return (
-      currentClass.role === 'Student' && (
+      (currentClass.role !== 'Student' || currentGroup.type === 'office') && (
         <div style={{ paddingLeft: 20 }}>
-          <List relaxed>
+          <List relaxed selection>
             {currentClass.groups
               .filter((group) => group.type === 'office')
               .map((group) => (
                 <List.Item
                   key={`office`}
                   onClick={() => {
-                    handleSelectGroup(group)
-                    setCurrentGroup(group)
+                    if (currentGroup.id !== group.id) {
+                      handleSelectGroup(group)
+                      setCurrentGroup(group)
+                    }
                   }}
                   style={
                     currentGroup.id == group.id && vonageCred !== null
@@ -104,6 +107,7 @@ function ClassPage() {
                   <List.Content>
                     <List.Header as="a">TA Office</List.Header>
                   </List.Content>
+                  {showInviteButton(group)}
                 </List.Item>
               ))}
           </List>
@@ -116,6 +120,12 @@ function ClassPage() {
     await api.postGroup(classId, group.name, group.type)
 
     fetchCurrentClass()
+  }
+
+  function showInviteButton(group) {
+    return currentGroup.id == group.id && vonageCred !== null
+      ? plusIcon
+      : noPlusIcon
   }
 
   return (
@@ -171,15 +181,17 @@ function ClassPage() {
                 content: {
                   content: (
                     <div style={{ paddingLeft: 20 }}>
-                      <List relaxed>
+                      <List relaxed selection>
                         {currentClass.groups
                           .filter((group) => group.type === 'discussion')
                           .map((group) => (
                             <List.Item
                               key={`discussion_${group.id}`}
                               onClick={() => {
-                                handleSelectGroup(group)
-                                setCurrentGroup(group)
+                                if (currentGroup.id !== group.id) {
+                                  handleSelectGroup(group)
+                                  setCurrentGroup(group)
+                                }
                               }}
                               style={
                                 currentGroup.id == group.id &&
@@ -192,6 +204,7 @@ function ClassPage() {
                               <List.Content>
                                 <List.Header as="a">{group.name}</List.Header>
                               </List.Content>
+                              {showInviteButton(group)}
                             </List.Item>
                           ))}
                       </List>
@@ -205,15 +218,17 @@ function ClassPage() {
                 content: {
                   content: (
                     <div style={{ paddingLeft: 20 }}>
-                      <List relaxed>
+                      <List relaxed selection>
                         {currentClass.groups
                           .filter((group) => group.type === 'group')
                           .map((group) => (
                             <List.Item
                               key={`private_group_${group.id}`}
                               onClick={() => {
-                                handleSelectGroup(group)
-                                setCurrentGroup(group)
+                                if (currentGroup.id !== group.id) {
+                                  handleSelectGroup(group)
+                                  setCurrentGroup(group)
+                                }
                               }}
                               style={
                                 currentGroup.id == group.id &&
@@ -226,9 +241,7 @@ function ClassPage() {
                               <List.Content>
                                 <List.Header as="a">{group.name}</List.Header>
                               </List.Content>
-                              {group.name === 'zoom-test'
-                                ? plusIcon
-                                : noPlusIcon}
+                              {showInviteButton(group)}
                             </List.Item>
                           ))}
                       </List>
@@ -249,13 +262,16 @@ function ClassPage() {
           </div>
         </div>
       }
-      right={<Queue onJoin={handleJoinTA} />}
+      right={<Queue onJoin={handleJoinTA} currentGroup={currentGroup} />}
     >
       {vonageCred && (
         <Vonage
           sessionId={vonageCred.sessionId}
           token={vonageCred.token}
-          onLeave={() => setVonageCred(null)}
+          onLeave={() => {
+            setVonageCred(null)
+            setCurrentGroup({ id: '', name: '' })
+          }}
         />
       )}
     </Layout>

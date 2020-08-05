@@ -35,7 +35,12 @@ class StudentQueueView extends Component {
       isReadyToRender: false,
       office: this.props.office,
       inCall: false,
+      currentGroup: this.props.currentGroup,
     }
+  }
+
+  componentWillReceiveProps(nextProps) {
+    this.setState({ currentGroup: nextProps.currentGroup })
   }
 
   createTimeoutNotification() {
@@ -162,7 +167,8 @@ class StudentQueueView extends Component {
           isYourTurn={this.state.isYourTurn}
           queueComponent={this}
           onJoin={this.props.onJoin}
-          group={this.state.office}
+          office={this.state.office}
+          currentGroup={this.state.currentGroup}
         />
 
         <Button.Group
