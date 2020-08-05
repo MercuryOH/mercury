@@ -85,7 +85,7 @@ function ClassPage() {
     return (
       (currentClass.role !== 'Student' || currentGroup.type === 'office') && (
         <div style={{ paddingLeft: 20 }}>
-          <List relaxed>
+          <List relaxed selection>
             {currentClass.groups
               .filter((group) => group.type === 'office')
               .map((group) => (
