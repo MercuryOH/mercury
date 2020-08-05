@@ -25,6 +25,8 @@ function ClassPage() {
   })
   const [vonageCred, setVonageCred] = useState(null)
   const { classId } = router.query
+  const plusIcon = <List.Icon name="plus" size="small" />
+  const noPlusIcon = <div></div>
 
   const fetchCurrentClass = () => {
     api
@@ -224,6 +226,9 @@ function ClassPage() {
                               <List.Content>
                                 <List.Header as="a">{group.name}</List.Header>
                               </List.Content>
+                              {group.name === 'zoom-test'
+                                ? plusIcon
+                                : noPlusIcon}
                             </List.Item>
                           ))}
                       </List>
