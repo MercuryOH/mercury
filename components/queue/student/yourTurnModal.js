@@ -1,9 +1,10 @@
 import React, { Component } from 'react'
+import PropTypes from 'prop-types'
 import { Modal, Button, Header } from 'semantic-ui-react'
 
 const timeOutTime = 3000
 
-export default class YourTurnModal extends Component {
+class YourTurnModal extends Component {
   constructor(props) {
     super(props)
     this.queueComponent = this.props.queueComponent
@@ -41,6 +42,12 @@ export default class YourTurnModal extends Component {
     this.queueComponent.setState({ isYourTurn: false, TAName: '' })
   }
 
+  handleJoin = () => {
+    this.setState(state => ({ ...state, modelState: false }))
+
+    this.props.onJoin(this.props.group)
+  }
+
   render() {
     return (
       <div>
@@ -75,7 +82,7 @@ export default class YourTurnModal extends Component {
             >
               <Button
                 color="green"
-                onClick={() => this.setState({ modalState: false })}
+                onClick={this.handleJoin}
                 style={{
                   fontSize: '1vw',
                   textAlign: 'center',
@@ -119,3 +126,10 @@ export default class YourTurnModal extends Component {
     )
   }
 }
+
+YourTurnModal.propTypes = {
+  group: PropTypes.object.isRequired,
+  onJoin: PropTypes.func.isRequired,
+}
+
+export default YourTurnModal

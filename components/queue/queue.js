@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import PropTypes from 'prop-types'
 import * as api from '../../util/mercuryService'
 import StudentQueueView from './student/studentQueueView'
 import TAQueueView from './ta/taQueueView'
@@ -53,11 +54,15 @@ class Queue extends Component {
     }
 
     if (this.getRoleForClass() === 'Student') {
-      return <StudentQueueView me={me} classData={classData} />
+      return <StudentQueueView me={me} classData={classData} onJoin={this.props.onJoin} />
     }
 
     return <TAQueueView me={me} classData={classData} />
   }
+}
+
+Queue.propTypes = {
+  onJoin: PropTypes.func.isRequired
 }
 
 export default Queue

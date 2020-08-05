@@ -87,6 +87,10 @@ function ClassPage() {
       .catch(console.error)
   }
 
+  const handleJoinTA = (group) => {
+    handleSelectGroup(group)
+  }
+
   function getRole() {
     let userRole = null
 
@@ -306,7 +310,7 @@ function ClassPage() {
           </div>
         </div>
       }
-      right={<Queue />}
+      right={<Queue onJoin={handleJoinTA} />}
     >
       {vonageCred && (
         <Vonage

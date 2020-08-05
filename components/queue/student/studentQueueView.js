@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import PropTypes from 'prop-types'
 import styled from 'styled-components'
 import YourTurnModal from './yourTurnModal'
 import StudentWebSocketController from './studentWebSocket'
@@ -17,7 +18,7 @@ const QueueLabel = styled(Label)`
  * This is how the student views the Queue
  */
 
-export default class StudentQueueView extends Component {
+class StudentQueueView extends Component {
   constructor(props) {
     super(props)
     this.state = {
@@ -154,6 +155,8 @@ export default class StudentQueueView extends Component {
         <YourTurnModal
           isYourTurn={this.state.isYourTurn}
           queueComponent={this}
+          onJoin={this.props.onJoin}
+          group={{}}
         />
 
         <Button.Group
@@ -189,4 +192,8 @@ export default class StudentQueueView extends Component {
       </QueueDiv>
     )
   }
+}
+
+StudentQueueView.propTypes = {
+  onJoin: PropTypes.func.isRequired
 }
