@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
 import dynamic from 'next/dynamic'
 import Layout from '../../components/layout'
-import { Button, Accordion, List } from 'semantic-ui-react'
+import { Button, Accordion, List, Icon } from 'semantic-ui-react'
 import { AuthRequired, useAuth } from '../../components/authProvider'
 import Queue from '../../components/queue/queue'
 import * as api from '../../util/mercuryService'
@@ -77,6 +77,285 @@ function ClassPage() {
     )
   }
 
+  function leftDisplay() {
+    return currentClass.role === 'Student' ? (
+      <div style={{ height: '100%', marginLeft: '2.5%' }}>
+        <Button.Group
+          size="huge"
+          style={{ marginBottom: 12, width: '100%' }}
+          fluid
+        >
+          <Button
+            compact
+            icon="angle left"
+            content={currentClass.name}
+            style={{
+              fontSize: '1.5vw',
+              textAlign: 'left',
+              width: '75%',
+              marginBottom: '2%',
+              minWidth: '41px',
+            }}
+            onClick={handleBack}
+          />
+          <Button
+            compact
+            icon="setting"
+            style={{
+              fontSize: '1.5vw',
+              textAlign: 'center',
+              width: '15%',
+              marginBottom: '2%',
+              minWidth: '14px',
+            }}
+          />
+        </Button.Group>
+        {showOffice()}
+        <Accordion
+          fluid
+          exclusive={false}
+          defaultActiveIndex={[0, 1]}
+          style={{
+            fontSize: '1vw',
+            textAlign: 'left',
+            width: '100%',
+            marginBottom: '2%',
+            minWidth: '41px',
+          }}
+          panels={[
+            {
+              key: 'discussions',
+              title: 'Discussions',
+              content: {
+                content: (
+                  <div style={{ paddingLeft: 20 }}>
+                    <List relaxed selection>
+                      {currentClass.groups
+                        .filter((group) => group.type === 'discussion')
+                        .map((group) => (
+                          <List.Item
+                            key={`discussion_${group.id}`}
+                            onClick={() => {
+                              if (currentGroup.id !== group.id) {
+                                handleSelectGroup(group)
+                                setCurrentGroup(group)
+                              }
+                            }}
+                            style={
+                              currentGroup.id == group.id &&
+                              vonageCred !== null
+                                ? clickedGroupsStyle
+                                : unClickedGroupsStyle
+                            }
+                          >
+                            <List.Icon name="sound" />
+                            <List.Content>
+                              <List.Header as="a">{group.name}</List.Header>
+                            </List.Content>
+                            {showInviteButton(group)}
+                          </List.Item>
+                        ))}
+                    </List>
+                  </div>
+                ),
+              },
+            },
+            {
+              key: 'private-groups',
+              title: 'Private Groups',
+              content: {
+                content: (
+                  <div style={{ paddingLeft: 20 }}>
+                    <List relaxed selection>
+                      {currentClass.groups
+                        .filter((group) => group.type === 'group')
+                        .map((group) => (
+                          <List.Item
+                            key={`private_group_${group.id}`}
+                            onClick={() => {
+                              if (currentGroup.id !== group.id) {
+                                handleSelectGroup(group)
+                                setCurrentGroup(group)
+                              }
+                            }}
+                            style={
+                              currentGroup.id == group.id &&
+                              vonageCred !== null
+                                ? clickedGroupsStyle
+                                : unClickedGroupsStyle
+                            }
+                          >
+                            <List.Icon name="lock" />
+                            <List.Content>
+                              <List.Header as="a">{group.name}</List.Header>
+                            </List.Content>
+                            {showInviteButton(group)}
+                          </List.Item>
+                        ))}
+                    </List>
+                  </div>
+                ),
+              },
+            },
+          ]}
+        />
+        <div
+          style={{
+            position: 'absolute',
+            width: 'calc(100% - 38px)',
+            bottom: 14,
+          }}
+        >
+          {getButtonToDisplay()}
+        </div>
+      </div>
+    ) : (
+      <div style={{ height: '100%', marginLeft: '2.5%' }}>
+        <Button.Group
+          size="huge"
+          style={{ marginBottom: 12, width: '100%' }}
+          fluid
+        >
+          <Button
+            compact
+            icon="angle left"
+            content={currentClass.name}
+            style={{
+              fontSize: '1.5vw',
+              textAlign: 'left',
+              width: '75%',
+              marginBottom: '2%',
+              minWidth: '41px',
+            }}
+            onClick={handleBack}
+          />
+          <Button
+            compact
+            icon="setting"
+            style={{
+              fontSize: '1.5vw',
+              textAlign: 'center',
+              width: '15%',
+              marginBottom: '2%',
+              minWidth: '14px',
+            }}
+          />
+        </Button.Group>
+        {showOffice()}
+        <Accordion
+          fluid
+          exclusive={false}
+          defaultActiveIndex={[0, 1]}
+          style={{
+            fontSize: '1vw',
+            textAlign: 'left',
+            width: '100%',
+            marginBottom: '2%',
+            minWidth: '41px',
+          }}
+          panels={[
+            {
+              key: 'discussions',
+              title: 'Discussions',
+              content: {
+                content: (
+                  <div style={{ paddingLeft: 20 }}>
+                    <List relaxed selection>
+                      {currentClass.groups
+                        .filter((group) => group.type === 'discussion')
+                        .map((group) => (
+                          <>
+                          <List.Item
+                            key={`discussion_${group.id}`}
+                            onClick={() => {
+                              if (currentGroup.id !== group.id) {
+                                handleSelectGroup(group)
+                                setCurrentGroup(group)
+                              }
+                            }}
+                            style={
+                              currentGroup.id == group.id &&
+                              vonageCred !== null
+                                ? clickedGroupsStyle
+                                : unClickedGroupsStyle
+                            }
+                          >
+                            <List.Icon name="sound" />
+                            <List.Content>
+                              <List.Header as="a">{group.name}</List.Header>
+                            </List.Content>
+                            {showInviteButton(group)}
+                          </List.Item>
+                          <Button compact icon size = 'mini' floated = 'right'
+                          style ={{
+                            fontSize: '.6vw',
+                            textAlign: 'center',
+                            width: '10%',
+                            marginBottom: '2%',
+                            minWidth: '10px',
+                            backgroundColor: 'transparent',
+                          }}>
+                            <Icon name = 'delete' color = 'red' />
+                          </Button>
+                          </>
+                        ))}
+                    </List>
+                  </div>
+                ),
+              },
+            },
+            {
+              key: 'private-groups',
+              title: 'Private Groups',
+              content: {
+                content: (
+                  <div style={{ paddingLeft: 20 }}>
+                    <List relaxed selection>
+                      {currentClass.groups
+                        .filter((group) => group.type === 'group')
+                        .map((group) => (
+                          <List.Item
+                            key={`private_group_${group.id}`}
+                            onClick={() => {
+                              if (currentGroup.id !== group.id) {
+                                handleSelectGroup(group)
+                                setCurrentGroup(group)
+                              }
+                            }}
+                            style={
+                              currentGroup.id == group.id &&
+                              vonageCred !== null
+                                ? clickedGroupsStyle
+                                : unClickedGroupsStyle
+                            }
+                          >
+                            <List.Icon name="lock" />
+                            <List.Content>
+                              <List.Header as="a">{group.name}</List.Header>
+                            </List.Content>
+                            {showInviteButton(group)}
+                          </List.Item>
+                        ))}
+                    </List>
+                  </div>
+                ),
+              },
+            },
+          ]}
+        />
+        <div
+          style={{
+            position: 'absolute',
+            width: 'calc(100% - 38px)',
+            bottom: 14,
+          }}
+        >
+          {getButtonToDisplay()}
+        </div>
+      </div>
+    )
+  }
+
   function showOffice() {
     return (
       (currentClass.role !== 'Student' || currentGroup.type === 'office') && (
@@ -126,8 +405,8 @@ function ClassPage() {
 
   return (
     <Layout
-      left={
-        <div style={{ height: '100%', marginLeft: '2.5%' }}>
+      left={ leftDisplay()
+        /*<div style={{ height: '100%', marginLeft: '2.5%' }}>
           <Button.Group
             size="huge"
             style={{ marginBottom: 12, width: '100%' }}
@@ -256,7 +535,7 @@ function ClassPage() {
           >
             {getButtonToDisplay()}
           </div>
-        </div>
+        </div>*/
       }
       right={<Queue onJoin={handleJoinTA} currentGroup={currentGroup} />}
     >
@@ -277,20 +556,22 @@ function ClassPage() {
 const unClickedGroupsStyle = {
   fontSize: '.8vw',
   textAlign: 'left',
-  width: '75%',
+  width: '80%',
   marginBottom: '2%',
   minWidth: '41px',
+  display: 'inline-block'
 }
 const clickedGroupsStyle = {
   fontSize: '.8vw',
   textAlign: 'left',
-  width: '75%',
+  width: '80%',
   marginBottom: '2%',
   minWidth: '41px',
   background: '#e0e1e2',
   borderRadius: 10,
   borderWidth: 1,
   borderColor: '#fff',
+  display: 'inline-block'
 }
 
 export default AuthRequired(ClassPage)
