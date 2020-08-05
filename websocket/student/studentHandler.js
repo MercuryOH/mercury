@@ -55,7 +55,18 @@ const handleStudentMessage = (ws, message) => {
           msg: 'studentTimeout',
         })
       )
+      break
 
+    case 'joinTA':
+      const { group, TAName } = JSON.parse(msg)
+      const TAToSend = webSocketConnectionManager.getSocketOfName(TAName)
+
+      TAToSend.send(
+        prepareMessage({
+          msgType: 'studentJoin',
+          msg: JSON.stringify(group),
+        })
+      )
       break
 
     default:

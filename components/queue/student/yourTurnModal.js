@@ -11,6 +11,7 @@ class YourTurnModal extends Component {
     this.queueComponent = this.props.queueComponent
 
     this.state = {
+      group: this.props.group,
       modalState: this.props.isYourTurn,
       timerRunning: false,
     }
@@ -44,10 +45,12 @@ class YourTurnModal extends Component {
   }
 
   handleJoin = () => {
+    const { queueWebSocketController } = this.queueComponent.state
     clearTimeout(timeOut)
     this.queueComponent.setState({ isYourTurn: false, inQueue: false })
     this.setState({ modalState: false, timerRunning: false })
-    this.props.onJoin(this.props.group)
+    queueWebSocketController.signalJoinTA(this.state.group)
+    this.props.onJoin(this.state.group)
   }
 
   render() {

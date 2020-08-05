@@ -95,6 +95,16 @@ export default class StudentWebSocketController {
     )
   }
 
+  signalJoinTA(group) {
+    const { TAName } = this.component.state
+    this.connection.send(
+      this.prepareMessage({
+        msgType: 'joinTA',
+        msg: JSON.stringify({ group, TAName }),
+      })
+    )
+  }
+
   prepareMessage(msg) {
     const { courseId } = this.component
     const enrichedPayload = { ...msg, courseId, role }

@@ -76,6 +76,12 @@ export default class TAWebSocketController {
       case 'studentTimeout': // in this case, the server lets the TA know that the student has timed out
         this.removeTAWaitingModal()
         break
+
+      case 'studentJoin': // in this case, the TA's invitation to join has been accepted
+        this.removeTAWaitingModal()
+        this.component.props.onJoin(JSON.parse(msg))
+        break
+
       default:
         throw new Error(`Message ${msg} is incorrectly formatted`)
     }

@@ -72,7 +72,9 @@ class Queue extends Component {
       )
     }
 
-    return <TAQueueView me={me} classData={classData} />
+    return (
+      <TAQueueView me={me} classData={classData} onJoin={this.props.onJoin} />
+    )
   }
 }
 
