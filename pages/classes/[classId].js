@@ -17,7 +17,6 @@ function ClassPage() {
   const router = useRouter()
   const [currGroup, setCurrGroup] = useState('bs')
   const [classUsers, setClassUsers] = useState([])
-
   const [groups, setGroups] = useState([])
   const [classes, setClasses] = useState([])
   const [currentClass, setCurrentClass] = useState({
@@ -27,6 +26,16 @@ function ClassPage() {
   })
   const [vonageCred, setVonageCred] = useState(null)
   const { classId } = router.query
+
+  useEffect(() => {
+  api
+    .getMe()
+    .then((users) => setUsers(users))
+    .catch(console.error)
+})
+
+var inclass = ''
+var userids = []
 
   const fetchCurrentClass = async () => {
     var test = api.getClassNG(classId)
@@ -38,32 +47,30 @@ function ClassPage() {
       }
     }
 
-    useEffect(() => {
-      api
-        .getMe()
-        .then((users) => setUsers(users))
-        .catch(console.error)
-    })
+  useEffect(() => {
+    api
+      .getClassUsers(classId)
+      .then((classUsers) => setClassUsers(classUsers))
+      .catch(console.error)
+      classUsers.forEach((c) => {
+        userids.push(c.UserId)
+        inclass = userids.includes(users.id)
+        //console.log(userids)
+        //console.log(users.id)
+        //console.log(inclass)
+      })
+  }, [])
 
     const checkUser = async () => {
-      var inclass = ""
-      var classUsersList = api.getClassUsers(classId)
-      classUsersList.then((classUsers) => setClassUsers(classUsers)).catch(console.error)
-      /*Array.from(classUsersList).forEach((c) => {
-        if (c.UserId === api.getMe().id){
-          inclass = "true"
-        }
-      }
-    )
-      if (inclass === ""){
+      if (inclass === 'false') {
         await router.push('/calendar')
-      }*/
+      }
     }
 
   useEffect(() => {
     if (!classId) return
     fetchCurrentClass()
-    //checkUser()
+    checkUser()
   }, [classId])
 
   useEffect(() => {
