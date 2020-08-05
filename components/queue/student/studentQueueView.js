@@ -34,6 +34,7 @@ class StudentQueueView extends Component {
       TAName: '',
       isReadyToRender: false,
       office: this.props.office,
+      inCall: false,
     }
   }
 
@@ -81,6 +82,10 @@ class StudentQueueView extends Component {
   }
 
   getButtonToDisplay() {
+    if (this.state.inCall) {
+      return null
+    }
+
     const buttonToDisplay = this.state.inQueue ? (
       <Button
         onClick={this.removeMeFromQueue.bind(this)}
