@@ -61,12 +61,12 @@ class Vonage extends React.Component {
           onError={this.handleSessionError}
         >
           <OTPublisher
-            properties={{ publishAudio: true, width: '100%', height: '40vh'}}
+            properties={{ publishAudio: true, width: '100%', height: '40vh' }}
             onPublish={this.handlePublish}
             eventHandlers={this.publishEventHandlers}
             onError={this.handlePublishError}
           />
-          <OTStreams style = {{display: 'inline-flex'}}>
+          <OTStreams style={{ display: 'inline-flex' }}>
             <OTSubscriber
               properties={{ width: '100%', height: '40vh' }}
               onSubscribe={this.handleSubscribe}

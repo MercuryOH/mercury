@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import styled from 'styled-components'
 import { useRouter } from 'next/router'
 import { Menu, Image, Label, Dropdown } from 'semantic-ui-react'
-import * as api from '../util/mercuryService'
+import { useAuth } from './authProvider'
 
 const ProfileContainer = styled.div`
   display: flex;
@@ -10,25 +10,8 @@ const ProfileContainer = styled.div`
 `
 
 function Navbar() {
-  const [users, setUsers] = useState([])
   const router = useRouter()
-
-  var name = ''
-  var email = ''
-
-  useEffect(() => {
-    api
-      .getMe()
-      .then(function (users) {
-        setUsers(users)
-      })
-      .catch(console.error)
-  })
-
-  if (users) {
-    name = users.firstName + ' ' + users.lastName
-    email = users.email
-  }
+  const { user } = useAuth()
 
   return (
     <Menu size="massive" style={{ marginBottom: 0, zIndex: 1 }} borderless>
@@ -46,8 +29,8 @@ function Navbar() {
             }
           >
             <Dropdown.Menu>
-              <Dropdown.Item text={name} />
-              <Dropdown.Item text={email} />
+              <Dropdown.Item text={`${user.firstName} ${user.lastName}`} />
+              <Dropdown.Item text={user.email} />
               <Dropdown.Item
                 text="Logout"
                 onClick={() => router.push('/login')}

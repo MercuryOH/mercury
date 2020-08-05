@@ -13,20 +13,19 @@ export function AuthProvider({ children }) {
   const [user, setUser] = useState(null)
   const [loading, setLoading] = useState(true)
 
-  useEffect(() => {
-    async function loadUserFromCookies() {
-      const token = Cookies.get(MERCURY_TOKEN)
+  const loadUserFromCookies = async () => {
+    const token = Cookies.get(MERCURY_TOKEN)
+    if (token) {
+      api.setToken(`Bearer ${token}`)
 
-      if (token) {
-        api.setToken(`Bearer ${token}`)
-
-        const currentUser = await api.getMe()
-        if (currentUser) setUser(currentUser)
-      }
-
-      setLoading(false)
+      const currentUser = await api.getMe()
+      if (currentUser) setUser(currentUser)
     }
 
+    setLoading(false)
+  }
+
+  useEffect(() => {
     loadUserFromCookies()
   }, [])
 
@@ -66,7 +65,6 @@ export function AuthRequired(Component) {
     useEffect(() => {
       if (!isAuthenticated && !loading) router.push('/login')
     }, [loading, isAuthenticated])
-
     return loading ? (
       <Segment style={{ height: '100vh' }} loading />
     ) : (

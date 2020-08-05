@@ -43,7 +43,7 @@ class YourTurnModal extends Component {
   }
 
   handleJoin = () => {
-    this.setState(state => ({ ...state, modelState: false }))
+    this.setState((state) => ({ ...state, modelState: false }))
 
     this.props.onJoin(this.props.group)
   }

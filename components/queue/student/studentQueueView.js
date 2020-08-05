@@ -196,7 +196,7 @@ class StudentQueueView extends Component {
 }
 
 StudentQueueView.propTypes = {
-  onJoin: PropTypes.func.isRequired
+  onJoin: PropTypes.func.isRequired,
 }
 
 export default StudentQueueView

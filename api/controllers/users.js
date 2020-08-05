@@ -83,10 +83,4 @@ router.get('/me', middleware.authRequired, async (req, res) => {
   })
 })
 
-router.get('/:classId', middleware.authRequired, async (req, res) => {
-  const { classId: ClassId } = req.params
-  const classUser = await models.ClassUser.findByPk(ClassId)
-  return res.json(classUser)
-})
-
 module.exports = router
