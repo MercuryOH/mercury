@@ -11,6 +11,7 @@ class Queue extends Component {
       isDataLoaded: false,
       me: {},
       classData: [],
+      office: {},
     }
   }
 
@@ -19,6 +20,7 @@ class Queue extends Component {
 
     let me = {}
     let classData = {}
+    let office = {}
 
     api
       .getMe()
@@ -29,7 +31,20 @@ class Queue extends Component {
       .then((classPayload) => {
         classData = classPayload
       })
-      .then(() => this.setState({ me, classData, isDataLoaded: true }))
+      
+      .then(() => api.getClassNG(this.courseId))
+      .then((cclass) => {
+        console.log(cclass)
+        cclass.Groups.forEach((group) => {
+          if (group.type === 'office') {
+            console.log(group)
+            office = group
+          }
+        })
+      })
+
+      .then(() => this.setState({ me, classData, office, isDataLoaded: true }))
+    
   }
 
   getRoleForClass() {
@@ -47,14 +62,21 @@ class Queue extends Component {
   }
 
   render() {
-    const { isDataLoaded, me, classData } = this.state
+    const { isDataLoaded, me, classData, office } = this.state
 
     if (!isDataLoaded) {
       return null
     }
 
     if (this.getRoleForClass() === 'Student') {
-      return <StudentQueueView me={me} classData={classData} onJoin={this.props.onJoin} />
+      return (
+        <StudentQueueView
+          me={me}
+          classData={classData}
+          onJoin={this.props.onJoin}
+          office={office}
+        />
+      )
     }
 
     return <TAQueueView me={me} classData={classData} />
@@ -62,7 +84,7 @@ class Queue extends Component {
 }
 
 Queue.propTypes = {
-  onJoin: PropTypes.func.isRequired
+  onJoin: PropTypes.func.isRequired,
 }
 
 export default Queue

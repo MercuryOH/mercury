@@ -33,6 +33,7 @@ class StudentQueueView extends Component {
       nextStudentName: '',
       TAName: '',
       isReadyToRender: false,
+      office: this.props.office,
     }
   }
 
@@ -156,7 +157,7 @@ class StudentQueueView extends Component {
           isYourTurn={this.state.isYourTurn}
           queueComponent={this}
           onJoin={this.props.onJoin}
-          group={{}}
+          group={this.state.office}
         />
 
         <Button.Group
