@@ -3,6 +3,7 @@ import PropTypes from 'prop-types'
 import { Modal, Button, Header } from 'semantic-ui-react'
 
 const timeOutTime = 20000
+let timeOut = null
 
 class YourTurnModal extends Component {
   constructor(props) {
@@ -31,7 +32,7 @@ class YourTurnModal extends Component {
   }
 
   startTimer() {
-    setTimeout(this.handleTimerEnd.bind(this), timeOutTime)
+    timeOut = setTimeout(this.handleTimerEnd.bind(this), timeOutTime)
   }
 
   handleTimerEnd() {
@@ -43,8 +44,9 @@ class YourTurnModal extends Component {
   }
 
   handleJoin = () => {
-    this.setState((state) => ({ ...state, modelState: false }))
-
+    clearTimeout(timeOut)
+    this.queueComponent.setState({ isYourTurn: false, inQueue: false })
+    this.setState({ modalState: false, timerRunning: false })
     this.props.onJoin(this.props.group)
   }
 

@@ -31,14 +31,13 @@ class Queue extends Component {
       .then((classPayload) => {
         classData = classPayload
       })
-      
+
       .then(() => api.getClass(this.courseId))
       .then((cclass) => {
         office = cclass.groups.find((group) => group.type === 'office')
       })
 
       .then(() => this.setState({ me, classData, office, isDataLoaded: true }))
-    
   }
 
   getRoleForClass() {
