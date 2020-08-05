@@ -25,7 +25,7 @@ function ClassPage() {
   })
   const [vonageCred, setVonageCred] = useState(null)
   const { classId } = router.query
-  const plusIcon = <List.Icon name="plus" size="small" />
+  const plusIcon = <List.Icon name="user plus" size="med" />
   const noPlusIcon = <div></div>
 
   const fetchCurrentClass = () => {
