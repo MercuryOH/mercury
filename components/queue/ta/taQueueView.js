@@ -20,7 +20,7 @@ export default class TAQueueView extends Component {
     this.state = {
       displayStudentsStyle: { display: 'grid' },
       iconToDisplay: 'caret square down outline',
-      queueWebSocketController: new TAWebSocketController(this),
+      queueWebSocketController: new TAWebSocketController(),
       studentsInQueue: [],
       me: this.props.me,
       nextStudentName: '',
