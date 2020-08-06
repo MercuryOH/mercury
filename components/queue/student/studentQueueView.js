@@ -21,26 +21,6 @@ const QueueLabel = styled(Label)`
 
 class StudentQueueView extends Component {
   constructor(props) {
-    /**
-     * Define EventEmitter subscribers
-     */
-
-    EventEmitter.subscribe('activateYourTurnModal', (TAName) => {
-      this.setState({ isYourTurn: true, TAName, inQueue: false })
-    })
-
-    EventEmitter.subscribe('updateStudentsInQueue', (msg) => {
-      this.setState({ studentsInQueue: msg })
-    })
-
-    EventEmitter.subscribe('addMeToQueue', () => {
-      this.setState({ inQueue: true })
-    })
-
-    EventEmitter.subscribe('removeMeFromQueue', () => {
-      this.setState({ inQueue: false })
-    })
-
     super(props)
     this.state = {
       displayStudentsStyle: { display: 'grid' },
@@ -58,6 +38,29 @@ class StudentQueueView extends Component {
       inCall: false,
       currentGroup: this.props.currentGroup,
     }
+    this.defineEventEmitterCallbacks()
+  }
+
+  /**
+   * Define EventEmitter subscribers
+   */
+
+  defineEventEmitterCallbacks() {
+    EventEmitter.subscribe('activateYourTurnModal', (TAName) => {
+      this.setState({ isYourTurn: true, TAName, inQueue: false })
+    })
+
+    EventEmitter.subscribe('updateStudentsInQueue', (msg) => {
+      this.setState({ studentsInQueue: msg })
+    })
+
+    EventEmitter.subscribe('addMeToQueue', () => {
+      this.setState({ inQueue: true })
+    })
+
+    EventEmitter.subscribe('removeMeFromQueue', () => {
+      this.setState({ inQueue: false })
+    })
   }
 
   componentWillReceiveProps(nextProps) {
