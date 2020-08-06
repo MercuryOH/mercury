@@ -4,6 +4,7 @@ import styled from 'styled-components'
 import TaWaitingModal from './taWaitingModal'
 import TAWebSocketController from './taWebSocket'
 import { NotificationContainer, NotificationManager } from 'react-notifications'
+import { EventEmitter } from '../../util/EventEmitter'
 
 const QueueDiv = styled.div`
   grid-gap: 2vh;
@@ -22,10 +23,46 @@ export default class TAQueueView extends Component {
       queueWebSocketController: new TAWebSocketController(this),
       studentsInQueue: [],
       me: this.props.me,
-      inviteNextStudent: false,
       nextStudentName: '',
       isReadyToRender: false,
     }
+
+    this.defineEventEmitterCallbacks()
+  }
+
+  defineEventEmitterCallbacks() {
+    EventEmitter.subscribe('activateTAWaitingModal', (nextStudentName) => {
+      this.setState({ nextStudentName })
+
+      EventEmitter.publish('newTAWaitingModalProps', {
+        inviteNextStudent: true,
+        nextStudentName,
+      })
+    })
+
+    EventEmitter.subscribe('removeTAWaitingModalOnTimeout', () => {
+      const { nextStudentName } = this.state
+      this.createTimeoutNotification(nextStudentName)
+      this.setState({ nextStudentName: '' })
+
+      EventEmitter.publish('newTAWaitingModalProps', {
+        inviteNextStudent: false,
+        nextStudentName: '',
+      })
+    })
+
+    EventEmitter.subscribe('removeTAWaitingModal', () => {
+      this.setState({ nextStudentName: '' })
+
+      EventEmitter.publish('newTAWaitingModalProps', {
+        inviteNextStudent: false,
+        nextStudentName: '',
+      })
+    })
+
+    EventEmitter.subscribe('updateStudentsInQueue', (studentsInQueue) => {
+      this.setState({ studentsInQueue })
+    })
   }
 
   createTimeoutNotification(studentName) {
@@ -33,9 +70,10 @@ export default class TAQueueView extends Component {
   }
 
   componentDidMount() {
-    this.courseId = Number(window.location.href.split('/')[4])
-    const { queueWebSocketController } = this.state
-    queueWebSocketController.start()
+    const courseId = Number(window.location.href.split('/')[4])
+    const onJoin = this.props.onJoin
+    const { queueWebSocketController, me } = this.state
+    queueWebSocketController.start({ me, courseId, onJoin })
     this.setState({ isReadyToRender: true })
   }
 
@@ -116,10 +154,7 @@ export default class TAQueueView extends Component {
 
     return (
       <QueueDiv>
-        <TaWaitingModal
-          inviteNextStudent={this.state.inviteNextStudent}
-          studentName={this.state.nextStudentName}
-        />
+        <TaWaitingModal />
 
         <Button.Group
           size="huge"

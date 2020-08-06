@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import { Modal, Button, Header } from 'semantic-ui-react'
+import { EventEmitter } from '../../util/EventEmitter'
 
 export default class TaWaitingModal extends Component {
   constructor(props) {
@@ -8,11 +9,12 @@ export default class TaWaitingModal extends Component {
       modalState: this.props.inviteNextStudent,
       studentName: this.props.studentName,
     }
-  }
-  componentWillReceiveProps(nextProps) {
-    this.setState({
-      modalState: nextProps.inviteNextStudent,
-      studentName: nextProps.studentName,
+
+    EventEmitter.subscribe('newTAWaitingModalProps', (nextProps) => {
+      this.setState({
+        modalState: nextProps.inviteNextStudent,
+        studentName: nextProps.nextStudentName,
+      })
     })
   }
 

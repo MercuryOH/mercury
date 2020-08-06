@@ -1,3 +1,5 @@
+import { EventEmitter } from '../../util/EventEmitter'
+
 const url = 'ws://localhost:8080'
 const role = 'Instructor'
 
@@ -7,16 +9,11 @@ const role = 'Instructor'
  */
 
 export default class TAWebSocketController {
-  constructor(component) {
-    this.component = component
-    this.started = false
-  }
-
-  start() {
-    const { me } = this.component.state
+  start({ me, courseId, onJoin }) {
     const { firstName, lastName } = me
     this.fullName = `${firstName} ${lastName}`
-
+    this.courseId = courseId
+    this.onJoin = onJoin
     this.connection = new WebSocket(url)
     this.connection.onopen = this.processConnectionOpen.bind(this)
     this.connection.onerror = this.processConnectionError.bind(this)
@@ -39,31 +36,19 @@ export default class TAWebSocketController {
   }
 
   activateTAWaitingModal(studentName) {
-    this.component.setState({
-      inviteNextStudent: true,
-      nextStudentName: studentName,
-    })
+    EventEmitter.publish('activateTAWaitingModal', studentName)
   }
 
   removeTAWaitingModalOnTimeout() {
-    const { nextStudentName } = this.component.state
-    this.component.createTimeoutNotification(nextStudentName)
-
-    this.component.setState({
-      inviteNextStudent: false,
-      nextStudentName: '',
-    })
+    EventEmitter.publish('removeTAWaitingModalOnTimeout')
   }
 
   removeTAWaitingModal() {
-    this.component.setState({
-      inviteNextStudent: false,
-      nextStudentName: '',
-    })
+    EventEmitter.publish('removeTAWaitingModal')
   }
 
   updateStudentsInQueue(msg) {
-    this.component.setState({ studentsInQueue: msg })
+    EventEmitter.publish('updateStudentsInQueue', msg)
   }
 
   processConnectionMessage(e) {
@@ -86,7 +71,7 @@ export default class TAWebSocketController {
 
       case 'studentJoin': // in this case, the TA's invitation to join has been accepted
         this.removeTAWaitingModal()
-        this.component.props.onJoin(JSON.parse(msg))
+        this.onJoin(JSON.parse(msg))
         break
 
       case 'studentDecline': // in this case the student declines the TA's invitation, and the TA's modal closes
@@ -108,7 +93,7 @@ export default class TAWebSocketController {
   }
 
   prepareMessage(msg) {
-    const { courseId } = this.component
+    const { courseId } = this
     const enrichedPayload = { ...msg, courseId, role }
     return JSON.stringify(enrichedPayload)
   }
