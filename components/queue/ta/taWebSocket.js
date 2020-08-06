@@ -89,6 +89,10 @@ export default class TAWebSocketController {
         this.component.props.onJoin(JSON.parse(msg))
         break
 
+      case 'studentDecline': // in this case the student declines the TA's invitation, and the TA's modal closes
+        this.removeTAWaitingModal()
+        break
+
       default:
         throw new Error(`Message ${msg} is incorrectly formatted`)
     }
