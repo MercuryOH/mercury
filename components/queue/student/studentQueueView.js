@@ -64,29 +64,29 @@ class StudentQueueView extends Component {
       this.setState({ inQueue: false })
     })
 
-    EventEmitter.subscribe('studentTimeout', () => {
+    EventEmitter.subscribe('studentTimeout', (TAName) => {
       const { queueWebSocketController } = this.state
-      queueWebSocketController.signalStudentTimeout()
+      queueWebSocketController.signalStudentTimeout(TAName)
       this.createTimeoutNotification()
     })
 
-    EventEmitter.subscribe('studentJoinTA', () => {
+    EventEmitter.subscribe('studentJoinTA', (TAName) => {
       const { queueWebSocketController, office, onJoin } = this.state
-      queueWebSocketController.signalJoinTA(office)
+      queueWebSocketController.signalJoinTA(office, TAName)
       this.setState({ inQueue: false })
       onJoin(office)
     })
 
-    EventEmitter.subscribe('studentInviteTA', () => {
+    EventEmitter.subscribe('studentInviteTA', (TAName) => {
       const { queueWebSocketController, onJoin, currentGroup } = this.state
-      queueWebSocketController.signalJoinTA(currentGroup)
+      queueWebSocketController.signalJoinTA(currentGroup, TAName)
       this.setState({ inQueue: false })
       onJoin(currentGroup)
     })
 
-    EventEmitter.subscribe('studentDeclineTA', () => {
+    EventEmitter.subscribe('studentDeclineTA', (TAName) => {
       const { queueWebSocketController, onJoin, currentGroup } = this.state
-      queueWebSocketController.signalDeclineTA()
+      queueWebSocketController.signalDeclineTA(TAName)
       this.setState({ inQueue: false })
       onJoin(currentGroup)
     })

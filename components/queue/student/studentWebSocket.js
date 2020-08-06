@@ -87,17 +87,16 @@ export default class StudentWebSocketController {
     EventEmitter.publish('removeMeFromQueue')
   }
 
-  signalStudentTimeout() {
+  signalStudentTimeout(TAName) {
     this.connection.send(
       this.prepareMessage({
         msgType: 'studentTimeout',
-        msg: this.component.state.TAName,
+        msg: TAName,
       })
     )
   }
 
-  signalJoinTA(group) {
-    const { TAName } = this.component.state
+  signalJoinTA(group, TAName) {
     this.connection.send(
       this.prepareMessage({
         msgType: 'joinTA',
@@ -106,11 +105,11 @@ export default class StudentWebSocketController {
     )
   }
 
-  signalDeclineTA() {
+  signalDeclineTA(TAName) {
     this.connection.send(
       this.prepareMessage({
         msgType: 'declineTA',
-        msg: this.component.state.TAName,
+        msg: TAName,
       })
     )
   }

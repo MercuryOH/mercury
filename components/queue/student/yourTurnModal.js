@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 import { Modal, Button, Header } from 'semantic-ui-react'
 import { EventEmitter } from '../../util/EventEmitter'
 
-const timeOutTime = 10000
+const timeOutTime = 5000
 let timeOut = null
 
 class YourTurnModal extends Component {
@@ -32,25 +32,29 @@ class YourTurnModal extends Component {
   }
 
   handleTimerEnd() {
-    EventEmitter.publish('studentTimeout')
+    const { TAName } = this.state
+    EventEmitter.publish('studentTimeout', TAName)
     this.setState({ modalState: false, TAName: '' })
   }
 
   handleJoin = () => {
+    const { TAName } = this.state
     clearTimeout(timeOut)
-    EventEmitter.publish('studentJoinTA')
+    EventEmitter.publish('studentJoinTA', TAName)
     this.setState({ modalState: false })
   }
 
   handleInvite = () => {
+    const { TAName } = this.state
     clearTimeout(timeOut)
-    EventEmitter.publish('studentInviteTA')
+    EventEmitter.publish('studentInviteTA', TAName)
     this.setState({ modalState: false })
   }
 
   handleDecline = () => {
+    const { TAName } = this.state
     clearTimeout(timeOut)
-    EventEmitter.publish('studentDeclineTA')
+    EventEmitter.publish('studentDeclineTA', TAName)
     this.setState({ modalState: false })
   }
 
