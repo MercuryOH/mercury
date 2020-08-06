@@ -37,6 +37,7 @@ class StudentQueueView extends Component {
       office: this.props.office,
       inCall: false,
       currentGroup: this.props.currentGroup,
+      onJoin: this.props.onJoin,
     }
     this.defineEventEmitterCallbacks()
   }
@@ -67,6 +68,27 @@ class StudentQueueView extends Component {
       const { queueWebSocketController } = this.state
       queueWebSocketController.signalStudentTimeout()
       this.createTimeoutNotification()
+    })
+
+    EventEmitter.subscribe('studentJoinTA', () => {
+      const { queueWebSocketController, office, onJoin } = this.state
+      queueWebSocketController.signalJoinTA(office)
+      this.setState({ inQueue: false })
+      onJoin(office)
+    })
+
+    EventEmitter.subscribe('studentInviteTA', () => {
+      const { queueWebSocketController, onJoin, currentGroup } = this.state
+      queueWebSocketController.signalJoinTA(currentGroup)
+      this.setState({ inQueue: false })
+      onJoin(currentGroup)
+    })
+
+    EventEmitter.subscribe('studentDeclineTA', () => {
+      const { queueWebSocketController, onJoin, currentGroup } = this.state
+      queueWebSocketController.signalDeclineTA()
+      this.setState({ inQueue: false })
+      onJoin(currentGroup)
     })
   }
 

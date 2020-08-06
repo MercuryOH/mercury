@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 import { Modal, Button, Header } from 'semantic-ui-react'
 import { EventEmitter } from '../../util/EventEmitter'
 
-const timeOutTime = 3000
+const timeOutTime = 10000
 let timeOut = null
 
 class YourTurnModal extends Component {
@@ -14,7 +14,6 @@ class YourTurnModal extends Component {
     this.state = {
       office: this.props.office,
       modalState: this.props.isYourTurn,
-      timerRunning: false,
       currentGroup: this.props.currentGroup,
       TAName: '',
     }
@@ -38,30 +37,21 @@ class YourTurnModal extends Component {
   }
 
   handleJoin = () => {
-    const { queueWebSocketController } = this.queueComponent.state
     clearTimeout(timeOut)
-    this.queueComponent.setState({ isYourTurn: false, inQueue: false })
-    this.setState({ modalState: false, timerRunning: false })
-    queueWebSocketController.signalJoinTA(this.state.office)
-    this.props.onJoin(this.state.office)
+    EventEmitter.publish('studentJoinTA')
+    this.setState({ modalState: false })
   }
 
   handleInvite = () => {
-    const { queueWebSocketController } = this.queueComponent.state
     clearTimeout(timeOut)
-    this.queueComponent.setState({ isYourTurn: false, inQueue: false })
-    this.setState({ modalState: false, timerRunning: false })
-    queueWebSocketController.signalJoinTA(this.state.currentGroup)
-    this.props.onJoin(this.state.currentGroup)
+    EventEmitter.publish('studentInviteTA')
+    this.setState({ modalState: false })
   }
 
   handleDecline = () => {
-    const { queueWebSocketController } = this.queueComponent.state
     clearTimeout(timeOut)
-    this.queueComponent.setState({ isYourTurn: false, inQueue: false })
-    this.setState({ modalState: false, timerRunning: false })
-    queueWebSocketController.removeMeFromQueue()
-    queueWebSocketController.signalDeclineTA()
+    EventEmitter.publish('studentDeclineTA')
+    this.setState({ modalState: false })
   }
 
   enableInviteTA() {
