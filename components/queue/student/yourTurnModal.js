@@ -1,8 +1,9 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import { Modal, Button, Header } from 'semantic-ui-react'
+import { EventEmitter } from '../../util/EventEmitter'
 
-const timeOutTime = 20000
+const timeOutTime = 3000
 let timeOut = null
 
 class YourTurnModal extends Component {
@@ -15,24 +16,16 @@ class YourTurnModal extends Component {
       modalState: this.props.isYourTurn,
       timerRunning: false,
       currentGroup: this.props.currentGroup,
+      TAName: '',
     }
+
+    EventEmitter.subscribe('startYourTurnModalTimer', (TAName) => {
+      this.setState({ TAName, modalState: true }, this.startTimer)
+    })
   }
 
   componentWillReceiveProps(nextProps) {
-    const { isYourTurn } = nextProps
-    const { timerRunning } = this.state
-
     this.setState({ currentGroup: nextProps.currentGroup })
-
-    if (isYourTurn && !timerRunning) {
-      this.setState(
-        { modalState: nextProps.isYourTurn, timerRunning: true },
-        this.startTimer
-      )
-      return
-    }
-
-    this.setState({ modalState: nextProps.isYourTurn })
   }
 
   startTimer() {
@@ -40,11 +33,8 @@ class YourTurnModal extends Component {
   }
 
   handleTimerEnd() {
-    const { queueWebSocketController } = this.queueComponent.state
-    queueWebSocketController.signalStudentTimeout()
-    this.setState({ modalState: false, timerRunning: false })
-    this.queueComponent.createTimeoutNotification()
-    this.queueComponent.setState({ isYourTurn: false, TAName: '' })
+    EventEmitter.publish('studentTimeout')
+    this.setState({ modalState: false, TAName: '' })
   }
 
   handleJoin = () => {

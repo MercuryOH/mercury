@@ -48,6 +48,7 @@ class StudentQueueView extends Component {
   defineEventEmitterCallbacks() {
     EventEmitter.subscribe('activateYourTurnModal', (TAName) => {
       this.setState({ isYourTurn: true, TAName, inQueue: false })
+      EventEmitter.publish('startYourTurnModalTimer', TAName)
     })
 
     EventEmitter.subscribe('updateStudentsInQueue', (msg) => {
@@ -60,6 +61,12 @@ class StudentQueueView extends Component {
 
     EventEmitter.subscribe('removeMeFromQueue', () => {
       this.setState({ inQueue: false })
+    })
+
+    EventEmitter.subscribe('studentTimeout', () => {
+      const { queueWebSocketController } = this.state
+      queueWebSocketController.signalStudentTimeout()
+      this.createTimeoutNotification()
     })
   }
 

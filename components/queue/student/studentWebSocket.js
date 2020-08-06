@@ -114,6 +114,7 @@ export default class StudentWebSocketController {
       })
     )
   }
+
   prepareMessage(msg) {
     const { courseId } = this.component
     const enrichedPayload = { ...msg, courseId, role }
