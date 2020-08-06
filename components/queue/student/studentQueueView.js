@@ -37,6 +37,7 @@ class StudentQueueView extends Component {
       currentGroup: { id: '', name: '' },
       onJoin: this.props.onJoin,
     }
+
     this.defineEventEmitterCallbacks()
   }
 
@@ -72,14 +73,16 @@ class StudentQueueView extends Component {
       const { queueWebSocketController, office, onJoin } = this.state
       queueWebSocketController.signalJoinTA(office, TAName)
       this.setState({ inQueue: false })
-      onJoin(office)
+      // onJoin(office)
+      EventEmitter.publish('joinTA', office)
     })
 
     EventEmitter.subscribe('studentInviteTA', (TAName) => {
       const { queueWebSocketController, onJoin, currentGroup } = this.state
       queueWebSocketController.signalJoinTA(currentGroup, TAName)
       this.setState({ inQueue: false })
-      onJoin(currentGroup)
+      // onJoin(currentGroup)
+      EventEmitter.publish('joinTA', currentGroup)
     })
 
     EventEmitter.subscribe('studentDeclineTA', (TAName) => {
