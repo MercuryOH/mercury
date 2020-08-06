@@ -22,7 +22,6 @@ export default class TAQueueView extends Component {
       queueWebSocketController: new TAWebSocketController(this),
       studentsInQueue: [],
       me: this.props.me,
-      classData: this.props.classData,
       inviteNextStudent: false,
       nextStudentName: '',
       isReadyToRender: false,

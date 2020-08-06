@@ -28,7 +28,6 @@ class StudentQueueView extends Component {
       queueWebSocketController: new StudentWebSocketController(),
       studentsInQueue: [],
       me: this.props.me,
-      classData: this.props.classData,
       inQueue: false,
       isYourTurn: false,
       nextStudentName: '',

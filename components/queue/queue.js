@@ -62,19 +62,11 @@ class Queue extends Component {
 
     if (this.getRoleForClass() === 'Student') {
       return (
-        <StudentQueueView
-          me={me}
-          classData={classData}
-          onJoin={this.props.onJoin}
-          office={office}
-          currentGroup={this.state.currentGroup}
-        />
+        <StudentQueueView me={me} onJoin={this.props.onJoin} office={office} />
       )
     }
 
-    return (
-      <TAQueueView me={me} classData={classData} onJoin={this.props.onJoin} />
-    )
+    return <TAQueueView me={me} onJoin={this.props.onJoin} />
   }
 }
 
