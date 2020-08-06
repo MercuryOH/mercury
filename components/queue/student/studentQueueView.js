@@ -25,14 +25,13 @@ class StudentQueueView extends Component {
     this.state = {
       displayStudentsStyle: { display: 'grid' },
       iconToDisplay: 'caret square down outline',
-      queueWebSocketController: new StudentWebSocketController(this),
+      queueWebSocketController: new StudentWebSocketController(),
       studentsInQueue: [],
       me: this.props.me,
       classData: this.props.classData,
       inQueue: false,
       isYourTurn: false,
       nextStudentName: '',
-      TAName: '',
       isReadyToRender: false,
       office: this.props.office,
       inCall: false,
@@ -48,7 +47,7 @@ class StudentQueueView extends Component {
 
   defineEventEmitterCallbacks() {
     EventEmitter.subscribe('activateYourTurnModal', (TAName) => {
-      this.setState({ isYourTurn: true, TAName, inQueue: false })
+      this.setState({ inQueue: false })
       EventEmitter.publish('startYourTurnModalTimer', TAName)
     })
 
@@ -177,9 +176,9 @@ class StudentQueueView extends Component {
   }
 
   componentDidMount() {
-    this.courseId = Number(window.location.href.split('/')[4])
-    const { queueWebSocketController } = this.state
-    queueWebSocketController.start()
+    const { me, queueWebSocketController } = this.state
+    const courseId = Number(window.location.href.split('/')[4])
+    queueWebSocketController.start({ me, courseId })
     this.setState({ isReadyToRender: true })
   }
 
@@ -209,20 +208,13 @@ class StudentQueueView extends Component {
       return null
     }
 
-    const queueLabels =
-      this.state.displayStudentsStyle.display == 'none'
-        ? []
-        : this.state.studentsInQueue.map(this.createQueueLabel)
+    const queueLabels = this.isStudentDisplayed()
+      ? this.state.studentsInQueue.map(this.createQueueLabel)
+      : []
 
     return (
       <QueueDiv>
-        <YourTurnModal
-          isYourTurn={this.state.isYourTurn}
-          queueComponent={this}
-          onJoin={this.props.onJoin}
-          office={this.state.office}
-          currentGroup={this.state.currentGroup}
-        />
+        <YourTurnModal currentGroup={this.state.currentGroup} />
 
         <Button.Group
           size="huge"

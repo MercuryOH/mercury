@@ -1,5 +1,4 @@
 import React, { Component } from 'react'
-import PropTypes from 'prop-types'
 import { Modal, Button, Header } from 'semantic-ui-react'
 import { EventEmitter } from '../../util/EventEmitter'
 
@@ -9,11 +8,9 @@ let timeOut = null
 class YourTurnModal extends Component {
   constructor(props) {
     super(props)
-    this.queueComponent = this.props.queueComponent
 
     this.state = {
-      office: this.props.office,
-      modalState: this.props.isYourTurn,
+      modalState: false,
       currentGroup: this.props.currentGroup,
       TAName: '',
     }
@@ -143,11 +140,6 @@ class YourTurnModal extends Component {
       </div>
     )
   }
-}
-
-YourTurnModal.propTypes = {
-  office: PropTypes.object.isRequired,
-  onJoin: PropTypes.func.isRequired,
 }
 
 export default YourTurnModal

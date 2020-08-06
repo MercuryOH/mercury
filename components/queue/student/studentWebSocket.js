@@ -8,14 +8,10 @@ import { EventEmitter } from '../../util/EventEmitter'
  */
 
 export default class StudentWebSocketController {
-  constructor(component) {
-    this.component = component
-  }
-
-  start() {
-    const { me } = this.component.state
+  start({ me, courseId }) {
     const { firstName, lastName } = me
     this.fullName = `${firstName} ${lastName}`
+    this.courseId = courseId
 
     this.connection = new WebSocket(url)
     this.connection.onopen = this.processConnectionOpen.bind(this)
@@ -115,7 +111,7 @@ export default class StudentWebSocketController {
   }
 
   prepareMessage(msg) {
-    const { courseId } = this.component
+    const { courseId } = this
     const enrichedPayload = { ...msg, courseId, role }
     return JSON.stringify(enrichedPayload)
   }
