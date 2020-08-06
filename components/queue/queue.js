@@ -55,7 +55,7 @@ class Queue extends Component {
   }
 
   render() {
-    const { isDataLoaded, me, classData, office } = this.state
+    const { isDataLoaded, me, office } = this.state
     if (!isDataLoaded) {
       return null
     }
