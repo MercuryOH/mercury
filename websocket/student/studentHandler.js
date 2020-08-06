@@ -69,6 +69,17 @@ const handleStudentMessage = (ws, message) => {
       )
       break
 
+    case 'declineTA':
+      const TA = webSocketConnectionManager.getSocketOfName(msg)
+
+      TA.send(
+        prepareMessage({
+          msgType: 'studentDecline',
+          msg: 'studentDecline',
+        })
+      )
+      break
+
     default:
       throw new Error(`Message Type ${msgType} is not recognized for student`)
   }

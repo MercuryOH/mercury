@@ -65,6 +65,15 @@ class YourTurnModal extends Component {
     this.props.onJoin(this.state.currentGroup)
   }
 
+  handleDecline = () => {
+    const { queueWebSocketController } = this.queueComponent.state
+    clearTimeout(timeOut)
+    this.queueComponent.setState({ isYourTurn: false, inQueue: false })
+    this.setState({ modalState: false, timerRunning: false })
+    queueWebSocketController.removeMeFromQueue()
+    queueWebSocketController.signalDeclineTA()
+  }
+
   enableInviteTA() {
     return (
       this.state.currentGroup.id !== '' && (
@@ -133,7 +142,7 @@ class YourTurnModal extends Component {
               {this.enableInviteTA()}
               <Button
                 color="red"
-                onClick={() => this.setState({ modalState: false })}
+                onClick={this.handleDecline}
                 style={{
                   fontSize: '1vw',
                   textAlign: 'center',

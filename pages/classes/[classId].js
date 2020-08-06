@@ -171,8 +171,7 @@ function ClassPage() {
                               }
                             }}
                             style={
-                              currentGroup.id == group.id &&
-                              vonageCred !== null
+                              currentGroup.id == group.id && vonageCred !== null
                                 ? clickedGroupsStyle
                                 : unClickedGroupsStyle
                             }
@@ -208,8 +207,7 @@ function ClassPage() {
                               }
                             }}
                             style={
-                              currentGroup.id == group.id &&
-                              vonageCred !== null
+                              currentGroup.id == group.id && vonageCred !== null
                                 ? clickedGroupsStyle
                                 : unClickedGroupsStyle
                             }
@@ -294,20 +292,20 @@ function ClassPage() {
                         .filter((group) => group.type === 'discussion')
                         .map((group) => (
                           <>
-                          <List.Item
-                            key={`discussion_${group.id}`}
-                            onClick={() => {
-                              if (currentGroup.id !== group.id) {
-                                handleSelectGroup(group)
-                                setCurrentGroup(group)
+                            <List.Item
+                              key={`discussion_${group.id}`}
+                              onClick={() => {
+                                if (currentGroup.id !== group.id) {
+                                  handleSelectGroup(group)
+                                  setCurrentGroup(group)
+                                }
+                              }}
+                              style={
+                                currentGroup.id == group.id &&
+                                vonageCred !== null
+                                  ? clickedGroupsStyle
+                                  : unClickedGroupsStyle
                               }
-                            }}
-                            style={
-                              currentGroup.id == group.id &&
-                              vonageCred !== null
-                                ? clickedGroupsStyle
-                                : unClickedGroupsStyle
-                            }
                           >
                             <List.Icon name="sound" />
                             <List.Content>
@@ -356,8 +354,7 @@ function ClassPage() {
                               }
                             }}
                             style={
-                              currentGroup.id == group.id &&
-                              vonageCred !== null
+                              currentGroup.id == group.id && vonageCred !== null
                                 ? clickedGroupsStyle
                                 : unClickedGroupsStyle
                             }
@@ -446,9 +443,7 @@ function ClassPage() {
 
   return (
     <Layout
-      left={
-        leftDisplay()
-      }
+      left={leftDisplay()}
       right={<Queue onJoin={handleJoinTA} currentGroup={currentGroup} />}
     >
       {vonageCred && (
@@ -472,7 +467,7 @@ const unClickedGroupsStyle = {
   width: '80%',
   marginBottom: '2%',
   minWidth: '41px',
-  display: 'inline-block'
+  display: 'inline-block',
 }
 const clickedGroupsStyle = {
   fontSize: '.8vw',
@@ -484,7 +479,7 @@ const clickedGroupsStyle = {
   borderRadius: 10,
   borderWidth: 1,
   borderColor: '#fff',
-  display: 'inline-block'
+  display: 'inline-block',
 }
 
 export default AuthRequired(ClassPage)

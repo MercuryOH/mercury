@@ -105,6 +105,14 @@ export default class StudentWebSocketController {
     )
   }
 
+  signalDeclineTA() {
+    this.connection.send(
+      this.prepareMessage({
+        msgType: 'declineTA',
+        msg: this.component.state.TAName,
+      })
+    )
+  }
   prepareMessage(msg) {
     const { courseId } = this.component
     const enrichedPayload = { ...msg, courseId, role }
