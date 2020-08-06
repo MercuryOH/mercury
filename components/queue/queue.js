@@ -12,7 +12,6 @@ class Queue extends Component {
       me: {},
       classData: [],
       office: {},
-      currentGroup: this.props.currentGroup,
     }
   }
 
@@ -39,10 +38,6 @@ class Queue extends Component {
       })
 
       .then(() => this.setState({ me, classData, office, isDataLoaded: true }))
-  }
-
-  componentWillReceiveProps(nextProps) {
-    this.setState({ currentGroup: nextProps.currentGroup })
   }
 
   getRoleForClass() {

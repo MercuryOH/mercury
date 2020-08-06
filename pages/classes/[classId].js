@@ -8,7 +8,8 @@ import Queue from '../../components/queue/queue'
 import * as api from '../../util/mercuryService'
 import CreateGroupModal from '../../components/createGroupModal'
 import StudentInviteModal from '../../components/studentInviteModal'
-//import CreateDiscussionModal from '../../components/createDiscussionModal'
+import { EventEmitter } from '../../components/util/EventEmitter'
+
 const CreateDiscussionModal = dynamic(
   () => import('../../components/createDiscussionModal'),
   {
@@ -81,8 +82,6 @@ function ClassPage() {
     handleSelectGroup(group)
     setCurrentGroup(group)
   }
-
-  var buttonClicked = 'false'
 
   function getButtonToDisplay() {
     return currentClass.role === 'Student' ? (
@@ -214,6 +213,10 @@ function ClassPage() {
                               if (currentGroup.id !== group.id) {
                                 handleSelectGroup(group)
                                 setCurrentGroup(group)
+                                EventEmitter.publish(
+                                  'currentGroupChange',
+                                  group
+                                )
                               }
                             }}
                             style={
@@ -458,10 +461,7 @@ function ClassPage() {
   }
 
   return (
-    <Layout
-      left={leftDisplay()}
-      right={<Queue onJoin={handleJoinTA} currentGroup={currentGroup} />}
-    >
+    <Layout left={leftDisplay()} right={<Queue onJoin={handleJoinTA} />}>
       {vonageCred && (
         <Vonage
           sessionId={vonageCred.sessionId}

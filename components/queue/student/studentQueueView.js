@@ -35,7 +35,7 @@ class StudentQueueView extends Component {
       isReadyToRender: false,
       office: this.props.office,
       inCall: false,
-      currentGroup: this.props.currentGroup,
+      currentGroup: { id: '', name: '' },
       onJoin: this.props.onJoin,
     }
     this.defineEventEmitterCallbacks()
@@ -89,10 +89,11 @@ class StudentQueueView extends Component {
       this.setState({ inQueue: false })
       onJoin(currentGroup)
     })
-  }
 
-  componentWillReceiveProps(nextProps) {
-    this.setState({ currentGroup: nextProps.currentGroup })
+    EventEmitter.subscribe('currentGroupChange', (currentGroup) => {
+      console.log(currentGroup)
+      this.setState({ currentGroup })
+    })
   }
 
   createTimeoutNotification() {
@@ -214,7 +215,7 @@ class StudentQueueView extends Component {
 
     return (
       <QueueDiv>
-        <YourTurnModal currentGroup={this.state.currentGroup} />
+        <YourTurnModal />
 
         <Button.Group
           size="huge"

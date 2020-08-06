@@ -11,17 +11,18 @@ class YourTurnModal extends Component {
 
     this.state = {
       modalState: false,
-      currentGroup: this.props.currentGroup,
+      currentGroup: { id: '', name: '' },
       TAName: '',
     }
 
     EventEmitter.subscribe('startYourTurnModalTimer', (TAName) => {
       this.setState({ TAName, modalState: true }, this.startTimer)
     })
-  }
 
-  componentWillReceiveProps(nextProps) {
-    this.setState({ currentGroup: nextProps.currentGroup })
+    EventEmitter.subscribe('currentGroupChange', (currentGroup) => {
+      console.log(currentGroup)
+      this.setState({ currentGroup })
+    })
   }
 
   startTimer() {
