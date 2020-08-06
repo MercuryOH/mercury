@@ -9,9 +9,12 @@ import * as api from '../../util/mercuryService'
 import CreateGroupModal from '../../components/createGroupModal'
 import StudentInviteModal from '../../components/studentInviteModal'
 //import CreateDiscussionModal from '../../components/createDiscussionModal'
-const CreateDiscussionModal = dynamic(() => import('../../components/createDiscussionModal'), {
-  ssr: false,
-})
+const CreateDiscussionModal = dynamic(
+  () => import('../../components/createDiscussionModal'),
+  {
+    ssr: false,
+  }
+)
 const Vonage = dynamic(() => import('../../components/vonage'), {
   ssr: false,
 })
@@ -19,7 +22,7 @@ const Vonage = dynamic(() => import('../../components/vonage'), {
 function ClassPage() {
   const router = useRouter()
   const { user } = useAuth()
-  const [clicked, setClicked] = useState({clicked: 'none'})
+  const [clicked, setClicked] = useState({ clicked: 'none' })
   const [currentGroup, setCurrentGroup] = useState({ id: '', name: '' })
   const [currentClass, setCurrentClass] = useState({
     id: '',
@@ -84,24 +87,31 @@ function ClassPage() {
   function getButtonToDisplay() {
     return currentClass.role === 'Student' ? (
       <CreateGroupModal onCreate={handleCreateGroup} />
-    ) : currentClass.role === 'Professor' &&  clicked.clicked === 'none' ? (
+    ) : currentClass.role === 'Professor' && clicked.clicked === 'none' ? (
       <Button
         color="teal"
         content="Modify Discussions"
         fluid
         style={{ fontSize: '1vw' }}
-        onClick={() => {clicked.clicked = 'inline'}}
+        onClick={() => {
+          clicked.clicked = 'inline'
+        }}
       />
     ) : (
       <>
-      <CreateDiscussionModal id = 'createDiscussionModal' onCreate={handleCreateGroup}/>
-      <Button
-        color="teal"
-        content="Exit Modify Discussions"
-        fluid
-        style={{ fontSize: '1vw', marginTop: '2%' }}
-        onClick={() => {clicked.clicked = 'none'}}
-      />
+        <CreateDiscussionModal
+          id="createDiscussionModal"
+          onCreate={handleCreateGroup}
+        />
+        <Button
+          color="teal"
+          content="Exit Modify Discussions"
+          fluid
+          style={{ fontSize: '1vw', marginTop: '2%' }}
+          onClick={() => {
+            clicked.clicked = 'none'
+          }}
+        />
       </>
     )
   }
@@ -306,28 +316,34 @@ function ClassPage() {
                                   ? clickedGroupsStyle
                                   : unClickedGroupsStyle
                               }
-                          >
-                            <List.Icon name="sound" />
-                            <List.Content>
-                              <List.Header as="a">{group.name}</List.Header>
-                            </List.Content>
-                            {showInviteButton(group)}
-                          </List.Item>
-                          <Button id = {`deletebutton${group.id}`} compact icon size = 'mini' floated = 'right'
-                          style ={{
-                            display: `${clicked.clicked}`,
-                            fontSize: '.6vw',
-                            textAlign: 'center',
-                            width: '10%',
-                            marginBottom: '2%',
-                            minWidth: '10px',
-                            backgroundColor: 'transparent',
-                          }}
-                          onClick={ () => {
-                            api.deleteGroup(classId, group.id)
-                          }}>
-                            <Icon name = 'delete' color = 'red' />
-                          </Button>
+                            >
+                              <List.Icon name="sound" />
+                              <List.Content>
+                                <List.Header as="a">{group.name}</List.Header>
+                              </List.Content>
+                              {showInviteButton(group)}
+                            </List.Item>
+                            <Button
+                              id={`deletebutton${group.id}`}
+                              compact
+                              icon
+                              size="mini"
+                              floated="right"
+                              style={{
+                                display: `${clicked.clicked}`,
+                                fontSize: '.6vw',
+                                textAlign: 'center',
+                                width: '10%',
+                                marginBottom: '2%',
+                                minWidth: '10px',
+                                backgroundColor: 'transparent',
+                              }}
+                              onClick={() => {
+                                api.deleteGroup(classId, group.id)
+                              }}
+                            >
+                              <Icon name="delete" color="red" />
+                            </Button>
                           </>
                         ))}
                     </List>

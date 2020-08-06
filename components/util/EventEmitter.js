@@ -1,11 +1,11 @@
 export const EventEmitter = {
   events: {},
-  dispatch: function (event, data) {
+  publish: function (event, data) {
     if (!this.events[event]) return
     this.events[event].forEach((callback) => callback(data))
   },
-  subscribe: function (event, callnacl) {
-    if (!this.event[event]) this.events[event] = []
-    this.event[event].push(callback)
+  subscribe: function (event, callback) {
+    if (!this.events[event]) this.events[event] = []
+    this.events[event].push(callback)
   },
 }

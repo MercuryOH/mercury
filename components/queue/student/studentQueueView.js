@@ -5,6 +5,7 @@ import YourTurnModal from './yourTurnModal'
 import StudentWebSocketController from './studentWebSocket'
 import { Label, Button } from 'semantic-ui-react'
 import { NotificationContainer, NotificationManager } from 'react-notifications'
+import { EventEmitter } from '../../util/EventEmitter'
 
 const QueueDiv = styled.div`
   grid-gap: 2vh;
@@ -20,6 +21,18 @@ const QueueLabel = styled(Label)`
 
 class StudentQueueView extends Component {
   constructor(props) {
+    /**
+     * Define EventEmitter Callbacks
+     */
+
+    EventEmitter.subscribe('activateYourTurnModal', (TAName) => {
+      this.setState({ isYourTurn: true, TAName, inQueue: false })
+    })
+
+    EventEmitter.subscribe('updateStudentsInQueue', (msg) => {
+      this.setState({ studentsInQueue: msg })
+    })
+
     super(props)
     this.state = {
       displayStudentsStyle: { display: 'grid' },

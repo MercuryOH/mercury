@@ -1,5 +1,6 @@
 const url = 'ws://localhost:8080'
 const role = 'Student'
+import { EventEmitter } from '../../util/EventEmitter'
 
 /**
  * QueueWebSocket controls the web socket business logic for the course queue and
@@ -38,11 +39,11 @@ export default class StudentWebSocketController {
   }
 
   activateYourTurnModal(TAName) {
-    this.component.setState({ isYourTurn: true, TAName, inQueue: false })
+    EventEmitter.publish('activateYourTurnModal', TAName)
   }
 
   updateStudentsInQueue(msg) {
-    this.component.setState({ studentsInQueue: msg })
+    EventEmitter.publish('updateStudentsInQueue', msg)
   }
 
   processConnectionMessage(e) {
