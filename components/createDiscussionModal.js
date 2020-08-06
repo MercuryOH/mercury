@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import PropTypes from 'prop-types'
 import { Modal, Button, Header, Search, Input } from 'semantic-ui-react'
 
-function ModifyDiscussionModal({ onCreate }) {
+function CreateDiscussionModal({ onCreate }) {
   const [name, setDiscussionName] = useState('')
   const [modalState, toggleModal] = useState(false)
 
@@ -20,9 +20,9 @@ function ModifyDiscussionModal({ onCreate }) {
         trigger={
           <Button
             color="teal"
-            content="Modify Discussions"
+            content="Create Discussions"
             fluid
-            style={{ fontSize: '1vw' }}
+            style={{ fontSize: '1vw'}}
             onClick={() => toggleModal(true)}
           />
         }
@@ -57,13 +57,6 @@ function ModifyDiscussionModal({ onCreate }) {
               value={name}
               onChange={(e) => setDiscussionName(e.target.value)}
             />
-            <br />
-            <br />
-            <Search
-              fluid
-              placeholder={'Add students to your group...'}
-              input={{ fluid: true }}
-            />
           </div>
 
           <div
@@ -88,8 +81,8 @@ function ModifyDiscussionModal({ onCreate }) {
   )
 }
 
-ModifyDiscussionModal.propTypes = {
+CreateDiscussionModal.propTypes = {
   onCreate: PropTypes.func.isRequired,
 }
 
-export default ModifyDiscussionModal
+export default CreateDiscussionModal

@@ -8,8 +8,10 @@ import Queue from '../../components/queue/queue'
 import * as api from '../../util/mercuryService'
 import CreateGroupModal from '../../components/createGroupModal'
 import StudentInviteModal from '../../components/studentInviteModal'
-import ModifyDiscussionModal from '../../components/modifyDiscussionModal'
-
+//import CreateDiscussionModal from '../../components/createDiscussionModal'
+const CreateDiscussionModal = dynamic(() => import('../../components/createDiscussionModal'), {
+  ssr: false,
+})
 const Vonage = dynamic(() => import('../../components/vonage'), {
   ssr: false,
 })
@@ -17,6 +19,7 @@ const Vonage = dynamic(() => import('../../components/vonage'), {
 function ClassPage() {
   const router = useRouter()
   const { user } = useAuth()
+  const [clicked, setClicked] = useState({clicked: 'none'})
   const [currentGroup, setCurrentGroup] = useState({ id: '', name: '' })
   const [currentClass, setCurrentClass] = useState({
     id: '',
@@ -76,11 +79,30 @@ function ClassPage() {
     setCurrentGroup(group)
   }
 
+  var buttonClicked = 'false'
+
   function getButtonToDisplay() {
     return currentClass.role === 'Student' ? (
       <CreateGroupModal onCreate={handleCreateGroup} />
+    ) : currentClass.role === 'Professor' &&  clicked.clicked === 'none' ? (
+      <Button
+        color="teal"
+        content="Modify Discussions"
+        fluid
+        style={{ fontSize: '1vw' }}
+        onClick={() => {clicked.clicked = 'inline'}}
+      />
     ) : (
-      <ModifyDiscussionModal onCreate={handleCreateGroup} />
+      <>
+      <CreateDiscussionModal id = 'createDiscussionModal' onCreate={handleCreateGroup}/>
+      <Button
+        color="teal"
+        content="Exit Modify Discussions"
+        fluid
+        style={{ fontSize: '1vw', marginTop: '2%' }}
+        onClick={() => {clicked.clicked = 'none'}}
+      />
+      </>
     )
   }
 
@@ -293,8 +315,9 @@ function ClassPage() {
                             </List.Content>
                             {showInviteButton(group)}
                           </List.Item>
-                          <Button compact icon size = 'mini' floated = 'right'
+                          <Button id = {`deletebutton${group.id}`} compact icon size = 'mini' floated = 'right'
                           style ={{
+                            display: `${clicked.clicked}`,
                             fontSize: '.6vw',
                             textAlign: 'center',
                             width: '10%',

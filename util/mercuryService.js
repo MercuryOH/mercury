@@ -128,7 +128,6 @@ export async function deleteGroup(classId, groupId) {
         },
       }
     )
-
     return null
   } catch (e) {
     return null
