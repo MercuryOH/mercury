@@ -469,6 +469,7 @@ function ClassPage() {
           onLeave={() => {
             setVonageCred(null)
             setCurrentGroup({ id: '', name: '' })
+            EventEmitter.publish('callOver')
           }}
         />
       )}

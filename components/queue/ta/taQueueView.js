@@ -25,6 +25,7 @@ export default class TAQueueView extends Component {
       me: this.props.me,
       nextStudentName: '',
       isReadyToRender: false,
+      inCall: false,
     }
 
     this.defineEventEmitterCallbacks()
@@ -52,12 +53,16 @@ export default class TAQueueView extends Component {
     })
 
     EventEmitter.subscribe('removeTAWaitingModal', () => {
-      this.setState({ nextStudentName: '' })
+      this.setState({ nextStudentName: '', inCall: true })
 
       EventEmitter.publish('newTAWaitingModalProps', {
         inviteNextStudent: false,
         nextStudentName: '',
       })
+    })
+
+    EventEmitter.subscribe('callOver', () => {
+      this.setState({ inCall: false })
     })
 
     EventEmitter.subscribe('updateStudentsInQueue', (studentsInQueue) => {
@@ -99,6 +104,10 @@ export default class TAQueueView extends Component {
   }
 
   getButtonToDisplay() {
+    if (this.state.inCall) {
+      return null
+    }
+
     return (
       <div
         style={{

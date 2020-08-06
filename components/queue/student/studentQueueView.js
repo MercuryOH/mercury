@@ -72,14 +72,14 @@ class StudentQueueView extends Component {
     EventEmitter.subscribe('studentJoinTA', (TAName) => {
       const { queueWebSocketController, office, onJoin } = this.state
       queueWebSocketController.signalJoinTA(office, TAName)
-      this.setState({ inQueue: false })
+      this.setState({ inQueue: false, inCall: true })
       onJoin(office)
     })
 
     EventEmitter.subscribe('studentInviteTA', (TAName) => {
       const { queueWebSocketController, onJoin, currentGroup } = this.state
       queueWebSocketController.signalJoinTA(currentGroup, TAName)
-      this.setState({ inQueue: false })
+      this.setState({ inQueue: false, inCall: true })
       onJoin(currentGroup)
     })
 
@@ -93,6 +93,10 @@ class StudentQueueView extends Component {
     EventEmitter.subscribe('currentGroupChange', (currentGroup) => {
       console.log(currentGroup)
       this.setState({ currentGroup })
+    })
+
+    EventEmitter.subscribe('callOver', () => {
+      this.setState({ inCall: false })
     })
   }
 
