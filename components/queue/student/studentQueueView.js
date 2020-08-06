@@ -187,6 +187,26 @@ class StudentQueueView extends Component {
     this.setState({ isReadyToRender: true })
   }
 
+  createCurrStudentLabel(student) {
+    return (
+      <QueueLabel
+        style={{
+          fontSize: '1.2vw',
+          textAlign: 'center',
+          width: '95%',
+          marginBottom: '2%',
+          minWidth: '41px',
+          marginLeft: '.8%',
+          backgroundColor: 'red',
+          marginRight: '1%',
+        }}
+        key={student}
+      >
+        {student}
+      </QueueLabel>
+    )
+  }
+
   createQueueLabel(student) {
     return (
       <QueueLabel
