@@ -73,7 +73,7 @@ export default class StudentWebSocketController {
       })
     )
 
-    this.component.setState({ inQueue: true })
+    EventEmitter.publish('addMeToQueue')
   }
 
   removeMeFromQueue() {
@@ -84,7 +84,7 @@ export default class StudentWebSocketController {
       })
     )
 
-    this.component.setState({ inQueue: false })
+    EventEmitter.publish('removeMeFromQueue')
   }
 
   signalStudentTimeout() {

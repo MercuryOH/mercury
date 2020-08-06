@@ -22,7 +22,7 @@ const QueueLabel = styled(Label)`
 class StudentQueueView extends Component {
   constructor(props) {
     /**
-     * Define EventEmitter Callbacks
+     * Define EventEmitter subscribers
      */
 
     EventEmitter.subscribe('activateYourTurnModal', (TAName) => {
@@ -31,6 +31,14 @@ class StudentQueueView extends Component {
 
     EventEmitter.subscribe('updateStudentsInQueue', (msg) => {
       this.setState({ studentsInQueue: msg })
+    })
+
+    EventEmitter.subscribe('addMeToQueue', () => {
+      this.setState({ inQueue: true })
+    })
+
+    EventEmitter.subscribe('removeMeFromQueue', () => {
+      this.setState({ inQueue: false })
     })
 
     super(props)
