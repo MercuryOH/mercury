@@ -22,7 +22,7 @@ function CreateDiscussionModal({ onCreate }) {
             color="teal"
             content="Create Discussions"
             fluid
-            style={{ fontSize: '1vw'}}
+            style={{ fontSize: '1vw' }}
             onClick={() => toggleModal(true)}
           />
         }
@@ -52,6 +52,7 @@ function CreateDiscussionModal({ onCreate }) {
             }}
           >
             <Input
+              fluid
               placeholder="Discussion name"
               name="name"
               value={name}
