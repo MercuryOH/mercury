@@ -75,7 +75,12 @@ class ClassPage extends Component {
       .then((c) => {
         const userRole = c.users.find((u) => u.id === this.user.id)
         if (!userRole) this.props.router.push('/calendar')
-        this.setState({ currentClass: c, role: userRole.role })
+        this.setState({
+          currentClass: {
+            ...c,
+            role: userRole.role,
+          },
+        })
       })
       .catch(console.error)
   }
@@ -86,7 +91,12 @@ class ClassPage extends Component {
       .then((c) => {
         const userRole = c.users.find((u) => u.id === this.user.id)
         if (!userRole) this.props.router.push('/calendar')
-        this.setState({ currentClass: c, role: userRole.role })
+        this.setState({
+          currentClass: {
+            ...c,
+            role: userRole.role,
+          },
+        })
       })
       .catch(console.error)
   }
@@ -191,6 +201,8 @@ class ClassPage extends Component {
   }
 
   showOffice() {
+    console.log(this.state.currentClass.role !== 'Student')
+    console.log(this.state.currentClass)
     return (
       (this.state.currentClass.role !== 'Student' ||
         this.state.currentGroup.type === 'office') && (
