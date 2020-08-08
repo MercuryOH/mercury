@@ -23,7 +23,7 @@ export default class TAQueueView extends Component {
       queueWebSocketController: new TAWebSocketController(),
       studentsInQueue: [],
       me: this.props.me,
-      nextStudentName: '',
+      currStudentBeingHelped: '',
       isReadyToRender: false,
       inCall: false,
     }
@@ -40,9 +40,9 @@ export default class TAQueueView extends Component {
     })
 
     EventEmitter.subscribe('removeTAWaitingModalOnTimeout', () => {
-      const { nextStudentName } = this.state
-      this.createTimeoutNotification(nextStudentName)
-      this.setState({ nextStudentName: '' })
+      const { currStudentBeingHelped } = this.state
+      this.createTimeoutNotification(currStudentBeingHelped)
+      this.setState({ currStudentBeingHelped: '' })
 
       EventEmitter.publish('newTAWaitingModalProps', {
         inviteNextStudent: false,
@@ -51,7 +51,7 @@ export default class TAQueueView extends Component {
     })
 
     EventEmitter.subscribe('removeTAWaitingModal', () => {
-      this.setState({ nextStudentName: '', inCall: true })
+      this.setState({ currStudentBeingHelped: '', inCall: true })
 
       EventEmitter.publish('newTAWaitingModalProps', {
         inviteNextStudent: false,
@@ -60,15 +60,15 @@ export default class TAQueueView extends Component {
     })
 
     EventEmitter.subscribe('callOver', () => {
-      this.setState({ inCall: false, nextStudentName: '' })
+      this.setState({ inCall: false, currStudentBeingHelped: '' })
     })
 
     EventEmitter.subscribe('updateStudentsInQueue', (studentsInQueue) => {
       this.setState({ studentsInQueue })
     })
 
-    EventEmitter.subscribe('updateCurrStudent', (nextStudentName) => {
-      this.setState({ nextStudentName })
+    EventEmitter.subscribe('updateCurrStudent', (currStudentBeingHelped) => {
+      this.setState({ currStudentBeingHelped })
     })
   }
 
@@ -131,9 +131,9 @@ export default class TAQueueView extends Component {
   }
 
   createCurrStudentLabel() {
-    const { nextStudentName } = this.state
+    const { currStudentBeingHelped } = this.state
 
-    if (nextStudentName.length == 0) {
+    if (currStudentBeingHelped.length == 0) {
       return null
     }
 
@@ -149,9 +149,9 @@ export default class TAQueueView extends Component {
           backgroundColor: 'red',
           marginRight: '1%',
         }}
-        key={nextStudentName}
+        key={currStudentBeingHelped}
       >
-        {nextStudentName}
+        {currStudentBeingHelped}
       </QueueLabel>
     )
   }

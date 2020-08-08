@@ -30,7 +30,7 @@ class StudentQueueView extends Component {
       me: this.props.me,
       inQueue: false,
       isYourTurn: false,
-      nextStudentName: '',
+      currStudentBeingHelped: '',
       isReadyToRender: false,
       office: this.props.office,
       inCall: false,
@@ -96,11 +96,11 @@ class StudentQueueView extends Component {
     })
 
     EventEmitter.subscribe('callOver', () => {
-      this.setState({ inCall: false, nextStudentName: '' })
+      this.setState({ inCall: false, currStudentBeingHelped: '' })
     })
 
-    EventEmitter.subscribe('updateCurrStudent', (nextStudentName) => {
-      this.setState({ nextStudentName })
+    EventEmitter.subscribe('updateCurrStudent', (currStudentBeingHelped) => {
+      this.setState({ currStudentBeingHelped })
     })
   }
 
@@ -192,9 +192,9 @@ class StudentQueueView extends Component {
   }
 
   createCurrStudentLabel() {
-    const { nextStudentName } = this.state
+    const { currStudentBeingHelped } = this.state
 
-    if (nextStudentName.length == 0) {
+    if (currStudentBeingHelped.length == 0) {
       return null
     }
 
@@ -210,9 +210,9 @@ class StudentQueueView extends Component {
           backgroundColor: 'red',
           marginRight: '1%',
         }}
-        key={nextStudentName}
+        key={currStudentBeingHelped}
       >
-        {nextStudentName}
+        {currStudentBeingHelped}
       </QueueLabel>
     )
   }
