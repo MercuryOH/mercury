@@ -40,8 +40,12 @@ class WebSocketConnectionManager {
   }
 
   removeSocket(socket) {
-    this.courseToSockets.forEach((currSocket, courseId) => {
-      if (socket === currSocket) {
+    this.courseToSockets.forEach((socketSet, courseId) => {
+      if (socketSet.has(socket)) {
+        socketSet.delete(socket)
+      }
+
+      if (socketSet.size == 0) {
         this.courseToSockets.delete(courseId)
       }
     })
