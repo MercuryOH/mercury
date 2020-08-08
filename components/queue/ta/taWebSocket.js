@@ -43,8 +43,12 @@ export default class TAWebSocketController {
     EventEmitter.publish('removeTAWaitingModalOnTimeout')
   }
 
-  removeTAWaitingModal() {
-    EventEmitter.publish('removeTAWaitingModal')
+  removeTAWaitingModalOnAccept() {
+    EventEmitter.publish('removeTAWaitingModalOnAccept')
+  }
+
+  removeTAWaitingModalOnDecline() {
+    EventEmitter.publish('removeTAWaitingModalOnDecline')
   }
 
   updateStudentsInQueue(msg) {
@@ -74,12 +78,12 @@ export default class TAWebSocketController {
         break
 
       case 'studentJoin': // in this case, the TA's invitation to join has been accepted
-        this.removeTAWaitingModal()
+        this.removeTAWaitingModalOnAccept()
         this.onJoin(JSON.parse(msg))
         break
 
       case 'studentDecline': // in this case the student declines the TA's invitation, and the TA's modal closes
-        this.removeTAWaitingModal()
+        this.removeTAWaitingModalOnDecline()
         break
 
       case 'currStudentUpdate':

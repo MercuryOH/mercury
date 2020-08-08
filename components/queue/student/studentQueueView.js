@@ -77,8 +77,8 @@ class StudentQueueView extends Component {
     })
 
     EventEmitter.subscribe('studentInviteTA', (TAName) => {
-      const { queueWebSocketController, onJoin, currentGroup } = this.state
-      queueWebSocketController.signalJoinTA(currentGroup, TAName)
+      const { queueWebSocketController, onJoin, currentGroup, me } = this.state
+      queueWebSocketController.signalJoinTA(currentGroup, TAName, me)
       this.setState({ inQueue: false, inCall: true })
       onJoin(currentGroup)
     })

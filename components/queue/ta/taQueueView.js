@@ -23,6 +23,7 @@ export default class TAQueueView extends Component {
       queueWebSocketController: new TAWebSocketController(),
       studentsInQueue: [],
       me: this.props.me,
+      nextStudentName: '',
       currStudentBeingHelped: '',
       isReadyToRender: false,
       inCall: false,
@@ -33,6 +34,8 @@ export default class TAQueueView extends Component {
 
   defineEventEmitterCallbacks() {
     EventEmitter.subscribe('activateTAWaitingModal', (nextStudentName) => {
+      this.setState({ nextStudentName })
+
       EventEmitter.publish('newTAWaitingModalProps', {
         inviteNextStudent: true,
         nextStudentName,
@@ -40,9 +43,9 @@ export default class TAQueueView extends Component {
     })
 
     EventEmitter.subscribe('removeTAWaitingModalOnTimeout', () => {
-      const { currStudentBeingHelped } = this.state
-      this.createTimeoutNotification(currStudentBeingHelped)
-      this.setState({ currStudentBeingHelped: '' })
+      const { nextStudentName } = this.state
+      this.createTimeoutNotification(nextStudentName)
+      this.setState({ currStudentBeingHelped: '', nextStudentName: '' })
 
       EventEmitter.publish('newTAWaitingModalProps', {
         inviteNextStudent: false,
@@ -50,8 +53,19 @@ export default class TAQueueView extends Component {
       })
     })
 
-    EventEmitter.subscribe('removeTAWaitingModal', () => {
-      this.setState({ currStudentBeingHelped: '', inCall: true })
+    EventEmitter.subscribe('removeTAWaitingModalOnAccept', () => {
+      this.setState({ nextStudentName: '', inCall: true })
+
+      EventEmitter.publish('newTAWaitingModalProps', {
+        inviteNextStudent: false,
+        nextStudentName: '',
+      })
+    })
+
+    EventEmitter.subscribe('removeTAWaitingModalOnDecline', () => {
+      const { nextStudentName } = this.state
+      this.createDeclineNotification(nextStudentName)
+      this.setState({ currStudentBeingHelped: '', nextStudentName: '' })
 
       EventEmitter.publish('newTAWaitingModalProps', {
         inviteNextStudent: false,
@@ -74,6 +88,10 @@ export default class TAQueueView extends Component {
 
   createTimeoutNotification(studentName) {
     NotificationManager.info(`${studentName}'s Invitation Has Expired`)
+  }
+
+  createDeclineNotification(studentName) {
+    NotificationManager.info(`${studentName} Has Declined The Call`)
   }
 
   componentDidMount() {
