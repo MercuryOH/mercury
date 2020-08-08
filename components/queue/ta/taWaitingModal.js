@@ -6,8 +6,8 @@ export default class TaWaitingModal extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      modalState: this.props.inviteNextStudent,
-      studentName: this.props.studentName,
+      modalState: false,
+      studentName: '',
     }
 
     EventEmitter.subscribe('newTAWaitingModalProps', (nextProps) => {

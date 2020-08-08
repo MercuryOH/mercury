@@ -42,6 +42,10 @@ export default class StudentWebSocketController {
     EventEmitter.publish('updateStudentsInQueue', msg)
   }
 
+  updateCurrStudent(msg) {
+    EventEmitter.publish('updateCurrStudent', msg)
+  }
+
   processConnectionMessage(e) {
     const { msgType, msg } = JSON.parse(e.data)
 
@@ -56,8 +60,12 @@ export default class StudentWebSocketController {
         this.activateYourTurnModal(msg)
         break
 
+      case 'currStudentUpdate':
+        this.updateCurrStudent(msg)
+        break
+
       default:
-        throw new Error(`Message ${msg} is incorrectly formatted`)
+        throw new Error(`Message ${msgType} is incorrectly formatted`)
     }
   }
 
@@ -92,11 +100,11 @@ export default class StudentWebSocketController {
     )
   }
 
-  signalJoinTA(group, TAName) {
+  signalJoinTA(group, TAName, me) {
     this.connection.send(
       this.prepareMessage({
         msgType: 'joinTA',
-        msg: JSON.stringify({ group, TAName }),
+        msg: JSON.stringify({ group, TAName, me }),
       })
     )
   }

@@ -51,6 +51,10 @@ export default class TAWebSocketController {
     EventEmitter.publish('updateStudentsInQueue', msg)
   }
 
+  updateCurrStudent(msg) {
+    EventEmitter.publish('updateCurrStudent', msg)
+  }
+
   processConnectionMessage(e) {
     const { msgType, msg } = JSON.parse(e.data)
 
@@ -76,6 +80,10 @@ export default class TAWebSocketController {
 
       case 'studentDecline': // in this case the student declines the TA's invitation, and the TA's modal closes
         this.removeTAWaitingModal()
+        break
+
+      case 'currStudentUpdate':
+        this.updateCurrStudent(msg)
         break
 
       default:

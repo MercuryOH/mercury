@@ -58,7 +58,9 @@ const handleStudentMessage = (ws, message) => {
       break
 
     case 'joinTA':
-      const { group, TAName } = JSON.parse(msg)
+      const { group, TAName, me } = JSON.parse(msg)
+      const { firstName, lastName } = me
+      const fullName = `${firstName} ${lastName}`
       const TAToSend = webSocketConnectionManager.getSocketOfName(TAName)
 
       TAToSend.send(
@@ -67,6 +69,15 @@ const handleStudentMessage = (ws, message) => {
           msg: JSON.stringify(group),
         })
       )
+
+      webSocketConnectionManager.broadcast(
+        courseId,
+        prepareMessage({
+          msgType: 'currStudentUpdate',
+          msg: fullName,
+        })
+      )
+
       break
 
     case 'declineTA':

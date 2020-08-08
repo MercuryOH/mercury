@@ -33,8 +33,6 @@ export default class TAQueueView extends Component {
 
   defineEventEmitterCallbacks() {
     EventEmitter.subscribe('activateTAWaitingModal', (nextStudentName) => {
-      this.setState({ nextStudentName })
-
       EventEmitter.publish('newTAWaitingModalProps', {
         inviteNextStudent: true,
         nextStudentName,
@@ -62,11 +60,15 @@ export default class TAQueueView extends Component {
     })
 
     EventEmitter.subscribe('callOver', () => {
-      this.setState({ inCall: false })
+      this.setState({ inCall: false, nextStudentName: '' })
     })
 
     EventEmitter.subscribe('updateStudentsInQueue', (studentsInQueue) => {
       this.setState({ studentsInQueue })
+    })
+
+    EventEmitter.subscribe('updateCurrStudent', (nextStudentName) => {
+      this.setState({ nextStudentName })
     })
   }
 
@@ -128,6 +130,32 @@ export default class TAQueueView extends Component {
     )
   }
 
+  createCurrStudentLabel() {
+    const { nextStudentName } = this.state
+
+    if (nextStudentName.length == 0) {
+      return null
+    }
+
+    return (
+      <QueueLabel
+        style={{
+          fontSize: '1.2vw',
+          textAlign: 'center',
+          width: '95%',
+          marginBottom: '2%',
+          minWidth: '41px',
+          marginLeft: '.8%',
+          backgroundColor: 'red',
+          marginRight: '1%',
+        }}
+        key={nextStudentName}
+      >
+        {nextStudentName}
+      </QueueLabel>
+    )
+  }
+
   createQueueLabel(student) {
     return (
       <QueueLabel
@@ -186,6 +214,8 @@ export default class TAQueueView extends Component {
             }}
           />
         </Button.Group>
+
+        {this.createCurrStudentLabel()}
 
         <QueueDiv
           style={{ width: '100%', marginBottom: '2%', minWidth: '41px' }}

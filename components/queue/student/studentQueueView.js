@@ -70,8 +70,8 @@ class StudentQueueView extends Component {
     })
 
     EventEmitter.subscribe('studentJoinTA', (TAName) => {
-      const { queueWebSocketController, office, onJoin } = this.state
-      queueWebSocketController.signalJoinTA(office, TAName)
+      const { queueWebSocketController, office, onJoin, me } = this.state
+      queueWebSocketController.signalJoinTA(office, TAName, me)
       this.setState({ inQueue: false, inCall: true })
       onJoin(office)
     })
@@ -96,7 +96,11 @@ class StudentQueueView extends Component {
     })
 
     EventEmitter.subscribe('callOver', () => {
-      this.setState({ inCall: false })
+      this.setState({ inCall: false, nextStudentName: '' })
+    })
+
+    EventEmitter.subscribe('updateCurrStudent', (nextStudentName) => {
+      this.setState({ nextStudentName })
     })
   }
 
@@ -187,7 +191,13 @@ class StudentQueueView extends Component {
     this.setState({ isReadyToRender: true })
   }
 
-  createCurrStudentLabel(student) {
+  createCurrStudentLabel() {
+    const { nextStudentName } = this.state
+
+    if (nextStudentName.length == 0) {
+      return null
+    }
+
     return (
       <QueueLabel
         style={{
@@ -200,9 +210,9 @@ class StudentQueueView extends Component {
           backgroundColor: 'red',
           marginRight: '1%',
         }}
-        key={student}
+        key={nextStudentName}
       >
-        {student}
+        {nextStudentName}
       </QueueLabel>
     )
   }
@@ -262,6 +272,8 @@ class StudentQueueView extends Component {
             }}
           />
         </Button.Group>
+
+        {this.createCurrStudentLabel()}
 
         <QueueDiv
           style={{ width: '100%', marginBottom: '2%', minWidth: '41px' }}
