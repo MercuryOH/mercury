@@ -102,6 +102,13 @@ class StudentQueueView extends Component {
     EventEmitter.subscribe('updateCurrStudent', (currStudentBeingHelped) => {
       this.setState({ currStudentBeingHelped })
     })
+
+    EventEmitter.subscribe(
+      'initializeQueueOnGreeting',
+      ({ currStudent, studentsInQueue }) => {
+        this.setState({ currStudentBeingHelped: currStudent, studentsInQueue })
+      }
+    )
   }
 
   createTimeoutNotification() {

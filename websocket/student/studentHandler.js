@@ -12,12 +12,15 @@ const handleStudentMessage = (ws, message) => {
   switch (msgType) {
     case 'greeting':
       webSocketConnectionManager.addSocketForCourse(courseId, ws) // this websocket is now associated with the course
-      webSocketConnectionManager.associateUserWithSocket(msg, ws)
+      webSocketConnectionManager.associateUserWithSocket(msg, ws) // msg is the full name
 
       ws.send(
         prepareMessage({
-          msgType: 'queue',
-          msg: courseQueue.getAllStudents(courseId),
+          msgType: 'greetingAck',
+          msg: {
+            currStudent: courseQueue.getCurrStudent(),
+            studentsInQueue: courseQueue.getAllStudents(courseId),
+          },
         })
       )
       break
@@ -69,6 +72,8 @@ const handleStudentMessage = (ws, message) => {
           msg: JSON.stringify(group),
         })
       )
+
+      courseQueue.setCurrStudent(fullName)
 
       webSocketConnectionManager.broadcast(
         courseId,

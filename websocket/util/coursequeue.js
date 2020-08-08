@@ -5,9 +5,15 @@
 class Queue {
   constructor() {
     this.map = new Map()
-    // this.addStudentToQueue(2, 'Jonathan Ou')
-    // this.addStudentToQueue(2, 'Jeffrey Zhang')
-    // this.addStudentToQueue(2, 'Camilo')
+    this.currStudent = ''
+  }
+
+  setCurrStudent(currStudentName) {
+    this.currStudent = currStudentName
+  }
+
+  getCurrStudent() {
+    return this.currStudent
   }
 
   /**
