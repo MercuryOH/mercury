@@ -136,7 +136,10 @@ class StudentQueueView extends Component {
     const { firstName, lastName } = this.state.me
     const fullName = `${firstName} ${lastName}`
 
-    if (this.state.studentsInQueue.indexOf(fullName) >= 0) {
+    if (
+      this.state.studentsInQueue.indexOf(fullName) >= 0 ||
+      this.state.currStudentBeingHelped === fullName
+    ) {
       return
     }
 
