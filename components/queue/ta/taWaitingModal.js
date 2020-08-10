@@ -50,7 +50,7 @@ export default class TaWaitingModal extends Component {
                 flexDirection: 'row',
               }}
             >
-              <Button
+              {/* <Button
                 color="red"
                 onClick={() => this.setState({ modalState: false })}
                 style={{
@@ -62,7 +62,7 @@ export default class TaWaitingModal extends Component {
                 }}
               >
                 Remove
-              </Button>
+              </Button> */}
             </div>
           </Modal.Content>
         </Modal>

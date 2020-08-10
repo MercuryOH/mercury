@@ -9,7 +9,6 @@ import * as api from '../../util/mercuryService'
 import CreateGroupModal from '../../components/createGroupModal'
 import StudentInviteModal from '../../components/studentInviteModal'
 import { EventEmitter } from '../../components/util/EventEmitter'
-// import { render } from 'nprogress'
 
 const CreateDiscussionModal = dynamic(
   () => import('../../components/createDiscussionModal'),
@@ -20,28 +19,6 @@ const CreateDiscussionModal = dynamic(
 const Vonage = dynamic(() => import('../../components/vonage'), {
   ssr: false,
 })
-
-const unClickedGroupsStyle = {
-  fontSize: '.8vw',
-  textAlign: 'left',
-  width: '80%',
-  marginBottom: '2%',
-  minWidth: '41px',
-  display: 'inline-block',
-}
-
-const clickedGroupsStyle = {
-  fontSize: '.8vw',
-  textAlign: 'left',
-  width: '80%',
-  marginBottom: '2%',
-  minWidth: '41px',
-  background: '#e0e1e2',
-  borderRadius: 10,
-  borderWidth: 1,
-  borderColor: '#fff',
-  display: 'inline-block',
-}
 
 class ClassPage extends Component {
   constructor(props) {
@@ -200,9 +177,36 @@ class ClassPage extends Component {
     this.setState({ openInviteModal: false })
   }
 
+  getListItemStyle(group) {
+    const unClickedGroupsStyle = {
+      fontSize: '.8vw',
+      textAlign: 'left',
+      width: '80%',
+      marginBottom: '2%',
+      minWidth: '41px',
+      display: 'inline-block',
+    }
+
+    const clickedGroupsStyle = {
+      fontSize: '.8vw',
+      textAlign: 'left',
+      width: '80%',
+      marginBottom: '2%',
+      minWidth: '41px',
+      background: '#e0e1e2',
+      borderRadius: 10,
+      borderWidth: 1,
+      borderColor: '#fff',
+      display: 'inline-block',
+    }
+
+    return this.state.currentGroup.id == group.id &&
+      this.state.vonageCred !== null
+      ? clickedGroupsStyle
+      : unClickedGroupsStyle
+  }
+
   showOffice() {
-    console.log(this.state.currentClass.role !== 'Student')
-    console.log(this.state.currentClass)
     return (
       (this.state.currentClass.role !== 'Student' ||
         this.state.currentGroup.type === 'office') && (
@@ -221,12 +225,7 @@ class ClassPage extends Component {
                       this.setState({ openInviteModal: true })
                     }
                   }}
-                  style={
-                    this.state.currentGroup.id == group.id &&
-                    this.state.vonageCred !== null
-                      ? clickedGroupsStyle
-                      : unClickedGroupsStyle
-                  }
+                  style={this.getListItemStyle(group)}
                 >
                   <List.Icon name="graduation cap" />
                   <List.Content>
@@ -308,12 +307,7 @@ class ClassPage extends Component {
                                   this.setState({ currentGroup: group })
                                 }
                               }}
-                              style={
-                                this.state.currentGroup.id == group.id &&
-                                this.state.vonageCred !== null
-                                  ? clickedGroupsStyle
-                                  : unClickedGroupsStyle
-                              }
+                              style={this.getListItemStyle(group)}
                             >
                               <List.Icon name="sound" />
                               <List.Content>
@@ -353,12 +347,7 @@ class ClassPage extends Component {
                                 )
                               }
                             }}
-                            style={
-                              this.state.currentGroup.id == group.id &&
-                              this.state.vonageCred !== null
-                                ? clickedGroupsStyle
-                                : unClickedGroupsStyle
-                            }
+                            style={this.getListItemStyle(group)}
                           >
                             <List.Icon name="lock" />
                             <List.Content>
@@ -388,6 +377,7 @@ class ClassPage extends Component {
   }
 
   render() {
+    this.fetchCurrentClass()
     return (
       <Layout
         left={this.leftDisplay()}
