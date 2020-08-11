@@ -4,16 +4,21 @@ import FormHTMLEditor from './FormHTMLEditor'
 import StarRatings from 'react-star-ratings'
 import stripHtml from 'string-strip-html'
 import * as api from '../util/mercuryService'
+import { EventEmitter } from './util/EventEmitter'
 
 export default class FeedbackModal extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      modalState: true,
+      modalState: false,
       rating: 0,
       comment: '',
-      classId: this.props.classId,
+      classId: -1,
     }
+
+    EventEmitter.subscribe('callOver', (classId) => {
+      this.setState({ classId, modalState: true })
+    })
   }
 
   changeRating(newRating, _name) {

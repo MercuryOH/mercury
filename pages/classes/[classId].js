@@ -9,6 +9,7 @@ import * as api from '../../util/mercuryService'
 import CreateGroupModal from '../../components/createGroupModal'
 import StudentInviteModal from '../../components/studentInviteModal'
 import { EventEmitter } from '../../components/util/EventEmitter'
+import FeedbackModal from '../../components/feedbackModal'
 
 const CreateDiscussionModal = dynamic(
   () => import('../../components/createDiscussionModal'),
@@ -35,13 +36,14 @@ class ClassPage extends Component {
         role: 'Student',
       },
       vonageCred: null,
+      isMounted: false,
     }
     this.defineEventEmitterCallbacks()
   }
 
   defineEventEmitterCallbacks() {
     EventEmitter.subscribe('clearLeftSide', () => {
-      this.setState({withTa: true})
+      this.setState({ withTa: true })
     })
   }
 
@@ -64,6 +66,7 @@ class ClassPage extends Component {
             ...c,
             role: userRole.role,
           },
+          isMounted: true,
         })
       })
       .catch(console.error)
@@ -390,6 +393,10 @@ class ClassPage extends Component {
   }
 
   render() {
+    if (!this.state.isMounted) {
+      return null
+    }
+
     this.fetchCurrentClass()
     return (
       <Layout
@@ -401,14 +408,17 @@ class ClassPage extends Component {
             sessionId={this.state.vonageCred.sessionId}
             token={this.state.vonageCred.token}
             onLeave={() => {
-              this.setState({ vonageCred: null })
-              this.setState({ currentGroup: { id: '', name: '' } })
-              this.setState({ withTa: false})
-              EventEmitter.publish('callOver')
+              this.setState({
+                vonageCred: null,
+                currentGroup: { id: '', name: '' },
+                withTa: false,
+              })
+              EventEmitter.publish('callOver', this.classId)
             }}
           />
         )}
         <StudentInviteModal />
+        <FeedbackModal />
       </Layout>
     )
   }
