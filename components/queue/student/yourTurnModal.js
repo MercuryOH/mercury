@@ -31,6 +31,7 @@ class YourTurnModal extends Component {
   startTimer() {
     currTime = timeOutTime
     timeOut = setTimeout(this.tick.bind(this), granularity)
+    this.setState({ timeRemaining: currTime })
   }
 
   tick() {
