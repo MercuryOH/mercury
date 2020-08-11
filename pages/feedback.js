@@ -1,8 +1,11 @@
 import React, { Component } from 'react'
 import FeedbackModal from '../components/feedbackModal'
+import { AuthRequired } from '../components/authProvider'
 
-export default class Feedback extends Component {
+class Feedback extends Component {
   render() {
-    return <FeedbackModal />
+    return <FeedbackModal classId={2} />
   }
 }
+
+export default AuthRequired(Feedback)
