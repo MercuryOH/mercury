@@ -115,6 +115,8 @@ export default class StudentWebSocketController {
         msg: JSON.stringify({ group, TAName, me }),
       })
     )
+
+    EventEmitter.publish('clearLeftSide')
   }
 
   signalDeclineTA(TAName) {

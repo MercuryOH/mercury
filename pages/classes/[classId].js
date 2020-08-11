@@ -24,6 +24,7 @@ class ClassPage extends Component {
   constructor(props) {
     super(props)
     this.state = {
+      withTa: false,
       clicked: 'none',
       currentGroup: { id: '', name: '' },
       currentClass: {
@@ -35,6 +36,13 @@ class ClassPage extends Component {
       },
       vonageCred: null,
     }
+    this.defineEventEmitterCallbacks()
+  }
+
+  defineEventEmitterCallbacks() {
+    EventEmitter.subscribe('clearLeftSide', () => {
+      this.setState({withTa: true})
+    })
   }
 
   componentDidMount() {
@@ -243,7 +251,7 @@ class ClassPage extends Component {
   }
 
   leftDisplay() {
-    return (
+    return this.state.withTa === false ? (
       <div style={{ height: '100%', marginLeft: '2.5%' }}>
         <Button.Group
           size="huge"
@@ -385,6 +393,8 @@ class ClassPage extends Component {
           {this.getButtonToDisplay()}
         </div>
       </div>
+    ) : (
+      <div> </div>
     )
   }
 
@@ -402,6 +412,7 @@ class ClassPage extends Component {
             onLeave={() => {
               this.setState({ vonageCred: null })
               this.setState({ currentGroup: { id: '', name: '' } })
+              this.setState({ withTa: false})
               EventEmitter.publish('callOver')
             }}
           />
