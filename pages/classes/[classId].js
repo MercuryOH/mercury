@@ -229,10 +229,7 @@ class ClassPage extends Component {
                       this.handleSelectGroup(group)
                       this.setState({ currentGroup: group })
                     } else {
-                      EventEmitter.publish(
-                        'openInviteModal',
-                        true
-                      )
+                      EventEmitter.publish('openInviteModal', true)
                     }
                   }}
                   style={this.getListItemStyle(group)}
@@ -316,10 +313,7 @@ class ClassPage extends Component {
                                   this.handleSelectGroup(group)
                                   this.setState({ currentGroup: group })
                                 } else {
-                                  EventEmitter.publish(
-                                    'openInviteModal',
-                                    true
-                                  )
+                                  EventEmitter.publish('openInviteModal', true)
                                 }
                               }}
                               style={this.getListItemStyle(group)}
@@ -360,11 +354,8 @@ class ClassPage extends Component {
                                   'currentGroupChange',
                                   group
                                 )
-                              }else {
-                                EventEmitter.publish(
-                                  'openInviteModal',
-                                  true
-                                )
+                              } else {
+                                EventEmitter.publish('openInviteModal', true)
                               }
                             }}
                             style={this.getListItemStyle(group)}
@@ -417,7 +408,7 @@ class ClassPage extends Component {
             }}
           />
         )}
-        <StudentInviteModal/>
+        <StudentInviteModal />
       </Layout>
     )
   }

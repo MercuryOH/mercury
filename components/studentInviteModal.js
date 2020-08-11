@@ -19,10 +19,7 @@ class StudentInviteModal extends Component {
 
   handleInvite = () => {
     this.setState({ modalState: false })
-    EventEmitter.publish(
-      'openInviteModal',
-      false
-    )
+    EventEmitter.publish('openInviteModal', false)
   }
 
   render() {
