@@ -2,6 +2,8 @@ import React, { Component } from 'react'
 import { Modal, Button, Search } from 'semantic-ui-react'
 import PropTypes from 'prop-types'
 
+import { EventEmitter } from './util/EventEmitter'
+
 class StudentInviteModal extends Component {
   constructor(props) {
     super(props)
@@ -9,15 +11,18 @@ class StudentInviteModal extends Component {
     this.state = {
       modalState: this.props.isOpen,
     }
-  }
 
-  componentWillReceiveProps(nextProps) {
-    this.setState({ modalState: nextProps.isOpen })
+    EventEmitter.subscribe('openInviteModal', (openInviteModal) => {
+      this.setState({ modalState: openInviteModal })
+    })
   }
 
   handleInvite = () => {
     this.setState({ modalState: false })
-    this.props.onInvite()
+    EventEmitter.publish(
+      'openInviteModal',
+      false
+    )
   }
 
   render() {

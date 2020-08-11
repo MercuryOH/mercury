@@ -34,7 +34,6 @@ class ClassPage extends Component {
         role: 'Student',
       },
       vonageCred: null,
-      openInviteModal: false,
     }
   }
 
@@ -222,7 +221,10 @@ class ClassPage extends Component {
                       this.handleSelectGroup(group)
                       this.setState({ currentGroup: group })
                     } else {
-                      this.setState({ openInviteModal: true })
+                      EventEmitter.publish(
+                        'openInviteModal',
+                        true
+                      )
                     }
                   }}
                   style={this.getListItemStyle(group)}
@@ -305,6 +307,11 @@ class ClassPage extends Component {
                                 if (this.state.currentGroup.id !== group.id) {
                                   this.handleSelectGroup(group)
                                   this.setState({ currentGroup: group })
+                                } else {
+                                  EventEmitter.publish(
+                                    'openInviteModal',
+                                    true
+                                  )
                                 }
                               }}
                               style={this.getListItemStyle(group)}
@@ -344,6 +351,11 @@ class ClassPage extends Component {
                                 EventEmitter.publish(
                                   'currentGroupChange',
                                   group
+                                )
+                              }else {
+                                EventEmitter.publish(
+                                  'openInviteModal',
+                                  true
                                 )
                               }
                             }}
@@ -394,10 +406,7 @@ class ClassPage extends Component {
             }}
           />
         )}
-        <StudentInviteModal
-          isOpen={this.openInviteModal}
-          onInvite={this.handleInvite}
-        />
+        <StudentInviteModal/>
       </Layout>
     )
   }
