@@ -53,21 +53,27 @@ class YourTurnModal extends Component {
 
   handleJoin = () => {
     const { TAName } = this.state
-    clearTimeout(timeOut)
+    if (timeOut) {
+      clearTimeout(timeOut)
+    }
     EventEmitter.publish('studentJoinTA', TAName)
     this.setState({ modalState: false })
   }
 
   handleInvite = () => {
     const { TAName } = this.state
-    clearTimeout(timeOut)
+    if (timeOut) {
+      clearTimeout(timeOut)
+    }
     EventEmitter.publish('studentInviteTA', TAName)
     this.setState({ modalState: false })
   }
 
   handleDecline = () => {
     const { TAName } = this.state
-    clearTimeout(timeOut)
+    if (timeOut) {
+      clearTimeout(timeOut)
+    }
     EventEmitter.publish('studentDeclineTA', TAName)
     this.setState({ modalState: false })
   }
