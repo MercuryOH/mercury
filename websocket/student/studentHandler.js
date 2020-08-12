@@ -62,7 +62,7 @@ const handleStudentMessage = (ws, message) => {
 
     case 'joinTA':
       const { group, TAName, me } = JSON.parse(msg)
-      const { firstName, lastName } = me
+      const { firstName, lastName, id } = me
       const fullName = `${firstName} ${lastName}`
       const TAToSend = webSocketConnectionManager.getSocketOfName(TAName)
 
@@ -73,7 +73,7 @@ const handleStudentMessage = (ws, message) => {
         })
       )
 
-      courseQueue.setCurrStudent(fullName)
+      courseQueue.setCurrStudent(id)
 
       webSocketConnectionManager.broadcast(
         courseId,

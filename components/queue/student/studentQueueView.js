@@ -108,7 +108,14 @@ class StudentQueueView extends Component {
     EventEmitter.subscribe(
       'initializeQueueOnGreeting',
       ({ currStudent, studentsInQueue }) => {
-        this.setState({ currStudentBeingHelped: currStudent, studentsInQueue })
+        const name = `${this.state.me.firstName} ${this.state.me.lastName}`
+        const inQueue =
+          studentsInQueue.filter(({ fullName }) => fullName === name).length > 0
+        this.setState({
+          currStudentBeingHelped: currStudent,
+          studentsInQueue: studentsInQueue.map(({ fullName }) => fullName),
+          inQueue,
+        })
       }
     )
   }

@@ -9,12 +9,12 @@ class Queue {
     this.currStudent = ''
   }
 
-  setCurrStudent(currStudentName) {
-    this.currStudent = currStudentName
+  setCurrStudent(currStudentId) {
+    this.currStudent = currStudentId
   }
 
   getCurrStudent() {
-    return this.currStudent
+    return userRepository.getFullName(this.currStudent)
   }
 
   /**

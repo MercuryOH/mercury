@@ -18,7 +18,7 @@ class UserRepository {
       const tuple = this.pkToTuple.get(id)
       return `${tuple.firstName} ${tuple.lastName}`
     } else {
-      throw new Error('unable to find user')
+      return ''
     }
   }
 }
