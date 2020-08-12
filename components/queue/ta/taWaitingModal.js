@@ -77,7 +77,7 @@ export default class TaWaitingModal extends Component {
                 margin: 'auto',
               }}
             >
-              {`Waiting for ${this.state.studentName} to respond...`}
+              {`Waiting For ${this.state.studentName} To Respond...`}
             </Header>
 
             <div

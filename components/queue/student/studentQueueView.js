@@ -52,7 +52,9 @@ class StudentQueueView extends Component {
     })
 
     EventEmitter.subscribe('updateStudentsInQueue', (msg) => {
-      this.setState({ studentsInQueue: msg })
+      this.setState({
+        studentsInQueue: msg.map(({ fullName }) => fullName),
+      })
     })
 
     EventEmitter.subscribe('addMeToQueue', () => {

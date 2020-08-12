@@ -89,7 +89,10 @@ class Queue {
 
   getAllStudents(course) {
     if (this.map.has(course)) {
-      return this.map.get(course).map((id) => userRepository.getFullName(id))
+      return this.map.get(course).map((id) => {
+        const fullName = userRepository.getFullName(id)
+        return { id, fullName }
+      })
     }
 
     return []

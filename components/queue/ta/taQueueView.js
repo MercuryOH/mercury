@@ -77,8 +77,8 @@ export default class TAQueueView extends Component {
       this.setState({ inCall: false, currStudentBeingHelped: '' })
     })
 
-    EventEmitter.subscribe('updateStudentsInQueue', (studentsInQueue) => {
-      this.setState({ studentsInQueue })
+    EventEmitter.subscribe('updateStudentsInQueue', (msg) => {
+      this.setState({ studentsInQueue: msg.map(({ fullName }) => fullName) })
     })
 
     EventEmitter.subscribe('updateCurrStudent', (currStudentBeingHelped) => {
