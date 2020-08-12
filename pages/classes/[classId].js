@@ -231,6 +231,7 @@ class ClassPage extends Component {
                     if (this.state.currentGroup.id !== group.id) {
                       this.handleSelectGroup(group)
                       this.setState({ currentGroup: group })
+                      EventEmitter.publish('currentGroupChange', group)
                     } else {
                       EventEmitter.publish('openInviteModal', true)
                     }
@@ -315,6 +316,10 @@ class ClassPage extends Component {
                                 if (this.state.currentGroup.id !== group.id) {
                                   this.handleSelectGroup(group)
                                   this.setState({ currentGroup: group })
+                                  EventEmitter.publish(
+                                    'currentGroupChange',
+                                    group
+                                  )
                                 } else {
                                   EventEmitter.publish('openInviteModal', true)
                                 }
