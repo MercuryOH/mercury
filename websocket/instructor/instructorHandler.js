@@ -1,7 +1,7 @@
 const { courseQueue } = require('../util/coursequeue')
 const { webSocketConnectionManager } = require('../util/connectionmanager')
 const { prepareMessage } = require('../util/util')
-
+const { userRepository } = require('../../repository/userRepository')
 /**
  * Handles web socket messages sent by a student user
  */
@@ -45,7 +45,7 @@ const handleInstructorMessage = (ws, message) => {
         ws.send(
           prepareMessage({
             msgType: 'nextStudentNotified',
-            msg: nextStudent,
+            msg: userRepository.getFullName(nextStudent),
           })
         )
       }

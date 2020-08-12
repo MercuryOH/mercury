@@ -1,6 +1,7 @@
 /**
  * Basic queue data structure for maintaining the order of incoming students
  */
+const { userRepository } = require('../../repository/userRepository')
 
 class Queue {
   constructor() {
@@ -19,7 +20,7 @@ class Queue {
   /**
    * Add a student to the waiting queue for a course
    * @param course - the courseId to be updated
-   * @param student - the student (full name) to be added
+   * @param student - the student (id) to be added
    */
 
   addStudentToQueue(course, student) {
@@ -37,7 +38,7 @@ class Queue {
   /**
    * Get the next student of the course
    * @param course - the course to be queried
-   * @returns {any}
+   * @returns {student id of the next student}
    */
 
   getNextStudent(course) {
@@ -62,6 +63,11 @@ class Queue {
     return 0
   }
 
+  /**
+   *
+   * @param {*} course
+   * @param {*} student - the student id
+   */
   removeStudentFromQueue(course, student) {
     if (!this.map.has(course)) {
       return
@@ -83,7 +89,7 @@ class Queue {
 
   getAllStudents(course) {
     if (this.map.has(course)) {
-      return this.map.get(course)
+      return this.map.get(course).map((id) => userRepository.getFullName(id))
     }
 
     return []

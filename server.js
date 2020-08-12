@@ -7,12 +7,14 @@ const dev = process.env.NODE_ENV !== 'production'
 const app = next({ dev })
 const server = express()
 const handle = app.getRequestHandler()
+const { userRepository } = require('./repository/userRepository')
 
 server.use(express.json())
 
 async function main() {
   await app.prepare()
-  await models.sequelize.sync({ alter: true })
+  await userRepository.init()
+  await await models.sequelize.sync({ alter: true })
 
   webSocketServer.start()
   server.use('/api', apiRoutes)
