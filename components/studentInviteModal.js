@@ -9,7 +9,7 @@ class StudentInviteModal extends Component {
     super(props)
 
     this.state = {
-      modalState: this.props.isOpen,
+      modalState: false,
     }
 
     EventEmitter.subscribe('openInviteModal', (openInviteModal) => {
@@ -19,10 +19,7 @@ class StudentInviteModal extends Component {
 
   handleInvite = () => {
     this.setState({ modalState: false })
-    EventEmitter.publish(
-      'openInviteModal',
-      false
-    )
+    EventEmitter.publish('openInviteModal', false)
   }
 
   render() {
@@ -72,10 +69,6 @@ class StudentInviteModal extends Component {
       </div>
     )
   }
-}
-
-StudentInviteModal.propTypes = {
-  isOpen: PropTypes.bool.isRequired,
 }
 
 export default StudentInviteModal

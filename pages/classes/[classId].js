@@ -220,11 +220,9 @@ class ClassPage extends Component {
                     if (this.state.currentGroup.id !== group.id) {
                       this.handleSelectGroup(group)
                       this.setState({ currentGroup: group })
+                      EventEmitter.publish('currentGroupChange', group)
                     } else {
-                      EventEmitter.publish(
-                        'openInviteModal',
-                        true
-                      )
+                      EventEmitter.publish('openInviteModal', true)
                     }
                   }}
                   style={this.getListItemStyle(group)}
@@ -307,11 +305,12 @@ class ClassPage extends Component {
                                 if (this.state.currentGroup.id !== group.id) {
                                   this.handleSelectGroup(group)
                                   this.setState({ currentGroup: group })
-                                } else {
                                   EventEmitter.publish(
-                                    'openInviteModal',
-                                    true
+                                    'currentGroupChange',
+                                    group
                                   )
+                                } else {
+                                  EventEmitter.publish('openInviteModal', true)
                                 }
                               }}
                               style={this.getListItemStyle(group)}
@@ -352,11 +351,8 @@ class ClassPage extends Component {
                                   'currentGroupChange',
                                   group
                                 )
-                              }else {
-                                EventEmitter.publish(
-                                  'openInviteModal',
-                                  true
-                                )
+                              } else {
+                                EventEmitter.publish('openInviteModal', true)
                               }
                             }}
                             style={this.getListItemStyle(group)}
@@ -406,7 +402,7 @@ class ClassPage extends Component {
             }}
           />
         )}
-        <StudentInviteModal/>
+        <StudentInviteModal />
       </Layout>
     )
   }
