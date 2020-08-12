@@ -59,8 +59,6 @@ export default class FeedbackModal extends Component {
             />
 
             <br />
-            <br />
-            <br />
 
             <Header>Provide Your Comments</Header>
 
