@@ -73,9 +73,10 @@ export default class TAQueueView extends Component {
       })
     })
 
-    EventEmitter.subscribe('callOver', () => {
+    EventEmitter.subscribe('callOver', (classId) => {
       const { queueWebSocketController } = this.state
       queueWebSocketController.signalCallOver()
+      EventEmitter.publish('activateFeedbackModal', classId)
       this.setState({ inCall: false, currStudentBeingHelped: '' })
     })
 

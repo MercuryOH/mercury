@@ -33,7 +33,7 @@ class StudentQueueView extends Component {
       currStudentBeingHelped: '',
       isReadyToRender: false,
       office: this.props.office,
-      inCall: false,
+      inCallWithTA: false,
       currentGroup: { id: '', name: '' },
       onJoin: this.props.onJoin,
     }
@@ -74,14 +74,14 @@ class StudentQueueView extends Component {
     EventEmitter.subscribe('studentJoinTA', (TAName) => {
       const { queueWebSocketController, office, onJoin, me } = this.state
       queueWebSocketController.signalJoinTA(office, TAName, me)
-      this.setState({ inQueue: false, inCall: true })
+      this.setState({ inQueue: false, inCallWithTA: true })
       onJoin(office)
     })
 
     EventEmitter.subscribe('studentInviteTA', (TAName) => {
       const { queueWebSocketController, onJoin, currentGroup, me } = this.state
       queueWebSocketController.signalJoinTA(currentGroup, TAName, me)
-      this.setState({ inQueue: false, inCall: true })
+      this.setState({ inQueue: false, inCallWithTA: true })
       onJoin(currentGroup)
     })
 
@@ -97,10 +97,14 @@ class StudentQueueView extends Component {
       this.setState({ currentGroup })
     })
 
-    EventEmitter.subscribe('callOver', () => {
-      const { queueWebSocketController } = this.state
-      queueWebSocketController.signalCallOver()
-      this.setState({ inCall: false, currStudentBeingHelped: '' })
+    EventEmitter.subscribe('callOver', (classId) => {
+      const { queueWebSocketController, inCallWithTA } = this.state
+
+      if (inCallWithTA) {
+        queueWebSocketController.signalCallOver()
+        EventEmitter.publish('activateFeedbackModal', classId)
+        this.setState({ inCallWithTA: false, currStudentBeingHelped: '' })
+      }
     })
 
     EventEmitter.subscribe('updateCurrStudent', (currStudentBeingHelped) => {
@@ -169,7 +173,7 @@ class StudentQueueView extends Component {
   }
 
   getButtonToDisplay() {
-    if (this.state.inCall) {
+    if (this.state.inCallWithTA) {
       return null
     }
 
