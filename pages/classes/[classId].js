@@ -166,7 +166,7 @@ class ClassPage extends Component {
   }
 
   handleCreateGroup = async (group) => {
-    await api.postGroup(this.classId, group.name, group.type).then((group) => {
+    await api.postGroup(this.classId, group.name, group.type, this.user.id).then((group) => {
       this.fetchCurrentClass()
       this.handleSelectGroup(group)
       this.setState({ currentGroup: group })
