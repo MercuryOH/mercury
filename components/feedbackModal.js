@@ -16,7 +16,7 @@ export default class FeedbackModal extends Component {
       classId: -1,
     }
 
-    EventEmitter.subscribe('callOver', (classId) => {
+    EventEmitter.subscribe('activateFeedbackModal', (classId) => {
       this.setState({ classId, modalState: true })
     })
   }
