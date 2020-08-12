@@ -177,7 +177,6 @@ class ClassPage extends Component {
     const plusIcon = (
       <List.Icon
         name="user plus"
-        size="med"
         onClick={() => {
           EventEmitter.publish('openInviteModal', true)
         }}

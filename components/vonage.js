@@ -1,5 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
+import Publisher from './publisher'
 import { OTSession, OTPublisher, OTStreams, OTSubscriber } from 'opentok-react'
 import { Button, List } from 'semantic-ui-react'
 
@@ -60,12 +61,7 @@ class Vonage extends React.Component {
           eventHandlers={this.sessionEventHandlers}
           onError={this.handleSessionError}
         >
-          <OTPublisher
-            properties={{ publishAudio: true, width: '100%', height: '50vh', videoSource: 'screen' }}
-            onPublish={this.handlePublish}
-            eventHandlers={this.publishEventHandlers}
-            onError={this.handlePublishError}
-          />
+          <Publisher />
           <OTStreams style={{ display: 'inline-flex' }}>
             <OTSubscriber
               properties={{ width: '100%', height: '50vh' }}
