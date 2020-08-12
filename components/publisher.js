@@ -1,6 +1,8 @@
 import React, { Component } from 'react'
+import ScreenPublisher from './screenPublisher'
 import { OTPublisher } from 'opentok-react'
 import { Button } from 'semantic-ui-react'
+import { EventEmitter } from './util/EventEmitter'
 
 export default class Publisher extends Component {
   constructor(props) {
@@ -10,8 +12,30 @@ export default class Publisher extends Component {
       error: null,
       audio: true,
       video: true,
-      videoSource: 'camera'
+      activated: true
     };
+  }
+
+  getButtonToDisplay(){
+    return this.state.activated === true ? (
+      <Button
+        onClick = {() => {
+          EventEmitter.publish('startScreenShare')
+          this.setState({video: false, activated: false})
+          }
+        }
+        content = "Share Screen"
+      />
+    ) : (
+      <Button
+          onClick = {() => {
+              EventEmitter.publish('stopScreenShare')
+              this.setState({video: true, activated: true})
+            }
+          }
+          content = "Stop Screen Share"
+        />
+    )
   }
 
   onError = (err) => {
@@ -26,30 +50,12 @@ export default class Publisher extends Component {
           properties={{
             width: '100%',
             height: '50vh',
-            publishAudio: this.state.audio,
-            publishVideo: this.state.video,
-            videoSource: this.state.videoSource === 'screen' ? 'screen' : undefined
+            publishVideo: this.state.video
           }}
           onError={this.onError}
         />
-        <Button
-            onClick = {() => {
-              if (`${this.state.videoSource}` != 'screen') {
-                this.setState({videoSource: 'screen'})
-                console.log(`${this.state.videoSource}`)
-              }
-            }}
-            content = "Share Screen"
-          />
-          <Button
-            onClick = {() => {
-              if (`${this.state.videoSource}` != 'camera') {
-                this.setState({videoSource: 'camera'})
-                console.log(`${this.state.videoSource}`)
-              }
-            }}
-            content = "Share Camera"
-          />
+        <ScreenPublisher/>
+        {this.getButtonToDisplay()}
       </div>
     );
   }
