@@ -86,6 +86,20 @@ export default class TAQueueView extends Component {
     EventEmitter.subscribe('updateCurrStudent', (currStudentBeingHelped) => {
       this.setState({ currStudentBeingHelped })
     })
+
+    EventEmitter.subscribe(
+      'initializeQueueOnGreeting',
+      ({ currStudent, studentsInQueue }) => {
+        const myId = this.state.me.id
+        const inQueue =
+          studentsInQueue.filter(({ id }) => id === myId).length > 0
+        this.setState({
+          currStudentBeingHelped: currStudent,
+          studentsInQueue: studentsInQueue.map(({ fullName }) => fullName),
+          inQueue,
+        })
+      }
+    )
   }
 
   createTimeoutNotification(studentName) {

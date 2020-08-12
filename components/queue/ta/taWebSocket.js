@@ -57,10 +57,18 @@ export default class TAWebSocketController {
     EventEmitter.publish('updateCurrStudent', msg)
   }
 
+  initializeQueueOnGreeting(msg) {
+    EventEmitter.publish('initializeQueueOnGreeting', msg)
+  }
+
   processConnectionMessage(e) {
     const { msgType, msg } = JSON.parse(e.data)
 
     switch (msgType) {
+      case 'greetingAck':
+        this.initializeQueueOnGreeting(msg)
+        break
+
       case 'queue': // in this case, the server will send a message indicating the current students in the queue
         // msg - the new queue
         this.updateStudentsInQueue(msg)

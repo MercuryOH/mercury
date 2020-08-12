@@ -16,8 +16,11 @@ const handleInstructorMessage = (ws, message) => {
 
       ws.send(
         prepareMessage({
-          msgType: 'queue',
-          msg: courseQueue.getAllStudents(courseId),
+          msgType: 'greetingAck',
+          msg: {
+            currStudent: courseQueue.getCurrStudent(),
+            studentsInQueue: courseQueue.getAllStudents(courseId),
+          },
         })
       )
       break
