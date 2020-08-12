@@ -26,7 +26,7 @@ export default class TAQueueView extends Component {
       nextStudentName: '',
       currStudentBeingHelped: '',
       isReadyToRender: false,
-      inCall: false,
+      inCallWithStudent: false,
     }
 
     this.defineEventEmitterCallbacks()
@@ -54,7 +54,7 @@ export default class TAQueueView extends Component {
     })
 
     EventEmitter.subscribe('removeTAWaitingModalOnAccept', () => {
-      this.setState({ nextStudentName: '', inCall: true })
+      this.setState({ nextStudentName: '', inCallWithStudent: true })
 
       EventEmitter.publish('newTAWaitingModalProps', {
         inviteNextStudent: false,
@@ -77,7 +77,7 @@ export default class TAQueueView extends Component {
       const { queueWebSocketController } = this.state
       queueWebSocketController.signalCallOver()
       EventEmitter.publish('activateFeedbackModal', classId)
-      this.setState({ inCall: false, currStudentBeingHelped: '' })
+      this.setState({ inCallWithStudent: false, currStudentBeingHelped: '' })
     })
 
     EventEmitter.subscribe('updateStudentsInQueue', (msg) => {
@@ -141,7 +141,7 @@ export default class TAQueueView extends Component {
   }
 
   getButtonToDisplay() {
-    if (this.state.inCall) {
+    if (this.state.inCallWithStudent) {
       return null
     }
 
