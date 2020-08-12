@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { withRouter } from 'next/router'
 import dynamic from 'next/dynamic'
 import Layout from '../../components/layout'
-import { Button, Accordion, List, Icon } from 'semantic-ui-react'
+import { Button, Accordion, List, Icon, ListContent } from 'semantic-ui-react'
 import { AuthRequired, useAuth } from '../../components/authProvider'
 import Queue from '../../components/queue/queue'
 import * as api from '../../util/mercuryService'
@@ -174,7 +174,15 @@ class ClassPage extends Component {
   }
 
   showInviteButton(group) {
-    const plusIcon = <List.Icon name="user plus" size="med" />
+    const plusIcon = (
+      <List.Icon
+        name="user plus"
+        size="med"
+        onClick={() => {
+          EventEmitter.publish('openInviteModal', true)
+        }}
+      />
+    )
     const noPlusIcon = <div></div>
 
     return this.state.currentGroup.id == group.id &&
@@ -232,8 +240,6 @@ class ClassPage extends Component {
                       this.handleSelectGroup(group)
                       this.setState({ currentGroup: group })
                       EventEmitter.publish('currentGroupChange', group)
-                    } else {
-                      EventEmitter.publish('openInviteModal', true)
                     }
                   }}
                   style={this.getListItemStyle(group)}
@@ -320,8 +326,6 @@ class ClassPage extends Component {
                                     'currentGroupChange',
                                     group
                                   )
-                                } else {
-                                  EventEmitter.publish('openInviteModal', true)
                                 }
                               }}
                               style={this.getListItemStyle(group)}
@@ -362,8 +366,6 @@ class ClassPage extends Component {
                                   'currentGroupChange',
                                   group
                                 )
-                              } else {
-                                EventEmitter.publish('openInviteModal', true)
                               }
                             }}
                             style={this.getListItemStyle(group)}
