@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Modal, Button, Header } from 'semantic-ui-react'
+import { Modal, Button, Header, Icon } from 'semantic-ui-react'
 import FormHTMLEditor from './FormHTMLEditor'
 import StarRatings from 'react-star-ratings'
 import stripHtml from 'string-strip-html'
@@ -47,8 +47,18 @@ export default class FeedbackModal extends Component {
           style={{ borderless: 'true', width: '40%', height: '80%' }}
           open={modalState}
           onClose={() => this.setState({ modalState: false })}
+          closeOnDimmerClick={false}
+          closeOnEscape={false}
         >
           <Modal.Content style={{ borderless: 'true' }}>
+            <Modal.Header>
+              <Icon
+                onClick={() => this.setState({ modalState: false })}
+                style={{ float: 'right', cursor: 'pointer' }}
+                name="times"
+              ></Icon>
+            </Modal.Header>
+
             <Header>Rate Your Call</Header>
             <StarRatings
               rating={rating}
