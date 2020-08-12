@@ -1,8 +1,11 @@
 import React, { Component } from 'react'
-import { Modal, Button, Header } from 'semantic-ui-react'
+import { Modal, Button, Header, Label, Icon } from 'semantic-ui-react'
 import { EventEmitter } from '../../util/EventEmitter'
 
-const timeOutTime = 5000
+const timeOutTime = 15
+let currTime = timeOutTime
+const granularity = 1000
+
 let timeOut = null
 
 class YourTurnModal extends Component {
@@ -13,6 +16,7 @@ class YourTurnModal extends Component {
       modalState: false,
       currentGroup: { id: '', name: '' },
       TAName: '',
+      timeRemaining: currTime,
     }
 
     EventEmitter.subscribe('startYourTurnModalTimer', (TAName) => {
@@ -20,13 +24,25 @@ class YourTurnModal extends Component {
     })
 
     EventEmitter.subscribe('currentGroupChange', (currentGroup) => {
-      console.log(currentGroup)
       this.setState({ currentGroup })
     })
   }
 
   startTimer() {
-    timeOut = setTimeout(this.handleTimerEnd.bind(this), timeOutTime)
+    currTime = timeOutTime
+    timeOut = setTimeout(this.tick.bind(this), granularity)
+    this.setState({ timeRemaining: currTime })
+  }
+
+  tick() {
+    currTime -= 1
+
+    if (currTime === 0) {
+      this.handleTimerEnd()
+    } else {
+      timeOut = setTimeout(this.tick.bind(this), granularity)
+      this.setState({ timeRemaining: currTime })
+    }
   }
 
   handleTimerEnd() {
@@ -37,21 +53,27 @@ class YourTurnModal extends Component {
 
   handleJoin = () => {
     const { TAName } = this.state
-    clearTimeout(timeOut)
+    if (timeOut) {
+      clearTimeout(timeOut)
+    }
     EventEmitter.publish('studentJoinTA', TAName)
     this.setState({ modalState: false })
   }
 
   handleInvite = () => {
     const { TAName } = this.state
-    clearTimeout(timeOut)
+    if (timeOut) {
+      clearTimeout(timeOut)
+    }
     EventEmitter.publish('studentInviteTA', TAName)
     this.setState({ modalState: false })
   }
 
   handleDecline = () => {
     const { TAName } = this.state
-    clearTimeout(timeOut)
+    if (timeOut) {
+      clearTimeout(timeOut)
+    }
     EventEmitter.publish('studentDeclineTA', TAName)
     this.setState({ modalState: false })
   }
@@ -86,6 +108,11 @@ class YourTurnModal extends Component {
           closeOnDimmerClick={false}
           closeOnEscape={false}
         >
+          <Label style={{ width: '100%', textAlign: 'center' }}>
+            <Icon name="hourglass" />
+            {this.state.timeRemaining}
+          </Label>
+
           <Modal.Content style={{ borderless: 'true' }}>
             <Header
               style={{
@@ -97,7 +124,7 @@ class YourTurnModal extends Component {
                 margin: 'auto',
               }}
             >
-              Your turn!
+              Your Turn!
             </Header>
 
             <div

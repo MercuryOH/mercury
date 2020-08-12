@@ -1,6 +1,12 @@
 import React, { Component } from 'react'
-import { Modal, Button, Header } from 'semantic-ui-react'
+import { Modal, Label, Header, Icon } from 'semantic-ui-react'
 import { EventEmitter } from '../../util/EventEmitter'
+
+const timeOutTime = 15
+let currTime = timeOutTime
+const granularity = 1000
+
+let timeOut = null
 
 export default class TaWaitingModal extends Component {
   constructor(props) {
@@ -8,14 +14,41 @@ export default class TaWaitingModal extends Component {
     this.state = {
       modalState: false,
       studentName: '',
+      timeRemaining: currTime,
     }
 
     EventEmitter.subscribe('newTAWaitingModalProps', (nextProps) => {
-      this.setState({
-        modalState: nextProps.inviteNextStudent,
-        studentName: nextProps.nextStudentName,
-      })
+      const { inviteNextStudent, nextStudentName } = nextProps
+      const callBackToUse = inviteNextStudent ? this.startTimer : this.endTimer
+
+      this.setState(
+        { modalState: inviteNextStudent, studentName: nextStudentName },
+        callBackToUse
+      )
     })
+  }
+
+  startTimer() {
+    currTime = timeOutTime
+    timeOut = setTimeout(this.tick.bind(this), granularity)
+    this.setState({ timeRemaining: currTime })
+  }
+
+  endTimer() {
+    if (timeOut) {
+      clearTimeout(timeOut)
+    }
+  }
+
+  tick() {
+    currTime -= 1
+
+    if (currTime === 0) {
+      return
+    } else {
+      timeOut = setTimeout(this.tick.bind(this), granularity)
+      this.setState({ timeRemaining: currTime })
+    }
   }
 
   render() {
@@ -28,6 +61,11 @@ export default class TaWaitingModal extends Component {
           closeOnDimmerClick={false}
           closeOnEscape={false}
         >
+          <Label style={{ width: '100%', textAlign: 'center' }}>
+            <Icon name="hourglass" />
+            {this.state.timeRemaining}
+          </Label>
+
           <Modal.Content style={{ borderless: 'true' }}>
             <Header
               style={{
@@ -49,21 +87,7 @@ export default class TaWaitingModal extends Component {
                 padding: 30,
                 flexDirection: 'row',
               }}
-            >
-              {/* <Button
-                color="red"
-                onClick={() => this.setState({ modalState: false })}
-                style={{
-                  fontSize: '1vw',
-                  textAlign: 'center',
-                  width: '50%',
-                  //marginLeft: '5%',
-                  flex: 1,
-                }}
-              >
-                Remove
-              </Button> */}
-            </div>
+            ></div>
           </Modal.Content>
         </Modal>
       </div>

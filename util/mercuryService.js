@@ -16,6 +16,24 @@ export async function postLogin(email, password) {
   }
 }
 
+export async function submitFeedback(ClassId, stars, comments) {
+  try {
+    const { data } = await axios.post(
+      `/api/feedback/`,
+      { ClassId, stars, comments },
+      {
+        headers: {
+          authorization: token,
+        },
+      }
+    )
+
+    return data
+  } catch (e) {
+    return null
+  }
+}
+
 export async function postGroup(classId, name, type) {
   try {
     const { data } = await axios.post(

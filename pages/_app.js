@@ -6,6 +6,7 @@ import '../util/globalStyles.css'
 import 'nprogress/nprogress.css' //styles of nprogress
 import 'semantic-ui-css/semantic.min.css'
 import 'react-notifications/lib/notifications.css'
+import 'react-quill/dist/quill.snow.css' // ES6
 
 //Binding events.
 Router.events.on('routeChangeStart', () => NProgress.start())
