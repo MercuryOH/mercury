@@ -10,8 +10,8 @@ const role = 'Instructor'
 
 export default class TAWebSocketController {
   start({ me, courseId, onJoin }) {
-    const { firstName, lastName } = me
-    this.fullName = `${firstName} ${lastName}`
+    const { id } = me
+    this.id = id
     this.courseId = courseId
     this.onJoin = onJoin
     this.connection = new WebSocket(url)
@@ -21,12 +21,10 @@ export default class TAWebSocketController {
   }
 
   processConnectionOpen() {
-    const { fullName } = this
-
     this.connection.send(
       this.prepareMessage({
         msgType: 'greeting',
-        msg: fullName,
+        msg: this.id,
       })
     ) // notify the server which courseId this websocket belongs to
   }
@@ -99,7 +97,7 @@ export default class TAWebSocketController {
     this.connection.send(
       this.prepareMessage({
         msgType: 'next',
-        msg: this.fullName,
+        msg: this.id,
       })
     )
   }
