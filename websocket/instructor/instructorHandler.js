@@ -59,6 +59,17 @@ const handleInstructorMessage = (ws, message) => {
       )
       break
 
+    case 'callOver':
+      courseQueue.setCurrStudent(-1)
+      webSocketConnectionManager.broadcast(
+        courseId,
+        prepareMessage({
+          msgType: 'currStudentUpdate',
+          msg: courseQueue.getCurrStudent(),
+        })
+      )
+      break
+
     default:
       throw new Error(
         `Message Type ${msgType} is not recognized for instructor`

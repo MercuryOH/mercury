@@ -102,6 +102,15 @@ export default class TAWebSocketController {
     )
   }
 
+  signalCallOver() {
+    this.connection.send(
+      this.prepareMessage({
+        msgType: 'callOver',
+        msg: 'callOver',
+      })
+    )
+  }
+
   prepareMessage(msg) {
     const { courseId } = this
     const enrichedPayload = { ...msg, courseId, role }

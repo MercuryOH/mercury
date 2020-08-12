@@ -98,6 +98,8 @@ class StudentQueueView extends Component {
     })
 
     EventEmitter.subscribe('callOver', () => {
+      const { queueWebSocketController } = this.state
+      queueWebSocketController.signalCallOver()
       this.setState({ inCall: false, currStudentBeingHelped: '' })
     })
 
@@ -108,9 +110,9 @@ class StudentQueueView extends Component {
     EventEmitter.subscribe(
       'initializeQueueOnGreeting',
       ({ currStudent, studentsInQueue }) => {
-        const name = `${this.state.me.firstName} ${this.state.me.lastName}`
+        const myId = this.state.me.id
         const inQueue =
-          studentsInQueue.filter(({ fullName }) => fullName === name).length > 0
+          studentsInQueue.filter(({ id }) => id === myId).length > 0
         this.setState({
           currStudentBeingHelped: currStudent,
           studentsInQueue: studentsInQueue.map(({ fullName }) => fullName),
