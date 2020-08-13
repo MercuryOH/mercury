@@ -99,13 +99,10 @@ class ClassPage extends Component {
       .then(({ token }) => {
         this.setState({ vonageCred: null })
         this.setState({ vonageCred: { sessionId: group.sessionId, token } })
+        this.setState({ currentGroup: group })
+        EventEmitter.publish('currentGroupChange', group)
       })
       .catch(console.error)
-  }
-
-  handleJoinTA = (group) => {
-    this.handleSelectGroup(group)
-    this.setState({ currentGroup: group })
   }
 
   getButtonToDisplay() {
@@ -174,7 +171,6 @@ class ClassPage extends Component {
       .then((group) => {
         this.fetchCurrentClass()
         this.handleSelectGroup(group)
-        this.setState({ currentGroup: group })
       })
   }
 
@@ -242,8 +238,6 @@ class ClassPage extends Component {
                   onClick={() => {
                     if (this.state.currentGroup.id !== group.id) {
                       this.handleSelectGroup(group)
-                      this.setState({ currentGroup: group })
-                      EventEmitter.publish('currentGroupChange', group)
                     }
                   }}
                   style={this.getListItemStyle(group)}
@@ -325,11 +319,6 @@ class ClassPage extends Component {
                               onClick={() => {
                                 if (this.state.currentGroup.id !== group.id) {
                                   this.handleSelectGroup(group)
-                                  this.setState({ currentGroup: group })
-                                  EventEmitter.publish(
-                                    'currentGroupChange',
-                                    group
-                                  )
                                 }
                               }}
                               style={this.getListItemStyle(group)}
@@ -365,11 +354,6 @@ class ClassPage extends Component {
                             onClick={() => {
                               if (this.state.currentGroup.id !== group.id) {
                                 this.handleSelectGroup(group)
-                                this.setState({ currentGroup: group })
-                                EventEmitter.publish(
-                                  'currentGroupChange',
-                                  group
-                                )
                               }
                             }}
                             style={this.getListItemStyle(group)}
@@ -411,7 +395,7 @@ class ClassPage extends Component {
     return (
       <Layout
         left={this.leftDisplay()}
-        right={<Queue onJoin={this.handleJoinTA} />}
+        right={<Queue onJoin={this.handleSelectGroup} />}
       >
         {this.state.vonageCred && (
           <Vonage
