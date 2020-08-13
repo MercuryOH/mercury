@@ -36,7 +36,7 @@ class ClassPage extends Component {
         role: 'Student',
       },
       vonageCred: null,
-      isMounted: false,
+      isMounted: false
     }
     this.defineEventEmitterCallbacks()
   }

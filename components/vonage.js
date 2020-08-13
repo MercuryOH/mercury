@@ -1,12 +1,18 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import Publisher from './publisher'
-import { OTSession, OTPublisher, OTStreams, OTSubscriber } from 'opentok-react'
+import { EventEmitter } from './util/EventEmitter'
+import { OTSession, OTPublisher, OTStreams, OTSubscriber, createSession } from 'opentok-react'
 import { Button, List } from 'semantic-ui-react'
 
 class Vonage extends React.Component {
   constructor(props) {
     super(props)
+
+    this.state = {
+      ssButton: true,
+      streams: []
+    }
 
     this.sessionEventHandlers = {
       sessionConnected: () => {},
@@ -25,6 +31,8 @@ class Vonage extends React.Component {
       videoEnabled: () => {},
       videoDisabled: () => {},
     }
+
+    const { sessionId, token, onLeave } = this.props
   }
 
   handlePublish = () => {
@@ -33,8 +41,6 @@ class Vonage extends React.Component {
 
   handleSubscribe = () => {
     console.log('Subscribed!')
-    this.parentNode.style.display = 'inline-flex'
-    this.parentNode.parentNode.style.display = 'inline-flex'
   }
 
   handleSessionError = (error) => {
@@ -49,37 +55,74 @@ class Vonage extends React.Component {
     console.error(error)
   }
 
+  screenShareButton() {
+    return this.state.ssButton === true ? (
+      <Button
+        onClick = {() => {
+          EventEmitter.publish('startScreenShare')
+          EventEmitter.publish('disableVideo')
+          this.setState({ssButton: false})
+          }
+        }
+        style = {{fontSize: '.8vw', display: 'inline-flex'}}
+        content = "Share Screen"
+      />
+    ) : (
+      <Button
+          onClick = {() => {
+              EventEmitter.publish('stopScreenShare')
+              EventEmitter.publish('enableVideo')
+              this.setState({ssButton: true})
+            }
+          }
+          style = {{fontSize: '.8vw', display: 'inline-flex'}}
+          content = "Stop Screen Share"
+        />
+    )
+  }
+
+  componentWillMount() {
+    const { sessionId, token, onLeave } = this.props
+    this.sessionHelper = createSession({
+      apiKey: `${process.env.NEXT_PUBLIC_VV_API_KEY}`,
+      sessionId: `${sessionId}`,
+      token: `${token}`,
+      onStreamsUpdated: streams => { this.setState({ streams }); }
+    });
+  }
+
+  componentWillUnmount() {
+    this.sessionHelper.disconnect();
+  }
+
   render() {
     const { sessionId, token, onLeave } = this.props
-
     return (
       <div>
-        <OTSession
-          apiKey={process.env.NEXT_PUBLIC_VV_API_KEY}
-          sessionId={sessionId}
-          token={token}
-          eventHandlers={this.sessionEventHandlers}
-          onError={this.handleSessionError}
-        >
-          <Publisher />
-          <OTStreams style={{ display: 'inline-flex' }}>
+          <Publisher session={this.sessionHelper.session}/>
+          {this.state.streams.map(stream => (
             <OTSubscriber
+              key={stream.id}
+              session={this.sessionHelper.session}
+              stream={stream}
               properties={{ width: '100%', height: '50vh' }}
               onSubscribe={this.handleSubscribe}
               onError={this.handleSubscribeError}
             />
-          </OTStreams>
+          ))}
+          {this.screenShareButton()}
           <Button
             onClick={onLeave}
             color="red"
             icon="close"
+            style = {{fontSize: '.8vw', display: 'inline-flex'}}
             content="Leave call"
           />
-        </OTSession>
       </div>
     )
   }
 }
+
 
 Vonage.propTypes = {
   sessionId: PropTypes.string.isRequired,

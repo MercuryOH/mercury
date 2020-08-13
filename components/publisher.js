@@ -12,30 +12,17 @@ export default class Publisher extends Component {
       error: null,
       audio: true,
       video: true,
-      activated: true
     };
+    this.defineEventEmitterCallbacks()
   }
 
-  getButtonToDisplay(){
-    return this.state.activated === true ? (
-      <Button
-        onClick = {() => {
-          EventEmitter.publish('startScreenShare')
-          this.setState({video: false, activated: false})
-          }
-        }
-        content = "Share Screen"
-      />
-    ) : (
-      <Button
-          onClick = {() => {
-              EventEmitter.publish('stopScreenShare')
-              this.setState({video: true, activated: true})
-            }
-          }
-          content = "Stop Screen Share"
-        />
-    )
+  defineEventEmitterCallbacks() {
+    EventEmitter.subscribe('disableVideo', () => {
+      this.setState({ video: false })
+    })
+    EventEmitter.subscribe('enableVideo', () => {
+      this.setState({ video: true })
+    })
   }
 
   onError = (err) => {
@@ -52,10 +39,10 @@ export default class Publisher extends Component {
             height: '50vh',
             publishVideo: this.state.video
           }}
+          session = {this.props.session}
           onError={this.onError}
         />
-        <ScreenPublisher/>
-        {this.getButtonToDisplay()}
+        <ScreenPublisher session = {this.props.session}/>
       </div>
     );
   }
