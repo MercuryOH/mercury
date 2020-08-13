@@ -9,7 +9,6 @@ const openTok = new OpenTok(process.env.VV_API_KEY, process.env.VV_API_SECRET)
 const createGroupSchema = joi.object({
   name: joi.string().required(),
   type: joi.string().valid('group', 'discussion', 'office').required(),
-  creatorId: joi.number().integer().required(),
 })
 
 router.post('/', middleware.authRequired, async (req, res) => {
@@ -30,7 +29,6 @@ router.post('/', middleware.authRequired, async (req, res) => {
         type: value.type,
         sessionId: session.sessionId,
         ClassId,
-        creatorId: value.creatorId,
       }).then((group) => res.json(group))
     })
   } catch (err) {

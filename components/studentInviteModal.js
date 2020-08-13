@@ -62,8 +62,6 @@ class StudentInviteModal extends Component {
   }
 
   render() {
-    const { isLoading, value, results } = this.state
-
     return (
       <div>
         <Modal
