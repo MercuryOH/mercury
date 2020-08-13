@@ -57,6 +57,7 @@ class ClassPage extends Component {
       .then((meData) => {
         this.user = meData
       })
+
       .then(() => api.getClass(this.classId))
       .then((c) => {
         const userRole = c.users.find((u) => u.id === this.user.id)
@@ -68,12 +69,14 @@ class ClassPage extends Component {
           },
           isMounted: true,
         })
+        EventEmitter.publish('allUsersInClass', this.state.currentClass.users)
       })
       .catch(console.error)
+
+    this.refresh = setInterval(() => this.fetchCurrentClass(), 5000)
   }
 
   fetchCurrentClass = () => {
-    EventEmitter.publish('allUsersInClass', this.state.currentClass.users)
     api
       .getClass(this.classId)
       .then((c) => {
