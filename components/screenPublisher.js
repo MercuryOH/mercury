@@ -42,6 +42,7 @@ export default class ScreenPublisher extends Component {
             publishVideo: this.state.video,
             videoSource: 'screen'
           }}
+          session = {this.props.session}
           onError={this.onError}
         />
       </div>
