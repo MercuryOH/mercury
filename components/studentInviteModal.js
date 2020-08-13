@@ -1,8 +1,6 @@
 import React, { Component } from 'react'
 import { Modal, Button, Search } from 'semantic-ui-react'
-import PropTypes from 'prop-types'
 import _ from 'lodash'
-
 import { EventEmitter } from './util/EventEmitter'
 
 const initialState = { isLoading: false, results: [], value: '' }
@@ -87,13 +85,13 @@ class StudentInviteModal extends Component {
                 fluid
                 placeholder="Invite students..."
                 input={{ fluid: true }}
-                loading={isLoading}
+                loading={this.state.isLoading}
                 onResultSelect={this.handleResultSelect}
                 onSearchChange={_.debounce(this.handleSearchChange, 500, {
                   leading: true,
                 })}
-                results={results}
-                value={value}
+                results={this.state.results}
+                value={this.state.value}
               />
             </div>
 
