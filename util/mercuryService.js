@@ -34,11 +34,11 @@ export async function submitFeedback(ClassId, stars, comments) {
   }
 }
 
-export async function postGroup(classId, name, type, creatorId) {
+export async function postGroup(classId, name, type) {
   try {
     const { data } = await axios.post(
       `/api/classes/${classId}/groups`,
-      { name, type, creatorId },
+      { name, type },
       {
         headers: {
           authorization: token,
@@ -137,15 +137,11 @@ export async function postGroupToken(classId, groupId) {
 
 export async function deleteGroup(classId, groupId) {
   try {
-    await axios.delete(
-      `/api/classes/${classId}/groups/${groupId}`,
-      {},
-      {
-        headers: {
-          authorization: token,
-        },
-      }
-    )
+    await axios.delete(`/api/classes/${classId}/groups/${groupId}`, {
+      headers: {
+        authorization: token,
+      },
+    })
     return null
   } catch (e) {
     return null

@@ -156,9 +156,11 @@ class ClassPage extends Component {
           minWidth: '10px',
           backgroundColor: 'transparent',
         }}
-        onClick={() => {
-          api.deleteGroup(this.classId, group.id)
-        }}
+        onClick={() =>
+          api
+            .deleteGroup(this.classId, group.id)
+            .then(() => this.fetchCurrentClass())
+        }
       >
         <Icon name="delete" color="red" />
       </Button>
@@ -405,7 +407,6 @@ class ClassPage extends Component {
       return null
     }
 
-    this.fetchCurrentClass()
     return (
       <Layout
         left={this.leftDisplay()}

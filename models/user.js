@@ -5,6 +5,7 @@ module.exports = (sequelize, DataTypes) => {
   class User extends Model {
     static associate(models) {
       User.belongsToMany(models.Class, { through: 'ClassUser' })
+      User.hasMany(models.Group)
     }
 
     isPasswordMatch(password) {
