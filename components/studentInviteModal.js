@@ -1,8 +1,9 @@
 import React, { Component } from 'react'
 import { Modal, Button, Search } from 'semantic-ui-react'
-import PropTypes from 'prop-types'
-
+import _ from 'lodash'
 import { EventEmitter } from './util/EventEmitter'
+
+const initialState = { isLoading: false, results: [], value: '' }
 
 class StudentInviteModal extends Component {
   constructor(props) {
@@ -10,11 +11,28 @@ class StudentInviteModal extends Component {
 
     this.state = {
       modalState: false,
+      isLoading: false,
+      results: [],
+      value: '',
+      allUsers: [],
     }
 
     EventEmitter.subscribe('openInviteModal', (openInviteModal) => {
       this.setState({ modalState: openInviteModal })
     })
+
+    EventEmitter.subscribe('allUsersInClass', (users) => {
+      this.setState({ allUsers: users })
+    })
+  }
+
+  formatAsResults = (user) => {
+    console.log({ title: user.email, ...user })
+    return {
+      title: user.email,
+      id: user.id,
+      description: user.firstName + ' ' + user.lastName,
+    }
   }
 
   handleInvite = () => {
@@ -22,7 +40,30 @@ class StudentInviteModal extends Component {
     EventEmitter.publish('openInviteModal', false)
   }
 
+  handleResultSelect = (e, { result }) => this.setState({ value: result.title })
+
+  handleSearchChange = (e, { value }) => {
+    this.setState({ isLoading: true, value })
+
+    setTimeout(() => {
+      if (this.state.value.length < 1) return this.setState(initialState)
+
+      const re = new RegExp(_.escapeRegExp(this.state.value), 'i')
+      const isMatch = (result) => re.test(result.title)
+
+      this.setState({
+        isLoading: false,
+        results: _.filter(
+          this.state.allUsers.map(this.formatAsResults),
+          isMatch
+        ),
+      })
+    }, 300)
+  }
+
   render() {
+    const { isLoading, value, results } = this.state
+
     return (
       <div>
         <Modal
@@ -44,6 +85,13 @@ class StudentInviteModal extends Component {
                 fluid
                 placeholder="Invite students..."
                 input={{ fluid: true }}
+                loading={this.state.isLoading}
+                onResultSelect={this.handleResultSelect}
+                onSearchChange={_.debounce(this.handleSearchChange, 500, {
+                  leading: true,
+                })}
+                results={this.state.results}
+                value={this.state.value}
               />
             </div>
 

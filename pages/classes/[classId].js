@@ -73,6 +73,7 @@ class ClassPage extends Component {
   }
 
   fetchCurrentClass = () => {
+    EventEmitter.publish('allUsersInClass', this.state.currentClass.users)
     api
       .getClass(this.classId)
       .then((c) => {
