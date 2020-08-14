@@ -1,22 +1,59 @@
 const url = 'ws://localhost:8080'
-const role = 'Student'
-import { EventEmitter } from '../../util/EventEmitter'
+import { EventEmitter } from '../components/util/EventEmitter'
 
 /**
  * QueueWebSocket controls the web socket business logic for the course queue and
  * functions as a controller for the queue state
  */
 
-export default class StudentWebSocketController {
-  start({ me, courseId }) {
+export default class StudentWebSocketClient {
+  start({ me, courseId, role }) {
     const { id } = me
     this.id = id
+    this.role = role
     this.courseId = courseId
 
     this.connection = new WebSocket(url)
     this.connection.onopen = this.processConnectionOpen.bind(this)
     this.connection.onerror = this.processConnectionError.bind(this)
     this.connection.onmessage = this.processConnectionMessage.bind(this)
+
+    this.defineEventEmitterCallbacks()
+  }
+
+  defineEventEmitterCallbacks() {
+    EventEmitter.subscribe('greeting', () => {
+      this.connection.send(
+        this.prepareMessage({
+          msgType: 'greeting',
+          msg: this.id,
+        })
+      )
+    })
+
+    EventEmitter.subscribe('signalStudentTimeout', (TAName) =>
+      this.signalStudentTimeout(TAName)
+    )
+
+    EventEmitter.subscribe('signalJoinTA', ({ group, TAName, me }) => {
+      this.signalJoinTA(group, TAName, me)
+    })
+
+    EventEmitter.subscribe('signalDeclineTA', (TAName) => {
+      this.signalDeclineTA(TAName)
+    })
+
+    EventEmitter.subscribe('signalCallOver', () => {
+      this.signalCallOver()
+    })
+
+    EventEmitter.subscribe('signalAddMeToQueue', () => {
+      this.addMeToQueue()
+    })
+
+    EventEmitter.subscribe('signalRemoveMeFromQueue', () => {
+      this.removeMeFromQueue()
+    })
   }
 
   processConnectionOpen() {
@@ -53,6 +90,7 @@ export default class StudentWebSocketController {
 
     switch (msgType) {
       case 'greetingAck':
+        console.log('greetingAckReceived')
         this.initializeQueueOnGreeting(msg)
         break
 
@@ -136,7 +174,7 @@ export default class StudentWebSocketController {
   }
 
   prepareMessage(msg) {
-    const { courseId } = this
+    const { courseId, role } = this
     const enrichedPayload = { ...msg, courseId, role }
     return JSON.stringify(enrichedPayload)
   }

@@ -2,7 +2,6 @@ import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import styled from 'styled-components'
 import YourTurnModal from './yourTurnModal'
-import StudentWebSocketController from './studentWebSocket'
 import { Label, Button } from 'semantic-ui-react'
 import { NotificationContainer, NotificationManager } from 'react-notifications'
 import { EventEmitter } from '../../util/EventEmitter'
@@ -25,7 +24,6 @@ class StudentQueueView extends Component {
     this.state = {
       displayStudentsStyle: { display: 'grid' },
       iconToDisplay: 'caret square down outline',
-      queueWebSocketController: new StudentWebSocketController(),
       studentsInQueue: [],
       me: this.props.me,
       inQueue: false,
@@ -66,42 +64,40 @@ class StudentQueueView extends Component {
     })
 
     EventEmitter.subscribe('studentTimeout', (TAName) => {
-      const { queueWebSocketController } = this.state
-      queueWebSocketController.signalStudentTimeout(TAName)
+      EventEmitter.publish('signalStudentTimeout', TAName)
       this.createTimeoutNotification()
     })
 
     EventEmitter.subscribe('studentJoinTA', (TAName) => {
-      const { queueWebSocketController, office, onJoin, me } = this.state
-      queueWebSocketController.signalJoinTA(office, TAName, me)
+      const { office, onJoin, me } = this.state
+      EventEmitter.publish('signalJoinTA', { group: office, TAName, me })
       this.setState({ inQueue: false, inCallWithTA: true })
       onJoin(office)
     })
 
     EventEmitter.subscribe('studentInviteTA', (TAName) => {
-      const { queueWebSocketController, onJoin, currentGroup, me } = this.state
-      queueWebSocketController.signalJoinTA(currentGroup, TAName, me)
+      const { onJoin, currentGroup, me } = this.state
+      EventEmitter.publish('signalJoinTA', { group: currentGroup, TAName, me })
       this.setState({ inQueue: false, inCallWithTA: true })
       onJoin(currentGroup)
     })
 
     EventEmitter.subscribe('studentDeclineTA', (TAName) => {
-      const { queueWebSocketController, onJoin, currentGroup } = this.state
-      queueWebSocketController.signalDeclineTA(TAName)
+      const { onJoin, currentGroup } = this.state
+      EventEmitter.subscribe('signalDeclineTA', TAName)
       this.setState({ inQueue: false })
       onJoin(currentGroup)
     })
 
     EventEmitter.subscribe('currentGroupChange', (currentGroup) => {
-      console.log(currentGroup)
       this.setState({ currentGroup })
     })
 
     EventEmitter.subscribe('callOver', (classId) => {
-      const { queueWebSocketController, inCallWithTA } = this.state
+      const { inCallWithTA } = this.state
 
       if (inCallWithTA) {
-        queueWebSocketController.signalCallOver()
+        EventEmitter.publish('signalCallOver')
         EventEmitter.publish('activateFeedbackModal', classId)
         this.setState({ inCallWithTA: false, currStudentBeingHelped: '' })
       }
@@ -114,6 +110,7 @@ class StudentQueueView extends Component {
     EventEmitter.subscribe(
       'initializeQueueOnGreeting',
       ({ currStudent, studentsInQueue }) => {
+        console.log('hello Queue on Greeting')
         const myId = this.state.me.id
         const inQueue =
           studentsInQueue.filter(({ id }) => id === myId).length > 0
@@ -158,7 +155,7 @@ class StudentQueueView extends Component {
       return
     }
 
-    this.state.queueWebSocketController.addMeToQueue()
+    EventEmitter.publish('signalAddMeToQueue')
   }
 
   removeMeFromQueue() {
@@ -169,7 +166,7 @@ class StudentQueueView extends Component {
       return
     }
 
-    this.state.queueWebSocketController.removeMeFromQueue()
+    EventEmitter.publish('signalRemoveMeFromQueue')
   }
 
   getButtonToDisplay() {
@@ -210,9 +207,7 @@ class StudentQueueView extends Component {
   }
 
   componentDidMount() {
-    const { me, queueWebSocketController } = this.state
-    const courseId = Number(window.location.href.split('/')[4])
-    queueWebSocketController.start({ me, courseId })
+    EventEmitter.publish('greeting')
     this.setState({ isReadyToRender: true })
   }
 

@@ -2,14 +2,15 @@ import React, { Component } from 'react'
 import { withRouter } from 'next/router'
 import dynamic from 'next/dynamic'
 import Layout from '../../components/layout'
-import { Button, Accordion, List, Icon, ListContent } from 'semantic-ui-react'
-import { AuthRequired, useAuth } from '../../components/authProvider'
+import { Button, Accordion, List, Icon } from 'semantic-ui-react'
+import { AuthRequired } from '../../components/authProvider'
 import Queue from '../../components/queue/queue'
 import * as api from '../../util/mercuryService'
 import CreateGroupModal from '../../components/createGroupModal'
 import StudentInviteModal from '../../components/studentInviteModal'
 import { EventEmitter } from '../../components/util/EventEmitter'
 import FeedbackModal from '../../components/feedbackModal'
+import StudentWebSocketClient from '../../util/studentWebSocket'
 
 const CreateDiscussionModal = dynamic(
   () => import('../../components/createDiscussionModal'),
@@ -36,8 +37,9 @@ class ClassPage extends Component {
         role: 'Student',
       },
       vonageCred: null,
-      isMounted: false
+      isMounted: false,
     }
+
     this.defineEventEmitterCallbacks()
   }
 
@@ -62,6 +64,15 @@ class ClassPage extends Component {
       .then((c) => {
         const userRole = c.users.find((u) => u.id === this.user.id)
         if (!userRole) this.props.router.push('/calendar')
+        const { role } = userRole
+        if (role === 'Student') {
+          new StudentWebSocketClient().start({
+            role,
+            me: this.user,
+            courseId: Number(this.classId),
+          })
+        }
+
         this.setState({
           currentClass: {
             ...c,
@@ -72,8 +83,6 @@ class ClassPage extends Component {
         EventEmitter.publish('allUsersInClass', this.state.currentClass.users)
       })
       .catch(console.error)
-
-    this.refresh = setInterval(() => this.fetchCurrentClass(), 5000)
   }
 
   fetchCurrentClass = () => {
