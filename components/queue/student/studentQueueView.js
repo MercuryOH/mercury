@@ -84,7 +84,7 @@ class StudentQueueView extends Component {
 
     EventEmitter.subscribe('studentDeclineTA', (TAName) => {
       const { onJoin, currentGroup } = this.state
-      EventEmitter.subscribe('signalDeclineTA', TAName)
+      EventEmitter.publish('signalDeclineTA', TAName)
       this.setState({ inQueue: false })
       onJoin(currentGroup)
     })
@@ -110,8 +110,7 @@ class StudentQueueView extends Component {
     EventEmitter.subscribe(
       'initializeQueueOnGreeting',
       ({ currStudent, studentsInQueue }) => {
-        console.log('hello Queue on Greeting')
-        const myId = this.state.me.id
+        const { id: myId } = this.state.me
         const inQueue =
           studentsInQueue.filter(({ id }) => id === myId).length > 0
         this.setState({

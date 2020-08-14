@@ -11,6 +11,7 @@ import StudentInviteModal from '../../components/studentInviteModal'
 import { EventEmitter } from '../../components/util/EventEmitter'
 import FeedbackModal from '../../components/feedbackModal'
 import StudentWebSocketClient from '../../util/studentWebSocket'
+import TAWebSocketClient from '../../util/taWebSocket'
 
 const CreateDiscussionModal = dynamic(
   () => import('../../components/createDiscussionModal'),
@@ -51,8 +52,8 @@ class ClassPage extends Component {
 
   componentDidMount() {
     const { classId } = this.props.router.query
-    this.classId = classId
-    if (!this.classId) return
+    if (!classId) return
+    this.classId = Number(classId)
 
     api
       .getMe()
@@ -65,11 +66,21 @@ class ClassPage extends Component {
         const userRole = c.users.find((u) => u.id === this.user.id)
         if (!userRole) this.props.router.push('/calendar')
         const { role } = userRole
+
+        /**
+         * Start the appropriate web socket handler depending on the user role
+         */
+
         if (role === 'Student') {
           new StudentWebSocketClient().start({
-            role,
             me: this.user,
-            courseId: Number(this.classId),
+            courseId: this.classId,
+          })
+        } else {
+          new TAWebSocketClient().start({
+            me: this.user,
+            courseId: this.classId,
+            onJoin: this.handleSelectGroup,
           })
         }
 

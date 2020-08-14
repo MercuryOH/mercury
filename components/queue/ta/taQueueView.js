@@ -2,7 +2,6 @@ import React, { Component } from 'react'
 import { Label, Button } from 'semantic-ui-react'
 import styled from 'styled-components'
 import TaWaitingModal from './taWaitingModal'
-import TAWebSocketController from './taWebSocket'
 import { NotificationContainer, NotificationManager } from 'react-notifications'
 import { EventEmitter } from '../../util/EventEmitter'
 
@@ -20,7 +19,6 @@ export default class TAQueueView extends Component {
     this.state = {
       displayStudentsStyle: { display: 'grid' },
       iconToDisplay: 'caret square down outline',
-      queueWebSocketController: new TAWebSocketController(),
       studentsInQueue: [],
       me: this.props.me,
       nextStudentName: '',
@@ -74,9 +72,9 @@ export default class TAQueueView extends Component {
     })
 
     EventEmitter.subscribe('callOver', (classId) => {
-      const { queueWebSocketController, inCallWithStudent } = this.state
+      const { inCallWithStudent } = this.state
       if (inCallWithStudent) {
-        queueWebSocketController.signalCallOver()
+        EventEmitter.publish('signalCallOver')
         EventEmitter.publish('activateFeedbackModal', classId)
         this.setState({ inCallWithStudent: false, currStudentBeingHelped: '' })
       }
@@ -114,10 +112,7 @@ export default class TAQueueView extends Component {
   }
 
   componentDidMount() {
-    const courseId = Number(window.location.href.split('/')[4])
-    const onJoin = this.props.onJoin
-    const { queueWebSocketController, me } = this.state
-    queueWebSocketController.start({ me, courseId, onJoin })
+    EventEmitter.publish('greeting')
     this.setState({ isReadyToRender: true })
   }
 
@@ -139,7 +134,7 @@ export default class TAQueueView extends Component {
   }
 
   getNextStudentInQueue() {
-    this.state.queueWebSocketController.getNextStudent()
+    EventEmitter.publish('signalGetNextStudent')
   }
 
   getButtonToDisplay() {

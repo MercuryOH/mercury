@@ -1,16 +1,15 @@
 const url = 'ws://localhost:8080'
 import { EventEmitter } from '../components/util/EventEmitter'
-
+const role = 'Student'
 /**
  * QueueWebSocket controls the web socket business logic for the course queue and
  * functions as a controller for the queue state
  */
 
 export default class StudentWebSocketClient {
-  start({ me, courseId, role }) {
+  start({ me, courseId }) {
     const { id } = me
     this.id = id
-    this.role = role
     this.courseId = courseId
 
     this.connection = new WebSocket(url)
@@ -174,7 +173,7 @@ export default class StudentWebSocketClient {
   }
 
   prepareMessage(msg) {
-    const { courseId, role } = this
+    const { courseId } = this
     const enrichedPayload = { ...msg, courseId, role }
     return JSON.stringify(enrichedPayload)
   }
