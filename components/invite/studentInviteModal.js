@@ -29,12 +29,12 @@ class StudentInviteModal extends Component {
       this.setState({ modalState: openInviteModal })
     })
 
-    EventEmitter.subscribe('allUsersInClass', (users) => {
-      this.setState({ allUsers: users })
-    })
-
     EventEmitter.subscribe('me', (me) => {
       this.setState({ me })
+    })
+
+    EventEmitter.subscribe('allOtherStudentsInClass', (users) => {
+      this.setState({ allUsers: users })
     })
 
     EventEmitter.subscribe('currentGroupChange', (currentGroup) => {
@@ -54,13 +54,18 @@ class StudentInviteModal extends Component {
     this.setState({ modalState: false })
     EventEmitter.publish('openInviteModal', false)
 
-    if (this.state.selectedUser) {
-      EventEmitter.publish('sendOutInvite', {
-        sender: this.state.me,
-        recepientId: this.state.selectedUser.id,
-        group: this.state.currentGroup,
-      })
-    }
+    if (!this.state.selectedUser) return
+
+    EventEmitter.publish('sendOutInvite', {
+      sender: this.state.me,
+      recepientId: this.state.selectedUser.id,
+      group: this.state.currentGroup,
+    })
+  }
+
+  handleClose = () => {
+    this.setState({ modalState: false })
+    EventEmitter.publish('openInviteModal', false)
   }
 
   handleResultSelect = (e, { result }) => {
@@ -96,7 +101,7 @@ class StudentInviteModal extends Component {
         <Modal
           style={{ borderless: 'true', width: '40%', height: '40%' }}
           open={this.state.modalState}
-          onClose={this.handleInvite}
+          onClose={this.handleClose}
           closeOnDimmerClick={false}
           closeOnEscape={false}
           closeIcon

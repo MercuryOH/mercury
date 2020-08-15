@@ -67,7 +67,6 @@ class ClassPage extends Component {
         const userRole = c.users.find((u) => u.id === this.user.id)
         if (!userRole) this.props.router.push('/calendar')
         const { role } = userRole
-
         /**
          * Start the appropriate web socket handler depending on the user role
          */
@@ -93,7 +92,12 @@ class ClassPage extends Component {
           isMounted: true,
         })
 
-        EventEmitter.publish('allUsersInClass', this.state.currentClass.users)
+        EventEmitter.publish(
+          'allOtherStudentsInClass',
+          this.state.currentClass.users.filter(
+            (user) => user.id !== this.user.id && user.role === 'Student'
+          )
+        )
 
         EventEmitter.publish('me', this.user)
       })
@@ -200,6 +204,15 @@ class ClassPage extends Component {
       .then((group) => {
         this.fetchCurrentClass()
         this.handleSelectGroup(group)
+
+        // EventEmitter.subscribe('selectedUser', (selectedUser) => {
+        //   if (!selectedUser) return
+        //   EventEmitter.publish('sendOutInvite', {
+        //     sender: this.user,
+        //     recepientId: selectedUser.id,
+        //     group: group,
+        //   })
+        // })
       })
   }
 

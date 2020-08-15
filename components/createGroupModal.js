@@ -5,7 +5,7 @@ import _ from 'lodash'
 import { EventEmitter } from './util/EventEmitter'
 import SearchBar from './invite/searchBar'
 
-//const initialState = { isLoading: false, results: [], value: '' }
+const initialState = { isLoading: false, results: [], value: '' }
 
 class CreateGroupModal extends Component {
   constructor(props) {
@@ -14,49 +14,72 @@ class CreateGroupModal extends Component {
     this.state = {
       modalState: false,
       groupName: '',
-      // isLoading: false,
-      // results: [],
-      // value: '',
-      // allUsers: [],
+      isLoading: false,
+      results: [],
+      value: '',
+      allUsers: [],
+      selectedUser: {},
+      me: {},
+      currentGroup: { id: '', name: '' },
     }
 
-    // EventEmitter.subscribe('allUsersInClass', (users) => {
-    //   this.setState({ allUsers: users })
-    // })
+    this.defineEventEmitterCallbacks()
   }
 
-  // formatAsResults = (user) => {
-  //   console.log({ title: user.email, ...user })
-  //   return {
-  //     title: user.email,
-  //     id: user.id,
-  //     description: user.firstName + ' ' + user.lastName,
-  //   }
-  // }
+  defineEventEmitterCallbacks() {
+    EventEmitter.subscribe('allOtherStudentsInClass', (users) => {
+      this.setState({ allUsers: users })
+    })
 
-  // handleResultSelect = (e, { result }) => this.setState({ value: result.title })
+    EventEmitter.subscribe('me', (me) => {
+      this.setState({ me })
+    })
 
-  // handleSearchChange = (e, { value }) => {
-  //   this.setState({ isLoading: true, value })
+    EventEmitter.subscribe('currentGroupChange', (currentGroup) => {
+      this.setState({ currentGroup })
+    })
+  }
 
-  //   setTimeout(() => {
-  //     if (this.state.value.length < 1) return this.setState(initialState)
+  formatAsResults = (user) => {
+    return {
+      title: user.firstName + ' ' + user.lastName,
+      id: user.id,
+      description: user.email,
+    }
+  }
 
-  //     const re = new RegExp(_.escapeRegExp(this.state.value), 'i')
-  //     const isMatch = (result) => re.test(result.title)
+  handleResultSelect = (e, { result }) => {
+    this.setState({
+      value: result.title,
+      selectedUser: result,
+    })
+  }
 
-  //     this.setState({
-  //       isLoading: false,
-  //       results: _.filter(
-  //         this.state.allUsers.map(this.formatAsResults),
-  //         isMatch
-  //       ),
-  //     })
-  //   }, 300)
-  // }
+  handleSearchChange = (e, { value }) => {
+    this.setState({ isLoading: true, value })
+
+    setTimeout(() => {
+      if (this.state.value.length < 1) return this.setState(initialState)
+
+      const re = new RegExp(_.escapeRegExp(this.state.value), 'i')
+      const isMatch = (result) =>
+        re.test(result.title) || re.test(result.description)
+
+      this.setState({
+        isLoading: false,
+        results: _.filter(
+          this.state.allUsers.map(this.formatAsResults),
+          isMatch
+        ),
+      })
+    }, 300)
+  }
 
   createGroup = () => {
     if (!this.state.groupName) return
+
+    // if (!this.state.selectedUser) return
+    // EventEmitter.publish('selectedUser', this.state.selectedUser)
 
     this.setState({ modalState: false })
     this.props.onCreate({ name: this.state.groupName, type: 'group' })
@@ -111,9 +134,9 @@ class CreateGroupModal extends Component {
               />
               <br />
               <br />
-              {/* <Search
+              <Search
                 fluid
-                placeholder={'Add students to your group...'}
+                placeholder="Invite student..."
                 input={{ fluid: true }}
                 loading={this.state.isLoading}
                 onResultSelect={this.handleResultSelect}
@@ -122,8 +145,8 @@ class CreateGroupModal extends Component {
                 })}
                 results={this.state.results}
                 value={this.state.value}
-              /> */}
-              <SearchBar />
+              />
+              {/* <SearchBar /> */}
             </div>
 
             <div
