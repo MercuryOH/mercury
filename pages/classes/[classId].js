@@ -7,11 +7,12 @@ import { AuthRequired } from '../../components/authProvider'
 import Queue from '../../components/queue/queue'
 import * as api from '../../util/mercuryService'
 import CreateGroupModal from '../../components/createGroupModal'
-import StudentInviteModal from '../../components/studentInviteModal'
+import StudentInviteModal from '../../components/invite/studentInviteModal'
 import { EventEmitter } from '../../components/util/EventEmitter'
 import FeedbackModal from '../../components/feedbackModal'
 import StudentWebSocketClient from '../../util/studentWebSocket'
 import TAWebSocketClient from '../../util/taWebSocket'
+import ReceiveInviteModal from '../../components/invite/receiveInviteModal'
 
 const CreateDiscussionModal = dynamic(
   () => import('../../components/createDiscussionModal'),
@@ -91,9 +92,14 @@ class ClassPage extends Component {
           },
           isMounted: true,
         })
+
         EventEmitter.publish('allUsersInClass', this.state.currentClass.users)
+
+        EventEmitter.publish('me', this.user)
       })
       .catch(console.error)
+
+    setInterval(() => this.fetchCurrentClass(), 5000)
   }
 
   fetchCurrentClass = () => {
@@ -437,6 +443,7 @@ class ClassPage extends Component {
         )}
         <StudentInviteModal />
         <FeedbackModal />
+        <ReceiveInviteModal onJoin={this.handleSelectGroup} />
       </Layout>
     )
   }

@@ -53,6 +53,13 @@ export default class StudentWebSocketClient {
     EventEmitter.subscribe('signalRemoveMeFromQueue', () => {
       this.removeMeFromQueue()
     })
+
+    EventEmitter.subscribe(
+      'sendOutInvite',
+      ({ sender, recepientId, group }) => {
+        this.sendOutInvite(sender, recepientId, group)
+      }
+    )
   }
 
   processConnectionOpen() {
@@ -84,6 +91,10 @@ export default class StudentWebSocketClient {
     EventEmitter.publish('initializeQueueOnGreeting', msg)
   }
 
+  activateReceiveInviteModal(msg) {
+    EventEmitter.publish('activateReceiveInviteModal', msg)
+  }
+
   processConnectionMessage(e) {
     const { msgType, msg } = JSON.parse(e.data)
 
@@ -98,13 +109,18 @@ export default class StudentWebSocketClient {
         this.updateStudentsInQueue(msg)
         break
 
-      case 'yourTurn': // in this case, which os only if you arw a student, the server notifies that it is your turn
+      case 'yourTurn': // in this case, which is only if you are a student, the server notifies that it is your turn
         // msg - the TA that notifies you
         this.activateYourTurnModal(msg)
         break
 
       case 'currStudentUpdate':
         this.updateCurrStudent(msg)
+        break
+
+      case 'receiveInvite': // in this case, another user invites you to their group
+        // msg - sender, group
+        this.activateReceiveInviteModal(msg)
         break
 
       default:
@@ -168,6 +184,16 @@ export default class StudentWebSocketClient {
       this.prepareMessage({
         msgType: 'callOver',
         msg: 'callOver',
+      })
+    )
+  }
+
+  sendOutInvite(sender, recepientId, group) {
+    console.log(JSON.stringify({ sender, recepientId, group }))
+    this.connection.send(
+      this.prepareMessage({
+        msgType: 'sendOutInvite',
+        msg: JSON.stringify({ sender, recepientId, group }),
       })
     )
   }

@@ -3,8 +3,9 @@ import PropTypes from 'prop-types'
 import { Modal, Button, Header, Search, Input } from 'semantic-ui-react'
 import _ from 'lodash'
 import { EventEmitter } from './util/EventEmitter'
+import SearchBar from './invite/searchBar'
 
-const initialState = { isLoading: false, results: [], value: '' }
+//const initialState = { isLoading: false, results: [], value: '' }
 
 class CreateGroupModal extends Component {
   constructor(props) {
@@ -13,46 +14,46 @@ class CreateGroupModal extends Component {
     this.state = {
       modalState: false,
       groupName: '',
-      isLoading: false,
-      results: [],
-      value: '',
-      allUsers: [],
+      // isLoading: false,
+      // results: [],
+      // value: '',
+      // allUsers: [],
     }
 
-    EventEmitter.subscribe('allUsersInClass', (users) => {
-      this.setState({ allUsers: users })
-    })
+    // EventEmitter.subscribe('allUsersInClass', (users) => {
+    //   this.setState({ allUsers: users })
+    // })
   }
 
-  formatAsResults = (user) => {
-    console.log({ title: user.email, ...user })
-    return {
-      title: user.email,
-      id: user.id,
-      description: user.firstName + ' ' + user.lastName,
-    }
-  }
+  // formatAsResults = (user) => {
+  //   console.log({ title: user.email, ...user })
+  //   return {
+  //     title: user.email,
+  //     id: user.id,
+  //     description: user.firstName + ' ' + user.lastName,
+  //   }
+  // }
 
-  handleResultSelect = (e, { result }) => this.setState({ value: result.title })
+  // handleResultSelect = (e, { result }) => this.setState({ value: result.title })
 
-  handleSearchChange = (e, { value }) => {
-    this.setState({ isLoading: true, value })
+  // handleSearchChange = (e, { value }) => {
+  //   this.setState({ isLoading: true, value })
 
-    setTimeout(() => {
-      if (this.state.value.length < 1) return this.setState(initialState)
+  //   setTimeout(() => {
+  //     if (this.state.value.length < 1) return this.setState(initialState)
 
-      const re = new RegExp(_.escapeRegExp(this.state.value), 'i')
-      const isMatch = (result) => re.test(result.title)
+  //     const re = new RegExp(_.escapeRegExp(this.state.value), 'i')
+  //     const isMatch = (result) => re.test(result.title)
 
-      this.setState({
-        isLoading: false,
-        results: _.filter(
-          this.state.allUsers.map(this.formatAsResults),
-          isMatch
-        ),
-      })
-    }, 300)
-  }
+  //     this.setState({
+  //       isLoading: false,
+  //       results: _.filter(
+  //         this.state.allUsers.map(this.formatAsResults),
+  //         isMatch
+  //       ),
+  //     })
+  //   }, 300)
+  // }
 
   createGroup = () => {
     if (!this.state.groupName) return
@@ -110,7 +111,7 @@ class CreateGroupModal extends Component {
               />
               <br />
               <br />
-              <Search
+              {/* <Search
                 fluid
                 placeholder={'Add students to your group...'}
                 input={{ fluid: true }}
@@ -121,7 +122,8 @@ class CreateGroupModal extends Component {
                 })}
                 results={this.state.results}
                 value={this.state.value}
-              />
+              /> */}
+              <SearchBar />
             </div>
 
             <div
