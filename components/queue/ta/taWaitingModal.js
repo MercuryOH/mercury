@@ -7,6 +7,7 @@ let currTime = timeOutTime
 const granularity = 1000
 
 let timeOut = null
+let studentDisconnectTimeout = null
 
 export default class TaWaitingModal extends Component {
   constructor(props) {
@@ -28,22 +29,39 @@ export default class TaWaitingModal extends Component {
     })
   }
 
+  clearAllTimeouts() {
+    if (timeOut) {
+      clearTimeout(timeOut)
+    }
+
+    if (studentDisconnectTimeout) {
+      clearTimeout(studentDisconnectTimeout)
+    }
+  }
+
   startTimer() {
+    this.clearAllTimeouts()
     currTime = timeOutTime
     timeOut = setTimeout(this.tick.bind(this), granularity)
     this.setState({ timeRemaining: currTime })
   }
 
   endTimer() {
-    if (timeOut) {
-      clearTimeout(timeOut)
-    }
+    this.clearAllTimeouts()
+  }
+
+  endModalWaitingOnTimeout() {
+    EventEmitter.publish('removeTAWaitingModalOnTimeout')
   }
 
   tick() {
     currTime -= 1
 
     if (currTime === 0) {
+      studentDisconnectTimeout = setTimeout(
+        this.endModalWaitingOnTimeout.bind(this),
+        3000
+      )
       return
     } else {
       timeOut = setTimeout(this.tick.bind(this), granularity)

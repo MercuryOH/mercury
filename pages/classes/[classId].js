@@ -2,14 +2,17 @@ import React, { Component } from 'react'
 import { withRouter } from 'next/router'
 import dynamic from 'next/dynamic'
 import Layout from '../../components/layout'
-import { Button, Accordion, List, Icon, ListContent } from 'semantic-ui-react'
-import { AuthRequired, useAuth } from '../../components/authProvider'
+import { Button, Accordion, List, Icon } from 'semantic-ui-react'
+import { AuthRequired } from '../../components/authProvider'
 import Queue from '../../components/queue/queue'
 import * as api from '../../util/mercuryService'
 import CreateGroupModal from '../../components/createGroupModal'
-import StudentInviteModal from '../../components/studentInviteModal'
+import StudentInviteModal from '../../components/invite/studentInviteModal'
 import { EventEmitter } from '../../components/util/EventEmitter'
 import FeedbackModal from '../../components/feedbackModal'
+import StudentWebSocketClient from '../../util/studentWebSocket'
+import TAWebSocketClient from '../../util/taWebSocket'
+import ReceiveInviteModal from '../../components/invite/receiveInviteModal'
 
 const ScreenContainer = dynamic(() => import('../../components/screenContainer'), {
   ssr: false,
@@ -40,8 +43,9 @@ class ClassPage extends Component {
         role: 'Student',
       },
       vonageCred: null,
-      isMounted: false
+      isMounted: false,
     }
+
     this.defineEventEmitterCallbacks()
   }
 
@@ -53,8 +57,8 @@ class ClassPage extends Component {
 
   componentDidMount() {
     const { classId } = this.props.router.query
-    this.classId = classId
-    if (!this.classId) return
+    if (!classId) return
+    this.classId = Number(classId)
 
     api
       .getMe()
@@ -66,6 +70,24 @@ class ClassPage extends Component {
       .then((c) => {
         const userRole = c.users.find((u) => u.id === this.user.id)
         if (!userRole) this.props.router.push('/calendar')
+        const { role } = userRole
+        /**
+         * Start the appropriate web socket handler depending on the user role
+         */
+
+        if (role === 'Student') {
+          new StudentWebSocketClient().start({
+            me: this.user,
+            courseId: this.classId,
+          })
+        } else {
+          new TAWebSocketClient().start({
+            me: this.user,
+            courseId: this.classId,
+            onJoin: this.handleSelectGroup,
+          })
+        }
+
         this.setState({
           currentClass: {
             ...c,
@@ -73,11 +95,19 @@ class ClassPage extends Component {
           },
           isMounted: true,
         })
-        EventEmitter.publish('allUsersInClass', this.state.currentClass.users)
+
+        EventEmitter.publish(
+          'allOtherStudentsInClass',
+          this.state.currentClass.users.filter(
+            (user) => user.id !== this.user.id && user.role === 'Student'
+          )
+        )
+
+        EventEmitter.publish('me', this.user)
       })
       .catch(console.error)
 
-    this.refresh = setInterval(() => this.fetchCurrentClass(), 5000)
+    setInterval(() => this.fetchCurrentClass(), 5000)
   }
 
   fetchCurrentClass = () => {
@@ -178,6 +208,15 @@ class ClassPage extends Component {
       .then((group) => {
         this.fetchCurrentClass()
         this.handleSelectGroup(group)
+
+        // EventEmitter.subscribe('selectedUser', (selectedUser) => {
+        //   if (!selectedUser) return
+        //   EventEmitter.publish('sendOutInvite', {
+        //     sender: this.user,
+        //     recepientId: selectedUser.id,
+        //     group: group,
+        //   })
+        // })
       })
   }
 
@@ -422,6 +461,7 @@ class ClassPage extends Component {
         )}
         <StudentInviteModal />
         <FeedbackModal />
+        <ReceiveInviteModal onJoin={this.handleSelectGroup} />
       </Layout>
     )
   }

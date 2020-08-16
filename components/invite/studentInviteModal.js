@@ -1,7 +1,8 @@
 import React, { Component } from 'react'
 import { Modal, Button, Search } from 'semantic-ui-react'
 import _ from 'lodash'
-import { EventEmitter } from './util/EventEmitter'
+import { EventEmitter } from '../util/EventEmitter'
+import SearchBar from './searchBar'
 
 const initialState = { isLoading: false, results: [], value: '' }
 
@@ -15,32 +16,64 @@ class StudentInviteModal extends Component {
       results: [],
       value: '',
       allUsers: [],
+      selectedUser: {},
+      me: {},
+      currentGroup: { id: '', name: '' },
     }
 
+    this.defineEventEmitterCallbacks()
+  }
+
+  defineEventEmitterCallbacks() {
     EventEmitter.subscribe('openInviteModal', (openInviteModal) => {
       this.setState({ modalState: openInviteModal })
     })
 
-    EventEmitter.subscribe('allUsersInClass', (users) => {
+    EventEmitter.subscribe('me', (me) => {
+      this.setState({ me })
+    })
+
+    EventEmitter.subscribe('allOtherStudentsInClass', (users) => {
       this.setState({ allUsers: users })
+    })
+
+    EventEmitter.subscribe('currentGroupChange', (currentGroup) => {
+      this.setState({ currentGroup })
     })
   }
 
   formatAsResults = (user) => {
-    console.log({ title: user.email, ...user })
     return {
-      title: user.email,
+      title: user.firstName + ' ' + user.lastName,
       id: user.id,
-      description: user.firstName + ' ' + user.lastName,
+      description: user.email,
     }
   }
 
   handleInvite = () => {
     this.setState({ modalState: false })
     EventEmitter.publish('openInviteModal', false)
+
+    if (!this.state.selectedUser) return
+
+    EventEmitter.publish('sendOutInvite', {
+      sender: this.state.me,
+      recepientId: this.state.selectedUser.id,
+      group: this.state.currentGroup,
+    })
   }
 
-  handleResultSelect = (e, { result }) => this.setState({ value: result.title })
+  handleClose = () => {
+    this.setState({ modalState: false })
+    EventEmitter.publish('openInviteModal', false)
+  }
+
+  handleResultSelect = (e, { result }) => {
+    this.setState({
+      value: result.title,
+      selectedUser: result,
+    })
+  }
 
   handleSearchChange = (e, { value }) => {
     this.setState({ isLoading: true, value })
@@ -49,7 +82,8 @@ class StudentInviteModal extends Component {
       if (this.state.value.length < 1) return this.setState(initialState)
 
       const re = new RegExp(_.escapeRegExp(this.state.value), 'i')
-      const isMatch = (result) => re.test(result.title)
+      const isMatch = (result) =>
+        re.test(result.title) || re.test(result.description)
 
       this.setState({
         isLoading: false,
@@ -67,7 +101,7 @@ class StudentInviteModal extends Component {
         <Modal
           style={{ borderless: 'true', width: '40%', height: '40%' }}
           open={this.state.modalState}
-          onClose={this.handleInvite}
+          onClose={this.handleClose}
           closeOnDimmerClick={false}
           closeOnEscape={false}
           closeIcon
@@ -81,7 +115,7 @@ class StudentInviteModal extends Component {
             >
               <Search
                 fluid
-                placeholder="Invite students..."
+                placeholder="Invite student..."
                 input={{ fluid: true }}
                 loading={this.state.isLoading}
                 onResultSelect={this.handleResultSelect}
@@ -92,6 +126,7 @@ class StudentInviteModal extends Component {
                 value={this.state.value}
               />
             </div>
+            {/* <SearchBar /> */}
 
             <div
               style={{

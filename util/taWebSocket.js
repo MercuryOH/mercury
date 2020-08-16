@@ -1,5 +1,4 @@
-import { EventEmitter } from '../../util/EventEmitter'
-
+import { EventEmitter } from '../components/util/EventEmitter'
 const url = 'ws://localhost:8080'
 const role = 'Instructor'
 
@@ -8,7 +7,7 @@ const role = 'Instructor'
  * functions as a controller for the queue state
  */
 
-export default class TAWebSocketController {
+export default class TAWebSocketClient {
   start({ me, courseId, onJoin }) {
     const { id } = me
     this.id = id
@@ -18,6 +17,26 @@ export default class TAWebSocketController {
     this.connection.onopen = this.processConnectionOpen.bind(this)
     this.connection.onerror = this.processConnectionError.bind(this)
     this.connection.onmessage = this.processConnectionMessage.bind(this)
+    this.defineEventEmitterCallbacks()
+  }
+
+  defineEventEmitterCallbacks() {
+    EventEmitter.subscribe('greeting', () => {
+      this.connection.send(
+        this.prepareMessage({
+          msgType: 'greeting',
+          msg: this.id,
+        })
+      )
+    })
+
+    EventEmitter.subscribe('signalGetNextStudent', () => {
+      this.getNextStudent()
+    })
+
+    EventEmitter.subscribe('signalCallOver', () => {
+      this.signalCallOver()
+    })
   }
 
   processConnectionOpen() {

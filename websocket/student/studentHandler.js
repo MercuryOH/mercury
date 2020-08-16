@@ -106,6 +106,20 @@ const handleStudentMessage = (ws, message) => {
       )
       break
 
+    case 'sendOutInvite':
+      const { sender, recepientId, group: currGroup } = JSON.parse(msg)
+      const recepientws = webSocketConnectionManager.getSocketOfName(
+        recepientId
+      )
+
+      recepientws.send(
+        prepareMessage({
+          msgType: 'receiveInvite',
+          msg: JSON.stringify({ sender, currGroup }),
+        })
+      )
+      break
+
     default:
       throw new Error(`Message Type ${msgType} is not recognized for student`)
   }
