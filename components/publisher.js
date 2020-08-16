@@ -35,14 +35,20 @@ export default class Publisher extends Component {
         {this.state.error ? <div>{this.state.error}</div> : null}
         <OTPublisher
           properties={{
-            width: '100%',
-            height: '50vh',
+            width: '15vw',
+            maxHeight: '10vh',
             publishVideo: this.state.video
           }}
           session = {this.props.session}
           onError={this.onError}
         />
-        <ScreenPublisher session = {this.props.session}/>
+        <ScreenPublisher
+        style = {{
+          width: '15vw',
+          height: '500px',
+          maxHeight: '20vh'
+        }}
+        session = {this.props.session}/>
       </div>
     );
   }

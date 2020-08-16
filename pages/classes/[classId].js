@@ -11,6 +11,10 @@ import StudentInviteModal from '../../components/studentInviteModal'
 import { EventEmitter } from '../../components/util/EventEmitter'
 import FeedbackModal from '../../components/feedbackModal'
 
+const ScreenContainer = dynamic(() => import('../../components/screenContainer'), {
+  ssr: false,
+})
+
 const CreateDiscussionModal = dynamic(
   () => import('../../components/createDiscussionModal'),
   {
@@ -401,7 +405,8 @@ class ClassPage extends Component {
         right={<Queue onJoin={this.handleSelectGroup} />}
       >
         {this.state.vonageCred && (
-          <Vonage
+          <ScreenContainer
+            style= {{width: '100%', maxHeight: '75vh'}}
             sessionId={this.state.vonageCred.sessionId}
             token={this.state.vonageCred.token}
             onLeave={() => {

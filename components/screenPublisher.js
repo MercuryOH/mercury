@@ -32,12 +32,12 @@ export default class ScreenPublisher extends Component {
 
   render() {
     return this.state.appear === false ? null : (
-      <div>
+      <>
         {this.state.error ? <div>{this.state.error}</div> : null}
         <OTPublisher
           properties={{
-            width: '100%',
-            height: '50vh',
+            width: '15vw',
+            height: '20vh',
             publishAudio: this.state.audio,
             publishVideo: this.state.video,
             videoSource: 'screen'
@@ -45,7 +45,7 @@ export default class ScreenPublisher extends Component {
           session = {this.props.session}
           onError={this.onError}
         />
-      </div>
+      </>
     );
   }
 }
