@@ -36,7 +36,8 @@ export default class ScreenPublisher extends Component {
         {this.state.error ? <div>{this.state.error}</div> : null}
         <OTPublisher
           properties={{
-            width: '15vw',
+            width: '13.62vw',
+            maxWidth: '13.62vw',
             height: '20vh',
             publishAudio: this.state.audio,
             publishVideo: this.state.video,

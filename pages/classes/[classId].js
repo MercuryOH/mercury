@@ -45,7 +45,6 @@ class ClassPage extends Component {
       vonageCred: null,
       isMounted: false,
     }
-
     this.defineEventEmitterCallbacks()
   }
 
