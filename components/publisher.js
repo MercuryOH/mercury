@@ -19,9 +19,11 @@ export default class Publisher extends Component {
   defineEventEmitterCallbacks() {
     EventEmitter.subscribe('disableVideo', () => {
       this.setState({ video: false })
+      EventEmitter.publish('disableVideoButton')
     })
     EventEmitter.subscribe('enableVideo', () => {
       this.setState({ video: true })
+      EventEmitter.publish('enableVideoButton')
     })
   }
 
@@ -35,14 +37,22 @@ export default class Publisher extends Component {
         {this.state.error ? <div>{this.state.error}</div> : null}
         <OTPublisher
           properties={{
-            width: '100%',
-            height: '50vh',
+            width: '13.57vw',
+            maxWidth: '13.57vw',
+            maxHeight: '8vh',
             publishVideo: this.state.video
           }}
           session = {this.props.session}
           onError={this.onError}
         />
-        <ScreenPublisher session = {this.props.session}/>
+        <ScreenPublisher
+        style = {{
+          width: '13.62vw',
+          maxWidth: '13.62vw',
+          height: '500px',
+          maxHeight: '16vh'
+        }}
+        session = {this.props.session}/>
       </div>
     );
   }

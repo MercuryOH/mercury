@@ -14,6 +14,10 @@ import StudentWebSocketClient from '../../util/studentWebSocket'
 import TAWebSocketClient from '../../util/taWebSocket'
 import ReceiveInviteModal from '../../components/invite/receiveInviteModal'
 
+const ScreenContainer = dynamic(() => import('../../components/screenContainer'), {
+  ssr: false,
+})
+
 const CreateDiscussionModal = dynamic(
   () => import('../../components/createDiscussionModal'),
   {
@@ -41,7 +45,6 @@ class ClassPage extends Component {
       vonageCred: null,
       isMounted: false,
     }
-
     this.defineEventEmitterCallbacks()
   }
 
@@ -428,7 +431,8 @@ class ClassPage extends Component {
         right={<Queue onJoin={this.handleSelectGroup} />}
       >
         {this.state.vonageCred && (
-          <Vonage
+          <ScreenContainer
+            style= {{width: '100%', maxHeight: '75vh'}}
             sessionId={this.state.vonageCred.sessionId}
             token={this.state.vonageCred.token}
             onLeave={() => {
