@@ -14,9 +14,12 @@ import StudentWebSocketClient from '../../util/studentWebSocket'
 import TAWebSocketClient from '../../util/taWebSocket'
 import ReceiveInviteModal from '../../components/invite/receiveInviteModal'
 
-const ScreenContainer = dynamic(() => import('../../components/screenContainer'), {
-  ssr: false,
-})
+const ScreenContainer = dynamic(
+  () => import('../../components/screenContainer'),
+  {
+    ssr: false,
+  }
+)
 
 const CreateDiscussionModal = dynamic(
   () => import('../../components/createDiscussionModal'),
@@ -444,7 +447,7 @@ class ClassPage extends Component {
       >
         {this.state.vonageCred && (
           <ScreenContainer
-            style= {{width: '100%', maxHeight: '75vh'}}
+            style={{ width: '100%', maxHeight: '75vh' }}
             sessionId={this.state.vonageCred.sessionId}
             token={this.state.vonageCred.token}
             onLeave={() => {

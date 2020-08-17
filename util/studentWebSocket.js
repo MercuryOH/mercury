@@ -100,7 +100,6 @@ export default class StudentWebSocketClient {
 
     switch (msgType) {
       case 'greetingAck':
-        console.log('greetingAckReceived')
         this.initializeQueueOnGreeting(msg)
         break
 
