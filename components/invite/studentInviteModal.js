@@ -16,7 +16,7 @@ class StudentInviteModal extends Component {
       results: [],
       value: '',
       allUsers: [],
-      selectedUser: {},
+      selectedUser: [],
       me: {},
       currentGroup: { id: '', name: '' },
     }
@@ -54,25 +54,29 @@ class StudentInviteModal extends Component {
     EventEmitter.publish('openInviteModal', false)
 
     if (_.isEmpty(this.state.selectedUser)) return
-
+    console.log(_.map(this.state.selectedUser, 'id'))
     EventEmitter.publish('sendOutInvite', {
       sender: this.state.me,
-      recepientId: this.state.selectedUser.id,
+      recepientIds: _.map(this.state.selectedUser, 'id'),
       group: this.state.currentGroup,
     })
 
-    this.setState({ value: '', selectedUser: {}, modalState: false })
+    this.setState({ value: '', selectedUser: [], modalState: false })
   }
 
   handleClose = () => {
-    this.setState({ value: '', selectedUser: {}, modalState: false })
+    this.setState({ value: '', selectedUser: [], modalState: false })
     EventEmitter.publish('openInviteModal', false)
   }
 
   handleResultSelect = (e, { result }) => {
+    const filtered = this.state.selectedUser.filter(
+      (user) => user.id !== result.id
+    )
+    filtered.push(result)
     this.setState({
       value: '',
-      selectedUser: result,
+      selectedUser: filtered,
     })
   }
 
@@ -97,16 +101,27 @@ class StudentInviteModal extends Component {
   }
 
   getSelectedLabels() {
-    {
-      /* <div>
-              {this.state.selectedUser.map((user) => (
-                <Label>
-                  {user.title}
-                  <Icon name="delete" onClick={this.removeSelected(user)} />
-                </Label>
-              ))}
-            </div> */
-    }
+    // if (_.isEmpty(this.state.selectedUser)) {
+    //   return <></>
+    // }
+
+    // return (
+    //   <div
+    //     style={{
+    //       textAlign: 'left',
+    //       paddingLeft: 80,
+    //       paddingRight: 80,
+    //     }}
+    //   >
+    //     <Label>
+    //       {this.state.selectedUser.title}
+    //       <Icon
+    //         name="delete"
+    //         onClick={() => this.removeSelected(this.state.selectedUser)}
+    //       />
+    //     </Label>
+    //   </div>
+    // )
 
     if (_.isEmpty(this.state.selectedUser)) {
       return <></>
@@ -120,21 +135,20 @@ class StudentInviteModal extends Component {
           paddingRight: 80,
         }}
       >
-        <Label>
-          {this.state.selectedUser.title}
-          <Icon
-            name="delete"
-            onClick={() => this.removeSelected(this.state.selectedUser)}
-          />
-        </Label>
+        {this.state.selectedUser.map((user) => (
+          <Label>
+            {user.title}
+            <Icon name="delete" onClick={() => this.removeSelected(user)} />
+          </Label>
+        ))}
       </div>
     )
   }
 
   removeSelected = (user) => {
     this.setState({
-      //selectedUser: this.state.selectedUser.filter((u) => u.id !== user.id),
-      selectedUser: {},
+      selectedUser: this.state.selectedUser.filter((u) => u.id !== user.id),
+      // selectedUser: {},
     })
   }
 

@@ -56,8 +56,10 @@ export default class StudentWebSocketClient {
 
     EventEmitter.subscribe(
       'sendOutInvite',
-      ({ sender, recepientId, group }) => {
-        this.sendOutInvite(sender, recepientId, group)
+      ({ sender, recepientIds, group }) => {
+        recepientIds.forEach((id) => {
+          this.sendOutInvite(sender, id, group)
+        });
       }
     )
 
