@@ -256,12 +256,14 @@ class ClassPage extends Component {
   }
 
   handleCreateGroup = async (group) => {
-    await api
-      .postGroup(this.classId, group.name, group.type, this.user.id)
-      .then((group) => {
-        this.fetchCurrentClass()
-        this.handleSelectGroup(group)
-      })
+    const groupData = await api.postGroup(
+      this.classId,
+      group.name,
+      group.type,
+      this.user.id
+    )
+    this.fetchCurrentClass()
+    await this.handleSelectGroup(groupData)
   }
 
   showInviteButton(group) {
