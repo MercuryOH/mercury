@@ -14,9 +14,12 @@ import StudentWebSocketClient from '../../util/studentWebSocket'
 import TAWebSocketClient from '../../util/taWebSocket'
 import ReceiveInviteModal from '../../components/invite/receiveInviteModal'
 
-const ScreenContainer = dynamic(() => import('../../components/screenContainer'), {
-  ssr: false,
-})
+const ScreenContainer = dynamic(
+  () => import('../../components/screenContainer'),
+  {
+    ssr: false,
+  }
+)
 
 const CreateDiscussionModal = dynamic(
   () => import('../../components/createDiscussionModal'),
@@ -70,6 +73,7 @@ class ClassPage extends Component {
         const userRole = c.users.find((u) => u.id === this.user.id)
         if (!userRole) this.props.router.push('/calendar')
         const { role } = userRole
+
         /**
          * Start the appropriate web socket handler depending on the user role
          */
@@ -207,15 +211,6 @@ class ClassPage extends Component {
       .then((group) => {
         this.fetchCurrentClass()
         this.handleSelectGroup(group)
-
-        // EventEmitter.subscribe('selectedUser', (selectedUser) => {
-        //   if (!selectedUser) return
-        //   EventEmitter.publish('sendOutInvite', {
-        //     sender: this.user,
-        //     recepientId: selectedUser.id,
-        //     group: group,
-        //   })
-        // })
       })
   }
 
@@ -234,10 +229,6 @@ class ClassPage extends Component {
       this.state.vonageCred !== null
       ? plusIcon
       : noPlusIcon
-  }
-
-  handleInvite = () => {
-    this.setState({ openInviteModal: false })
   }
 
   getListItemStyle(group) {
@@ -444,7 +435,7 @@ class ClassPage extends Component {
       >
         {this.state.vonageCred && (
           <ScreenContainer
-            style= {{width: '100%', maxHeight: '75vh'}}
+            style={{ width: '100%', maxHeight: '75vh' }}
             sessionId={this.state.vonageCred.sessionId}
             token={this.state.vonageCred.token}
             onLeave={() => {

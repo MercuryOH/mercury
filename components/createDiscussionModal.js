@@ -23,7 +23,10 @@ function CreateDiscussionModal({ onCreate }) {
             content="Create Discussions"
             fluid
             style={{ fontSize: '1vw' }}
-            onClick={() => toggleModal(true)}
+            onClick={() => {
+              toggleModal(true)
+              setDiscussionName('')
+            }}
           />
         }
         open={modalState}

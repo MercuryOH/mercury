@@ -4,7 +4,7 @@ module.exports = (sequelize, DataTypes) => {
   class Group extends Model {
     static associate(models) {
       Group.belongsTo(models.Class)
-      Group.belongsTo(models.User)
+      Group.belongsTo(models.User) // the userID who created the group
     }
   }
 
