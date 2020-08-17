@@ -167,6 +167,10 @@ class ScreenContainer extends React.Component {
           <Publisher style = {{width: '13.57vw', maxWidth: '13.57vw'}} session={this.sessionHelper.session}/>
           {this.state.streams.map((stream) => (
             <>
+            <Button
+            onClick = {() => {this.setState({focusStream: stream})}}
+            style = {{padding: '0px', width: '100%', maxHeight: '8vh'}}
+            >
             <OTSubscriber
               key={stream.id}
               session={this.sessionHelper.session}
@@ -175,7 +179,7 @@ class ScreenContainer extends React.Component {
               onSubscribe={this.handleSubscribe}
               onError={this.handleSubscribeError}
             />
-            {this.expandButton(stream)}
+            </Button>
             </>
           ))}
         </div>
