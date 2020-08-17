@@ -103,11 +103,19 @@ class ClassPage extends Component {
          */
 
         if (role === 'Student') {
+          /**
+           * Start student web socket handler
+           */
+
           new StudentWebSocketClient().start({
             me: this.user,
             courseId: this.classId,
           })
         } else {
+          /**
+           * Start TA web socket handler
+           */
+
           new TAWebSocketClient().start({
             me: this.user,
             courseId: this.classId,
