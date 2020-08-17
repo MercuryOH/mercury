@@ -80,7 +80,14 @@ export default class GroupJoinRequestModal extends Component {
               </Button>
               <Button
                 color="red"
-                onClick={() => this.setState({ modalState: false })}
+                onClick={() => {
+                  const { studentId, group } = this.state
+                  EventEmitter.publish('declineGroupJoinRequest', {
+                    studentId,
+                    group,
+                  })
+                  this.setState({ modalState: false })
+                }}
                 style={{
                   fontSize: '1vw',
                   textAlign: 'center',

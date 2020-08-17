@@ -165,6 +165,24 @@ const handleStudentMessage = async (ws, message) => {
       }
 
       break
+
+    case 'declineGroupJoinRequest':
+      // msg = studentID of person who requested to join
+      const socketToNotify = webSocketConnectionManager.getSocketOfUserID(
+        msg.studentId
+      )
+
+      if (socketToNotify) {
+        socketToNotify.send(
+          prepareMessage({
+            msgType: 'groupJoinRequestDeclined',
+            msg: msg.group,
+          })
+        )
+      }
+
+      break
+
     default:
       throw new Error(`Message Type ${msgType} is not recognized for student`)
   }

@@ -78,6 +78,15 @@ export default class StudentWebSocketClient {
         })
       )
     })
+
+    EventEmitter.subscribe('declineGroupJoinRequest', (msg) => {
+      this.connection.send(
+        this.prepareMessage({
+          msgType: 'declineGroupJoinRequest',
+          msg,
+        })
+      )
+    })
   }
 
   processConnectionOpen() {
@@ -117,8 +126,12 @@ export default class StudentWebSocketClient {
     EventEmitter.publish('activateGroupJoinRequestModal', msg)
   }
 
-  joinCurrentPrivateGroup(msg) {
-    EventEmitter.publish('joinPrivateGroup', msg)
+  joinPrivateGroupOnApproval(msg) {
+    EventEmitter.publish('joinPrivateGroupOnApproval', msg)
+  }
+
+  notifyJoinRequestDeclined(msg) {
+    EventEmitter.publish('notifyJoinRequestDeclined', msg)
   }
 
   processConnectionMessage(e) {
@@ -153,7 +166,11 @@ export default class StudentWebSocketClient {
         break
 
       case 'groupJoinRequestApproved':
-        this.joinCurrentPrivateGroup(msg)
+        this.joinPrivateGroupOnApproval(msg)
+        break
+
+      case 'groupJoinRequestDeclined':
+        this.notifyJoinRequestDeclined(msg)
         break
 
       default:

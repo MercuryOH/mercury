@@ -13,8 +13,9 @@ import FeedbackModal from '../../components/feedbackModal'
 import StudentWebSocketClient from '../../util/studentWebSocket'
 import TAWebSocketClient from '../../util/taWebSocket'
 import ReceiveInviteModal from '../../components/invite/receiveInviteModal'
-import JoinRequestModal from '../../components/invite/joinRequestModal'
+import { NotificationContainer, NotificationManager } from 'react-notifications'
 import GroupJoinRequestModal from '../../components/invite/groupJoinRequestModal'
+import WaitingForRequestApprovalModal from '../../components/invite/WaitingForRequestApprovalModal'
 
 const ScreenContainer = dynamic(
   () => import('../../components/screenContainer'),
@@ -50,21 +51,33 @@ class ClassPage extends Component {
     this.defineEventEmitterCallbacks()
   }
 
+  joinGroup(group) {
+    api
+      .postGroupToken(this.classId, group.id)
+      .then(({ token }) => {
+        this.setState({ vonageCred: null })
+        this.setState({ vonageCred: { sessionId: group.sessionId, token } })
+        this.setState({ currentGroup: group })
+        EventEmitter.publish('currentGroupChange', group)
+      })
+      .catch(console.error)
+  }
+
   defineEventEmitterCallbacks() {
     EventEmitter.subscribe('clearLeftSide', () => {
       this.setState({ withTa: true })
     })
 
-    EventEmitter.subscribe('joinPrivateGroup', (group) => {
-      api
-        .postGroupToken(this.classId, group.id)
-        .then(({ token }) => {
-          this.setState({ vonageCred: null })
-          this.setState({ vonageCred: { sessionId: group.sessionId, token } })
-          this.setState({ currentGroup: group })
-          EventEmitter.publish('currentGroupChange', group)
-        })
-        .catch(console.error)
+    EventEmitter.subscribe('joinPrivateGroupOnApproval', (group) => {
+      EventEmitter.publish('removeWaitingForRequestApprovalModal')
+      this.joinGroup(group)
+    })
+
+    EventEmitter.subscribe('notifyJoinRequestDeclined', (group) => {
+      NotificationManager.info(
+        `Your Request To Join ${group.name} Was Declined`
+      )
+      EventEmitter.publish('removeWaitingForRequestApprovalModal')
     })
   }
 
@@ -154,20 +167,12 @@ class ClassPage extends Component {
 
     if (UserId === id) {
       // you are the leader of the group, no need for authentication
-      api
-        .postGroupToken(this.classId, group.id)
-        .then(({ token }) => {
-          this.setState({ vonageCred: null })
-          this.setState({ vonageCred: { sessionId: group.sessionId, token } })
-          this.setState({ currentGroup: group })
-          EventEmitter.publish('currentGroupChange', group)
-        })
-        .catch(console.error)
+      this.joinGroup(group)
     } else {
       /**
        * Ping group leader to let you into the group
        */
-
+      EventEmitter.publish('activateWaitingForRequestApprovalModal', group)
       EventEmitter.publish('requestJoinGroup', {
         userId: id,
         group: group,
@@ -483,6 +488,8 @@ class ClassPage extends Component {
         <FeedbackModal />
         <ReceiveInviteModal onJoin={this.handleSelectGroup} />
         <GroupJoinRequestModal />
+        <WaitingForRequestApprovalModal />
+        <NotificationContainer />
       </Layout>
     )
   }
