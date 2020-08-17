@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Modal, Button, Search } from 'semantic-ui-react'
+import { Modal, Button, Search, Label, Icon } from 'semantic-ui-react'
 import _ from 'lodash'
 import { EventEmitter } from '../util/EventEmitter'
 import SearchBar from './searchBar'
@@ -51,7 +51,6 @@ class StudentInviteModal extends Component {
   }
 
   handleInvite = () => {
-    this.setState({ value: '', modalState: false })
     EventEmitter.publish('openInviteModal', false)
 
     if (_.isEmpty(this.state.selectedUser)) return
@@ -61,16 +60,18 @@ class StudentInviteModal extends Component {
       recepientId: this.state.selectedUser.id,
       group: this.state.currentGroup,
     })
+
+    this.setState({ value: '', selectedUser: {}, modalState: false })
   }
 
   handleClose = () => {
-    this.setState({ value: '', modalState: false })
+    this.setState({ value: '', selectedUser: {}, modalState: false })
     EventEmitter.publish('openInviteModal', false)
   }
 
   handleResultSelect = (e, { result }) => {
     this.setState({
-      value: result.title,
+      value: '',
       selectedUser: result,
     })
   }
@@ -95,6 +96,48 @@ class StudentInviteModal extends Component {
     }, 300)
   }
 
+  getSelectedLabels() {
+    {
+      /* <div>
+              {this.state.selectedUser.map((user) => (
+                <Label>
+                  {user.title}
+                  <Icon name="delete" onClick={this.removeSelected(user)} />
+                </Label>
+              ))}
+            </div> */
+    }
+
+    if (_.isEmpty(this.state.selectedUser)) {
+      return <></>
+    }
+
+    return (
+      <div
+        style={{
+          textAlign: 'left',
+          paddingLeft: 80,
+          paddingRight: 80,
+        }}
+      >
+        <Label>
+          {this.state.selectedUser.title}
+          <Icon
+            name="delete"
+            onClick={() => this.removeSelected(this.state.selectedUser)}
+          />
+        </Label>
+      </div>
+    )
+  }
+
+  removeSelected = (user) => {
+    this.setState({
+      //selectedUser: this.state.selectedUser.filter((u) => u.id !== user.id),
+      selectedUser: {},
+    })
+  }
+
   render() {
     return (
       <div>
@@ -110,7 +153,10 @@ class StudentInviteModal extends Component {
             <div
               style={{
                 textAlign: 'center',
-                padding: 80,
+                paddingTop: 80,
+                paddingLeft: 80,
+                paddingRight: 80,
+                paddingBottom: 20,
               }}
             >
               <Search
@@ -127,6 +173,8 @@ class StudentInviteModal extends Component {
               />
             </div>
             {/* <SearchBar /> */}
+
+            {this.getSelectedLabels()}
 
             <div
               style={{

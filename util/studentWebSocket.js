@@ -188,7 +188,6 @@ export default class StudentWebSocketClient {
   }
 
   sendOutInvite(sender, recepientId, group) {
-    console.log(JSON.stringify({ sender, recepientId, group }))
     this.connection.send(
       this.prepareMessage({
         msgType: 'sendOutInvite',
