@@ -147,3 +147,19 @@ export async function deleteGroup(classId, groupId) {
     return null
   }
 }
+
+export async function getGroupByID(classId, groupId) {
+  try {
+    const { data } = await axios.get(
+      `/api/classes/${classId}/groups/${groupId}`,
+      {
+        headers: {
+          authorization: token,
+        },
+      }
+    )
+    return data
+  } catch (e) {
+    return null
+  }
+}
