@@ -69,6 +69,15 @@ export default class StudentWebSocketClient {
         })
       )
     })
+
+    EventEmitter.subscribe('acceptGroupJoinRequest', (msg) => {
+      this.connection.send(
+        this.prepareMessage({
+          msgType: 'acceptGroupJoinRequest',
+          msg,
+        })
+      )
+    })
   }
 
   processConnectionOpen() {
@@ -108,6 +117,10 @@ export default class StudentWebSocketClient {
     EventEmitter.publish('activateGroupJoinRequestModal', msg)
   }
 
+  joinCurrentPrivateGroup(msg) {
+    EventEmitter.publish('joinPrivateGroup', msg)
+  }
+
   processConnectionMessage(e) {
     const { msgType, msg } = JSON.parse(e.data)
 
@@ -137,6 +150,10 @@ export default class StudentWebSocketClient {
 
       case 'groupJoinRequest':
         this.activateGroupJoinRequestModal(msg) // msg - the name of the student wanting to join
+        break
+
+      case 'groupJoinRequestApproved':
+        this.joinCurrentPrivateGroup(msg)
         break
 
       default:

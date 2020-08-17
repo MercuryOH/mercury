@@ -126,8 +126,10 @@ const handleStudentMessage = async (ws, message) => {
       break
 
     case 'requestJoinGroup':
-      const { userId, groupId } = JSON.parse(msg)
-      const { UserId: groupLeader } = await models.Group.findByPk(groupId)
+      const { userId, group: groupToJoin } = JSON.parse(msg)
+      const { UserId: groupLeader } = await models.Group.findByPk(
+        groupToJoin.id
+      )
       const groupLeaderSocket = webSocketConnectionManager.getSocketOfUserID(
         groupLeader
       )
@@ -140,6 +142,7 @@ const handleStudentMessage = async (ws, message) => {
             msg: JSON.stringify({
               userId,
               fullName: userRepository.getFullName(userId),
+              group: groupToJoin,
             }),
           })
         )
@@ -147,6 +150,21 @@ const handleStudentMessage = async (ws, message) => {
 
       break
 
+    case 'acceptGroupJoinRequest':
+      // msg = studentID of person who requested to join
+      const socketToSend = webSocketConnectionManager.getSocketOfUserID(
+        msg.studentId
+      )
+      if (socketToSend) {
+        socketToSend.send(
+          prepareMessage({
+            msgType: 'groupJoinRequestApproved',
+            msg: msg.group,
+          })
+        )
+      }
+
+      break
     default:
       throw new Error(`Message Type ${msgType} is not recognized for student`)
   }

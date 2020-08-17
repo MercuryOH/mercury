@@ -54,6 +54,18 @@ class ClassPage extends Component {
     EventEmitter.subscribe('clearLeftSide', () => {
       this.setState({ withTa: true })
     })
+
+    EventEmitter.subscribe('joinPrivateGroup', (group) => {
+      api
+        .postGroupToken(this.classId, group.id)
+        .then(({ token }) => {
+          this.setState({ vonageCred: null })
+          this.setState({ vonageCred: { sessionId: group.sessionId, token } })
+          this.setState({ currentGroup: group })
+          EventEmitter.publish('currentGroupChange', group)
+        })
+        .catch(console.error)
+    })
   }
 
   componentDidMount() {
@@ -134,14 +146,14 @@ class ClassPage extends Component {
 
   handleSelectGroup = async (group) => {
     /**
-     * First, check if you are the owner of the group
+     * First, check if you are the leadeer of the group
      */
     const currGroup = await api.getGroupByID(this.classId, group.id)
     const { UserId } = currGroup
     const { id } = this.user
 
     if (UserId === id) {
-      // you are the owner of the group, no need for authentication
+      // you are the leader of the group, no need for authentication
       api
         .postGroupToken(this.classId, group.id)
         .then(({ token }) => {
@@ -155,9 +167,10 @@ class ClassPage extends Component {
       /**
        * Ping group leader to let you into the group
        */
+
       EventEmitter.publish('requestJoinGroup', {
         userId: id,
-        groupId: group.id,
+        group: group,
       })
     }
   }

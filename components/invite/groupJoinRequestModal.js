@@ -9,17 +9,18 @@ export default class GroupJoinRequestModal extends Component {
 
     this.state = {
       modalState: false,
-      studentID: -1,
+      studentId: -1,
+      group: {},
       studentRequestingToJoin: '',
     }
 
     EventEmitter.subscribe('activateGroupJoinRequestModal', (data) => {
-      console.log(data)
-      const { userId, fullName } = JSON.parse(data)
-      console.log(fullName)
+      const { userId, fullName, group } = JSON.parse(data)
+
       this.setState({
         modalState: true,
         studentId: userId,
+        group,
         studentRequestingToJoin: fullName,
       })
     })
@@ -46,7 +47,7 @@ export default class GroupJoinRequestModal extends Component {
                 margin: 'auto',
               }}
             >
-              {`${this.state.studentRequestingToJoin} Requests To Join`}
+              {`${this.state.studentRequestingToJoin} Requests To Join ${this.state.group.name}`}
             </Header>
 
             <div
@@ -59,7 +60,14 @@ export default class GroupJoinRequestModal extends Component {
             >
               <Button
                 color="teal"
-                onClick={() => this.setState({ modalState: false })}
+                onClick={() => {
+                  const { studentId, group } = this.state
+                  EventEmitter.publish('acceptGroupJoinRequest', {
+                    studentId,
+                    group,
+                  })
+                  this.setState({ modalState: false })
+                }}
                 style={{
                   fontSize: '1vw',
                   textAlign: 'center',
