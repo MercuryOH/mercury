@@ -2,6 +2,7 @@ const { courseQueue } = require('../util/coursequeue')
 const { webSocketConnectionManager } = require('../util/connectionmanager')
 const { prepareMessage } = require('../util/util')
 const { userRepository } = require('../../repository/userRepository')
+
 /**
  * Handles web socket messages sent by a student user
  */
@@ -34,7 +35,7 @@ const handleInstructorMessage = (ws, message) => {
         // keep searching for the next web socket
 
         nextStudent = courseQueue.getNextStudent(courseId)
-        socketToSend = webSocketConnectionManager.getSocketOfName(nextStudent)
+        socketToSend = webSocketConnectionManager.getSocketOfUserID(nextStudent)
       }
 
       if (socketToSend !== null) {

@@ -13,6 +13,9 @@ import FeedbackModal from '../../components/feedbackModal'
 import StudentWebSocketClient from '../../util/studentWebSocket'
 import TAWebSocketClient from '../../util/taWebSocket'
 import ReceiveInviteModal from '../../components/invite/receiveInviteModal'
+import { NotificationContainer, NotificationManager } from 'react-notifications'
+import GroupJoinRequestModal from '../../components/invite/groupJoinRequestModal'
+import WaitingForRequestApprovalModal from '../../components/invite/WaitingForRequestApprovalModal'
 
 const ScreenContainer = dynamic(
   () => import('../../components/screenContainer'),
@@ -27,9 +30,6 @@ const CreateDiscussionModal = dynamic(
     ssr: false,
   }
 )
-const Vonage = dynamic(() => import('../../components/vonage'), {
-  ssr: false,
-})
 
 class ClassPage extends Component {
   constructor(props) {
@@ -51,9 +51,33 @@ class ClassPage extends Component {
     this.defineEventEmitterCallbacks()
   }
 
+  joinGroup(group) {
+    api
+      .postGroupToken(this.classId, group.id)
+      .then(({ token }) => {
+        this.setState({ vonageCred: null })
+        this.setState({ vonageCred: { sessionId: group.sessionId, token } })
+        this.setState({ currentGroup: group })
+        EventEmitter.publish('currentGroupChange', group)
+      })
+      .catch(console.error)
+  }
+
   defineEventEmitterCallbacks() {
     EventEmitter.subscribe('clearLeftSide', () => {
       this.setState({ withTa: true })
+    })
+
+    EventEmitter.subscribe('joinPrivateGroupOnApproval', (group) => {
+      EventEmitter.publish('removeWaitingForRequestApprovalModal')
+      this.joinGroup(group)
+    })
+
+    EventEmitter.subscribe('notifyJoinRequestDeclined', (group) => {
+      NotificationManager.info(
+        `Your Request To Join ${group.name} Was Declined`
+      )
+      EventEmitter.publish('removeWaitingForRequestApprovalModal')
     })
   }
 
@@ -79,11 +103,19 @@ class ClassPage extends Component {
          */
 
         if (role === 'Student') {
+          /**
+           * Start student web socket handler
+           */
+
           new StudentWebSocketClient().start({
             me: this.user,
             courseId: this.classId,
           })
         } else {
+          /**
+           * Start TA web socket handler
+           */
+
           new TAWebSocketClient().start({
             me: this.user,
             courseId: this.classId,
@@ -133,16 +165,34 @@ class ClassPage extends Component {
     await this.props.router.push('/calendar')
   }
 
-  handleSelectGroup = (group) => {
-    api
-      .postGroupToken(this.classId, group.id)
-      .then(({ token }) => {
-        this.setState({ vonageCred: null })
-        this.setState({ vonageCred: { sessionId: group.sessionId, token } })
-        this.setState({ currentGroup: group })
-        EventEmitter.publish('currentGroupChange', group)
+  handleSelectGroup = async (group) => {
+    if (group.type === 'office') {
+      // you are popped off the waiting queue
+      this.joinGroup(group)
+      return
+    }
+
+    /**
+     * First, check if you are the leader of the group
+     */
+
+    const currGroup = await api.getGroupByID(this.classId, group.id)
+    const { UserId } = currGroup
+    const { id } = this.user
+
+    if (UserId === id) {
+      // you are the leader of the group, no need for authentication
+      this.joinGroup(group)
+    } else {
+      /**
+       * Ping group leader to let you into the group
+       */
+      EventEmitter.publish('activateWaitingForRequestApprovalModal', group)
+      EventEmitter.publish('requestJoinGroup', {
+        userId: id,
+        group: group,
       })
-      .catch(console.error)
+    }
   }
 
   getButtonToDisplay() {
@@ -206,12 +256,14 @@ class ClassPage extends Component {
   }
 
   handleCreateGroup = async (group) => {
-    await api
-      .postGroup(this.classId, group.name, group.type, this.user.id)
-      .then((group) => {
-        this.fetchCurrentClass()
-        this.handleSelectGroup(group)
-      })
+    const groupData = await api.postGroup(
+      this.classId,
+      group.name,
+      group.type,
+      this.user.id
+    )
+    this.fetchCurrentClass()
+    await this.handleSelectGroup(groupData)
   }
 
   showInviteButton(group) {
@@ -452,6 +504,9 @@ class ClassPage extends Component {
         <StudentInviteModal />
         <FeedbackModal />
         <ReceiveInviteModal onJoin={this.handleSelectGroup} />
+        <GroupJoinRequestModal />
+        <WaitingForRequestApprovalModal />
+        <NotificationContainer />
       </Layout>
     )
   }

@@ -57,11 +57,11 @@ class WebSocketConnectionManager {
     })
   }
 
-  associateUserWithSocket(name, socket) {
-    this.nameToSocket.set(name, socket)
+  associateUserWithSocket(id, socket) {
+    this.nameToSocket.set(id, socket)
   }
 
-  getSocketOfName(name) {
+  getSocketOfUserID(name) {
     if (name == null) {
       throw new Error('null socket name')
     }
