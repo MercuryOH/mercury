@@ -75,15 +75,15 @@ class CreateGroupModal extends Component {
   //   }, 300)
   // }
 
-  // createGroup = () => {
-  //   if (!this.state.groupName) return
-  //   //this.props.onInvite({ selectedUser: this.state.selectedUser })
-  //   if (!this.state.selectedUser) return
-  //   EventEmitter.publish('selectedUser', this.state.selectedUser)
+  createGroup = () => {
+    if (!this.state.groupName) return
+    //this.props.onInvite({ selectedUser: this.state.selectedUser })
+    // if (!this.state.selectedUser) return
+    // EventEmitter.publish('selectedUser', this.state.selectedUser)
 
-  //   this.setState({ modalState: false })
-  //   this.props.onCreate({ name: this.state.groupName, type: 'group' })
-  // }
+    this.setState({ modalState: false })
+    this.props.onCreate({ name: this.state.groupName, type: 'group' })
+  }
 
   render() {
     return (
