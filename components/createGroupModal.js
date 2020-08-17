@@ -78,6 +78,8 @@ class CreateGroupModal extends Component {
   createGroup = () => {
     if (!this.state.groupName) return
 
+    this.props.onCreate({ name: this.state.groupName, type: 'group' })
+    //this.props.onInvite({ selectedUser: this.state.selectedUser })
     // if (!this.state.selectedUser) return
     // EventEmitter.publish('selectedUser', this.state.selectedUser)
 
@@ -97,7 +99,9 @@ class CreateGroupModal extends Component {
               content="New Group"
               fluid
               style={{ fontSize: '1vw' }}
-              onClick={() => this.setState({ modalState: true })}
+              onClick={() =>
+                this.setState({ groupName: '', value: '', modalState: true })
+              }
             />
           }
           open={this.state.modalState}

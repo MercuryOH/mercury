@@ -73,6 +73,7 @@ class ClassPage extends Component {
         const userRole = c.users.find((u) => u.id === this.user.id)
         if (!userRole) this.props.router.push('/calendar')
         const { role } = userRole
+
         /**
          * Start the appropriate web socket handler depending on the user role
          */
@@ -210,15 +211,6 @@ class ClassPage extends Component {
       .then((group) => {
         this.fetchCurrentClass()
         this.handleSelectGroup(group)
-
-        // EventEmitter.subscribe('selectedUser', (selectedUser) => {
-        //   if (!selectedUser) return
-        //   EventEmitter.publish('sendOutInvite', {
-        //     sender: this.user,
-        //     recepientId: selectedUser.id,
-        //     group: group,
-        //   })
-        // })
       })
   }
 
@@ -237,10 +229,6 @@ class ClassPage extends Component {
       this.state.vonageCred !== null
       ? plusIcon
       : noPlusIcon
-  }
-
-  handleInvite = () => {
-    this.setState({ openInviteModal: false })
   }
 
   getListItemStyle(group) {

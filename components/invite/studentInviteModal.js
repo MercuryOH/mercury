@@ -51,10 +51,10 @@ class StudentInviteModal extends Component {
   }
 
   handleInvite = () => {
-    this.setState({ modalState: false })
+    this.setState({ value: '', modalState: false })
     EventEmitter.publish('openInviteModal', false)
 
-    if (!this.state.selectedUser) return
+    if (_.isEmpty(this.state.selectedUser)) return
 
     EventEmitter.publish('sendOutInvite', {
       sender: this.state.me,
@@ -64,7 +64,7 @@ class StudentInviteModal extends Component {
   }
 
   handleClose = () => {
-    this.setState({ modalState: false })
+    this.setState({ value: '', modalState: false })
     EventEmitter.publish('openInviteModal', false)
   }
 
