@@ -166,9 +166,16 @@ class ClassPage extends Component {
   }
 
   handleSelectGroup = async (group) => {
+    if (group.type === 'office') {
+      // you are popped off the waiting queue
+      this.joinGroup(group)
+      return
+    }
+
     /**
-     * First, check if you are the leadeer of the group
+     * First, check if you are the leader of the group
      */
+
     const currGroup = await api.getGroupByID(this.classId, group.id)
     const { UserId } = currGroup
     const { id } = this.user
