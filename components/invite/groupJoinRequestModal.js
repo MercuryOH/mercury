@@ -1,6 +1,11 @@
 import React, { Component } from 'react'
-import { Modal, Button, Header } from 'semantic-ui-react'
+import { Modal, Button, Header, Label, Icon } from 'semantic-ui-react'
 import { EventEmitter } from '../util/EventEmitter'
+
+const timeOutTime = 15
+let currTime = timeOutTime
+const granularity = 1000
+let timeOut = null
 
 // someone requests to join your group
 export default class GroupJoinRequestModal extends Component {
@@ -12,18 +17,49 @@ export default class GroupJoinRequestModal extends Component {
       studentId: -1,
       group: {},
       studentRequestingToJoin: '',
+      timeRemaining: currTime,
     }
 
     EventEmitter.subscribe('activateGroupJoinRequestModal', (data) => {
       const { userId, fullName, group } = JSON.parse(data)
 
-      this.setState({
-        modalState: true,
-        studentId: userId,
-        group,
-        studentRequestingToJoin: fullName,
-      })
+      this.setState(
+        {
+          modalState: true,
+          studentId: userId,
+          group,
+          studentRequestingToJoin: fullName,
+        },
+        this.startTimer
+      )
     })
+  }
+
+  startTimer() {
+    currTime = timeOutTime
+    timeOut = setTimeout(this.tick.bind(this), granularity)
+    this.setState({ timeRemaining: currTime })
+  }
+
+  tick() {
+    currTime -= 1
+
+    if (currTime === 0) {
+      this.handleTimerEnd()
+    } else {
+      timeOut = setTimeout(this.tick.bind(this), granularity)
+      this.setState({ timeRemaining: currTime })
+    }
+  }
+
+  handleTimerEnd() {
+    clearTimeout(timeOut)
+    const { studentId, group } = this.state
+    EventEmitter.publish('declineGroupJoinRequest', {
+      studentId,
+      group,
+    })
+    this.setState({ modalState: false })
   }
 
   render() {
@@ -32,10 +68,18 @@ export default class GroupJoinRequestModal extends Component {
         <Modal
           style={{ borderless: 'true', width: '40%', height: '40%' }}
           open={this.state.modalState}
-          onClose={() => this.setState({ modalState: false })}
+          onClose={() => {
+            clearTimeout(timeOut)
+            this.setState({ modalState: false })
+          }}
           closeOnDimmerClick={false}
           closeOnEscape={false}
         >
+          <Label style={{ width: '100%', textAlign: 'center' }}>
+            <Icon name="hourglass" />
+            {this.state.timeRemaining}
+          </Label>
+
           <Modal.Content style={{ borderless: 'true' }}>
             <Header
               style={{
@@ -61,6 +105,7 @@ export default class GroupJoinRequestModal extends Component {
               <Button
                 color="teal"
                 onClick={() => {
+                  clearTimeout(timeOut)
                   const { studentId, group } = this.state
                   EventEmitter.publish('acceptGroupJoinRequest', {
                     studentId,
@@ -81,6 +126,7 @@ export default class GroupJoinRequestModal extends Component {
               <Button
                 color="red"
                 onClick={() => {
+                  clearTimeout(timeOut)
                   const { studentId, group } = this.state
                   EventEmitter.publish('declineGroupJoinRequest', {
                     studentId,
