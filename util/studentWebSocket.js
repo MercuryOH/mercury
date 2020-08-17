@@ -60,6 +60,15 @@ export default class StudentWebSocketClient {
         this.sendOutInvite(sender, recepientId, group)
       }
     )
+
+    EventEmitter.subscribe('requestJoinGroup', (data) => {
+      this.connection.send(
+        this.prepareMessage({
+          msgType: 'requestJoinGroup',
+          msg: JSON.stringify(data),
+        })
+      )
+    })
   }
 
   processConnectionOpen() {
@@ -95,6 +104,10 @@ export default class StudentWebSocketClient {
     EventEmitter.publish('activateReceiveInviteModal', msg)
   }
 
+  activateGroupJoinRequestModal(msg) {
+    EventEmitter.publish('activateGroupJoinRequestModal', msg)
+  }
+
   processConnectionMessage(e) {
     const { msgType, msg } = JSON.parse(e.data)
 
@@ -120,6 +133,10 @@ export default class StudentWebSocketClient {
       case 'receiveInvite': // in this case, another user invites you to their group
         // msg - sender, group
         this.activateReceiveInviteModal(msg)
+        break
+
+      case 'groupJoinRequest':
+        this.activateGroupJoinRequestModal(msg) // msg - the name of the student wanting to join
         break
 
       default:

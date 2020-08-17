@@ -13,6 +13,8 @@ import FeedbackModal from '../../components/feedbackModal'
 import StudentWebSocketClient from '../../util/studentWebSocket'
 import TAWebSocketClient from '../../util/taWebSocket'
 import ReceiveInviteModal from '../../components/invite/receiveInviteModal'
+import JoinRequestModal from '../../components/invite/joinRequestModal'
+import GroupJoinRequestModal from '../../components/invite/groupJoinRequestModal'
 
 const ScreenContainer = dynamic(
   () => import('../../components/screenContainer'),
@@ -27,9 +29,6 @@ const CreateDiscussionModal = dynamic(
     ssr: false,
   }
 )
-const Vonage = dynamic(() => import('../../components/vonage'), {
-  ssr: false,
-})
 
 class ClassPage extends Component {
   constructor(props) {
@@ -133,16 +132,34 @@ class ClassPage extends Component {
     await this.props.router.push('/calendar')
   }
 
-  handleSelectGroup = (group) => {
-    api
-      .postGroupToken(this.classId, group.id)
-      .then(({ token }) => {
-        this.setState({ vonageCred: null })
-        this.setState({ vonageCred: { sessionId: group.sessionId, token } })
-        this.setState({ currentGroup: group })
-        EventEmitter.publish('currentGroupChange', group)
+  handleSelectGroup = async (group) => {
+    /**
+     * First, check if you are the owner of the group
+     */
+    const currGroup = await api.getGroupByID(this.classId, group.id)
+    const { UserId } = currGroup
+    const { id } = this.user
+
+    if (UserId === id) {
+      // you are the owner of the group, no need for authentication
+      api
+        .postGroupToken(this.classId, group.id)
+        .then(({ token }) => {
+          this.setState({ vonageCred: null })
+          this.setState({ vonageCred: { sessionId: group.sessionId, token } })
+          this.setState({ currentGroup: group })
+          EventEmitter.publish('currentGroupChange', group)
+        })
+        .catch(console.error)
+    } else {
+      /**
+       * Ping group leader to let you into the group
+       */
+      EventEmitter.publish('requestJoinGroup', {
+        userId: id,
+        groupId: group.id,
       })
-      .catch(console.error)
+    }
   }
 
   getButtonToDisplay() {
@@ -452,6 +469,7 @@ class ClassPage extends Component {
         <StudentInviteModal />
         <FeedbackModal />
         <ReceiveInviteModal onJoin={this.handleSelectGroup} />
+        <GroupJoinRequestModal />
       </Layout>
     )
   }

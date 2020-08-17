@@ -14,12 +14,12 @@ class WebSocketServer {
        * Handle messages that are sent by the client
        */
 
-      ws.on('message', (message) => {
+      ws.on('message', async (message) => {
         const { role } = JSON.parse(message)
 
         switch (role) {
           case 'Student':
-            handleStudentMessage(ws, message)
+            await handleStudentMessage(ws, message)
             break
 
           case 'Instructor':
