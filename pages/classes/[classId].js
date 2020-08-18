@@ -166,7 +166,9 @@ class ClassPage extends Component {
   }
 
   handleSelectGroup = async (group) => {
-    if (group.type === 'office') {
+    const { role } = this.state.currentClass
+
+    if (group.type === 'office' || role === 'Professor') {
       // you are popped off the waiting queue
       this.joinGroup(group)
       return
