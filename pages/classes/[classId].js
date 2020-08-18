@@ -61,12 +61,14 @@ class ClassPage extends Component {
         }
         this.setState({ vonageCred: { sessionId: group.sessionId, token } })
         this.setState({ currentGroup: group })
+        EventEmitter.publish('userJoinGroup', group.id)
         EventEmitter.publish('currentGroupChange', group)
       })
       .catch(console.error)
   }
 
   leaveGroup = () => {
+    EventEmitter.publish('userLeaveGroup', this.state.currentGroup.id)
     this.setState({
       vonageCred: null,
       currentGroup: { id: '', name: '' },
@@ -184,7 +186,7 @@ class ClassPage extends Component {
     const { role } = this.state.currentClass
 
     if (group.type === 'office' || role === 'Professor') {
-      // you are popped off the waiting queue
+      // you are popped off the waiting queue or you are a TA
       this.joinGroup(group)
       return
     }

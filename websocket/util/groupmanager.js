@@ -10,11 +10,12 @@ class GroupManager {
   }
 
   addSocketToGroup(groupId, ws) {
-    if (this.groupToSockets.has(groupId)) {
+    if (!this.groupToSockets.has(groupId)) {
       this.groupToSockets.set(groupId, new Set())
     }
 
     this.groupToSockets.get(groupId).add(ws)
+    console.log(`Group ${groupId} size: ${this.getGroupSize(groupId)}`)
   }
 
   removeSocketFromGroup(groupId, ws) {
@@ -24,6 +25,8 @@ class GroupManager {
         sockets.delete(ws)
       }
     }
+
+    console.log(`Group ${groupId} size: ${this.getGroupSize(groupId)}`)
   }
 
   getGroupSize(groupId) {
@@ -33,4 +36,8 @@ class GroupManager {
 
     return 0
   }
+}
+
+module.exports = {
+  groupManager: new GroupManager(),
 }
