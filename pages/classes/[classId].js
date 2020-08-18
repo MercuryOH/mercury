@@ -382,7 +382,7 @@ class ClassPage extends Component {
             }}
             onClick={this.handleBack}
           />
-          <Button
+          {/* <Button
             compact
             icon="setting"
             style={{
@@ -392,7 +392,7 @@ class ClassPage extends Component {
               marginBottom: '2%',
               minWidth: '14px',
             }}
-          />
+          /> */}
         </Button.Group>
         {this.showOffice()}
         <Accordion
