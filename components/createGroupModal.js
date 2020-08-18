@@ -40,45 +40,43 @@ class CreateGroupModal extends Component {
     })
   }
 
-  formatAsResults = (user) => {
-    return {
-      title: user.firstName + ' ' + user.lastName,
-      id: user.id,
-      description: user.email,
-    }
-  }
+  // formatAsResults = (user) => {
+  //   return {
+  //     title: user.firstName + ' ' + user.lastName,
+  //     id: user.id,
+  //     description: user.email,
+  //   }
+  // }
 
-  handleResultSelect = (e, { result }) => {
-    this.setState({
-      value: result.title,
-      selectedUser: result,
-    })
-  }
+  // handleResultSelect = (e, { result }) => {
+  //   this.setState({
+  //     value: result.title,
+  //     selectedUser: result,
+  //   })
+  // }
 
-  handleSearchChange = (e, { value }) => {
-    this.setState({ isLoading: true, value })
+  // handleSearchChange = (e, { value }) => {
+  //   this.setState({ isLoading: true, value })
 
-    setTimeout(() => {
-      if (this.state.value.length < 1) return this.setState(initialState)
+  //   setTimeout(() => {
+  //     if (this.state.value.length < 1) return this.setState(initialState)
 
-      const re = new RegExp(_.escapeRegExp(this.state.value), 'i')
-      const isMatch = (result) =>
-        re.test(result.title) || re.test(result.description)
+  //     const re = new RegExp(_.escapeRegExp(this.state.value), 'i')
+  //     const isMatch = (result) =>
+  //       re.test(result.title) || re.test(result.description)
 
-      this.setState({
-        isLoading: false,
-        results: _.filter(
-          this.state.allUsers.map(this.formatAsResults),
-          isMatch
-        ),
-      })
-    }, 300)
-  }
+  //     this.setState({
+  //       isLoading: false,
+  //       results: _.filter(
+  //         this.state.allUsers.map(this.formatAsResults),
+  //         isMatch
+  //       ),
+  //     })
+  //   }, 300)
+  // }
 
   createGroup = () => {
     if (!this.state.groupName) return
-
-    this.props.onCreate({ name: this.state.groupName, type: 'group' })
     //this.props.onInvite({ selectedUser: this.state.selectedUser })
     // if (!this.state.selectedUser) return
     // EventEmitter.publish('selectedUser', this.state.selectedUser)
@@ -136,7 +134,7 @@ class CreateGroupModal extends Component {
                 value={this.state.groupName}
                 onChange={(e) => this.setState({ groupName: e.target.value })}
               />
-              <br />
+              {/* <br />
               <br />
               <Search
                 fluid
@@ -149,7 +147,7 @@ class CreateGroupModal extends Component {
                 })}
                 results={this.state.results}
                 value={this.state.value}
-              />
+              /> */}
               {/* <SearchBar /> */}
             </div>
 

@@ -56,10 +56,39 @@ export default class StudentWebSocketClient {
 
     EventEmitter.subscribe(
       'sendOutInvite',
-      ({ sender, recepientId, group }) => {
-        this.sendOutInvite(sender, recepientId, group)
+      ({ sender, recepientIds, group }) => {
+        recepientIds.forEach((id) => {
+          this.sendOutInvite(sender, id, group)
+        });
       }
     )
+
+    EventEmitter.subscribe('requestJoinGroup', (data) => {
+      this.connection.send(
+        this.prepareMessage({
+          msgType: 'requestJoinGroup',
+          msg: JSON.stringify(data),
+        })
+      )
+    })
+
+    EventEmitter.subscribe('acceptGroupJoinRequest', (msg) => {
+      this.connection.send(
+        this.prepareMessage({
+          msgType: 'acceptGroupJoinRequest',
+          msg,
+        })
+      )
+    })
+
+    EventEmitter.subscribe('declineGroupJoinRequest', (msg) => {
+      this.connection.send(
+        this.prepareMessage({
+          msgType: 'declineGroupJoinRequest',
+          msg,
+        })
+      )
+    })
   }
 
   processConnectionOpen() {
@@ -95,6 +124,18 @@ export default class StudentWebSocketClient {
     EventEmitter.publish('activateReceiveInviteModal', msg)
   }
 
+  activateGroupJoinRequestModal(msg) {
+    EventEmitter.publish('activateGroupJoinRequestModal', msg)
+  }
+
+  joinPrivateGroupOnApproval(msg) {
+    EventEmitter.publish('joinPrivateGroupOnApproval', msg)
+  }
+
+  notifyJoinRequestDeclined(msg) {
+    EventEmitter.publish('notifyJoinRequestDeclined', msg)
+  }
+
   processConnectionMessage(e) {
     const { msgType, msg } = JSON.parse(e.data)
 
@@ -120,6 +161,18 @@ export default class StudentWebSocketClient {
       case 'receiveInvite': // in this case, another user invites you to their group
         // msg - sender, group
         this.activateReceiveInviteModal(msg)
+        break
+
+      case 'groupJoinRequest':
+        this.activateGroupJoinRequestModal(msg) // msg - the name of the student wanting to join
+        break
+
+      case 'groupJoinRequestApproved':
+        this.joinPrivateGroupOnApproval(msg)
+        break
+
+      case 'groupJoinRequestDeclined':
+        this.notifyJoinRequestDeclined(msg)
         break
 
       default:
@@ -188,7 +241,6 @@ export default class StudentWebSocketClient {
   }
 
   sendOutInvite(sender, recepientId, group) {
-    console.log(JSON.stringify({ sender, recepientId, group }))
     this.connection.send(
       this.prepareMessage({
         msgType: 'sendOutInvite',

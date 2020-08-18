@@ -34,11 +34,11 @@ export async function submitFeedback(ClassId, stars, comments) {
   }
 }
 
-export async function postGroup(classId, name, type) {
+export async function postGroup(classId, name, type, userId) {
   try {
     const { data } = await axios.post(
       `/api/classes/${classId}/groups`,
-      { name, type },
+      { name, type, userId },
       {
         headers: {
           authorization: token,
