@@ -17,6 +17,8 @@ import { NotificationContainer, NotificationManager } from 'react-notifications'
 import GroupJoinRequestModal from '../../components/invite/groupJoinRequestModal'
 import WaitingForRequestApprovalModal from '../../components/invite/WaitingForRequestApprovalModal'
 
+const { groupManager } = require('../../websocket/util/groupmanager')
+
 const ScreenContainer = dynamic(
   () => import('../../components/screenContainer'),
   {
@@ -59,9 +61,10 @@ class ClassPage extends Component {
           //the user is currently in a call, leave the call first
           this.leaveGroup()
         }
-        this.setState({ vonageCred: { sessionId: group.sessionId, token } })
-        this.setState({ currentGroup: group })
-        EventEmitter.publish('userJoinGroup', group.id)
+        this.setState({
+          vonageCred: { sessionId: group.sessionId, token },
+          currentGroup: group,
+        })
         EventEmitter.publish('currentGroupChange', group)
       })
       .catch(console.error)
@@ -69,6 +72,12 @@ class ClassPage extends Component {
 
   leaveGroup = () => {
     EventEmitter.publish('userLeaveGroup', this.state.currentGroup.id)
+    if (
+      groupManager.getGroupSize(this.state.currentGroup.id) === 0 &&
+      this.state.currentGroup.type === 'group'
+    ) {
+      this.handleDeleteGroup(this.state.currentGroup)
+    }
     this.setState({
       vonageCred: null,
       currentGroup: { id: '', name: '' },
@@ -263,15 +272,15 @@ class ClassPage extends Component {
           minWidth: '10px',
           backgroundColor: 'transparent',
         }}
-        onClick={() =>
-          api
-            .deleteGroup(this.classId, group.id)
-            .then(() => this.fetchCurrentClass())
-        }
+        onClick={this.handleDeleteGroup}
       >
         <Icon name="delete" color="red" />
       </Button>
     )
+  }
+
+  handleDeleteGroup = async (group) => {
+    api.deleteGroup(this.classId, group.id).then(() => this.fetchCurrentClass())
   }
 
   handleCreateGroup = async (group) => {
