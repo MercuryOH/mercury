@@ -55,12 +55,25 @@ class ClassPage extends Component {
     api
       .postGroupToken(this.classId, group.id)
       .then(({ token }) => {
-        this.setState({ vonageCred: null })
+        if (this.state.currentGroup.id != '') {
+          //the user is currently in a call, leave the call first
+          this.leaveGroup()
+        }
         this.setState({ vonageCred: { sessionId: group.sessionId, token } })
         this.setState({ currentGroup: group })
         EventEmitter.publish('currentGroupChange', group)
       })
       .catch(console.error)
+  }
+
+  leaveGroup = () => {
+    this.setState({
+      vonageCred: null,
+      currentGroup: { id: '', name: '' },
+      withTa: false,
+    })
+    EventEmitter.publish('currentGroupChange', { id: '', name: '' })
+    EventEmitter.publish('callOver', this.classId)
   }
 
   defineEventEmitterCallbacks() {
@@ -492,15 +505,7 @@ class ClassPage extends Component {
             style={{ width: '100%', maxHeight: '75vh' }}
             sessionId={this.state.vonageCred.sessionId}
             token={this.state.vonageCred.token}
-            onLeave={() => {
-              this.setState({
-                vonageCred: null,
-                currentGroup: { id: '', name: '' },
-                withTa: false,
-              })
-              EventEmitter.publish('currentGroupChange', { id: '', name: '' })
-              EventEmitter.publish('callOver', this.classId)
-            }}
+            onLeave={this.leaveGroup}
           />
         )}
         <StudentInviteModal />
