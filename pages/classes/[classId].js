@@ -190,7 +190,7 @@ class ClassPage extends Component {
       group.type === 'discussion' ||
       role === 'Professor'
     ) {
-      // you are popped off the waiting queue or you are a TA
+      // you are popped off the waiting queue or you are a TA or you are joining a public discussion
       this.joinGroup(group)
       return
     }
