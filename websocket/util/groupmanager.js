@@ -15,7 +15,6 @@ class GroupManager {
     }
 
     this.groupToSockets.get(groupId).add(ws)
-    console.log(`Group ${groupId} size: ${this.getGroupSize(groupId)}`)
   }
 
   removeSocketFromGroup(groupId, ws) {
@@ -25,8 +24,6 @@ class GroupManager {
         sockets.delete(ws)
       }
     }
-
-    console.log(`Group ${groupId} size: ${this.getGroupSize(groupId)}`)
   }
 
   getGroupSize(groupId) {
