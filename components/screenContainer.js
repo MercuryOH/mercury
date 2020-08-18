@@ -164,18 +164,18 @@ class ScreenContainer extends React.Component {
           {this.getStreamToDisplay()}
         </div>
         <div style = {{width: '22%', maxHeight: '85vh', overflow: 'auto', height: '1000px'}}>
-          <Publisher style = {{width: '13.57vw', maxWidth: '13.57vw'}} session={this.sessionHelper.session}/>
+          <Publisher style = {{width: '13.57vw', maxWidth: '13.57vw', marginBottom: '5px'}} session={this.sessionHelper.session}/>
           {this.state.streams.map((stream) => (
             <>
             <Button
             onClick = {() => {this.setState({focusStream: stream})}}
-            style = {{padding: '0px', width: '100%', maxHeight: '8vh'}}
+            style = {{padding: '0px', width: '100%', maxHeight: '18vh', margin: '0px'}}
             >
             <OTSubscriber
               key={stream.id}
               session={this.sessionHelper.session}
               stream={stream}
-              properties={{ width: '100%', maxHeight: '8vh' }}
+              properties={{ width: '100%', height: '18vh', maxHeight: '18vh', margin: '0px' }}
               onSubscribe={this.handleSubscribe}
               onError={this.handleSubscribeError}
             />

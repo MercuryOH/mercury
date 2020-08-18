@@ -40,7 +40,8 @@ export default class Publisher extends Component {
             width: '13.57vw',
             maxWidth: '13.57vw',
             maxHeight: '8vh',
-            publishVideo: this.state.video
+            publishVideo: this.state.video,
+            marginBottom: '5px'
           }}
           session = {this.props.session}
           onError={this.onError}
@@ -50,7 +51,8 @@ export default class Publisher extends Component {
           width: '13.62vw',
           maxWidth: '13.62vw',
           height: '500px',
-          maxHeight: '16vh'
+          maxHeight: '16vh',
+          marginBottom: '5px'
         }}
         session = {this.props.session}/>
       </div>
