@@ -183,6 +183,17 @@ const handleStudentMessage = async (ws, message) => {
 
       break
 
+    case 'newGroupCreated':
+      webSocketConnectionManager.broadcast(
+        courseId,
+        prepareMessage({
+          msgType: 'fetchGroups',
+          msg: 'fetchGroups',
+        })
+      )
+
+      break
+
     default:
       throw new Error(`Message Type ${msgType} is not recognized for student`)
   }
