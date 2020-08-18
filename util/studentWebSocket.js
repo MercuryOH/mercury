@@ -59,7 +59,7 @@ export default class StudentWebSocketClient {
       ({ sender, recepientIds, group }) => {
         recepientIds.forEach((id) => {
           this.sendOutInvite(sender, id, group)
-        });
+        })
       }
     )
 
@@ -86,6 +86,15 @@ export default class StudentWebSocketClient {
         this.prepareMessage({
           msgType: 'declineGroupJoinRequest',
           msg,
+        })
+      )
+    })
+
+    EventEmitter.subscribe('newGroupCreated', (classId) => {
+      this.connection.send(
+        this.prepareMessage({
+          msgType: 'newGroupCreated',
+          msg: classId,
         })
       )
     })
@@ -136,6 +145,10 @@ export default class StudentWebSocketClient {
     EventEmitter.publish('notifyJoinRequestDeclined', msg)
   }
 
+  notifyFetchGroups() {
+    EventEmitter.publish('fetchGroups')
+  }
+
   processConnectionMessage(e) {
     const { msgType, msg } = JSON.parse(e.data)
 
@@ -173,6 +186,10 @@ export default class StudentWebSocketClient {
 
       case 'groupJoinRequestDeclined':
         this.notifyJoinRequestDeclined(msg)
+        break
+
+      case 'fetchGroups':
+        this.notifyFetchGroups()
         break
 
       default:

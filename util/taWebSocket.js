@@ -80,6 +80,10 @@ export default class TAWebSocketClient {
     EventEmitter.publish('initializeQueueOnGreeting', msg)
   }
 
+  notifyFetchGroups() {
+    EventEmitter.publish('fetchGroups')
+  }
+
   processConnectionMessage(e) {
     const { msgType, msg } = JSON.parse(e.data)
 
@@ -113,6 +117,10 @@ export default class TAWebSocketClient {
 
       case 'currStudentUpdate':
         this.updateCurrStudent(msg)
+        break
+
+      case 'fetchGroups':
+        this.notifyFetchGroups()
         break
 
       default:

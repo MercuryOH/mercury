@@ -79,6 +79,10 @@ class ClassPage extends Component {
       )
       EventEmitter.publish('removeWaitingForRequestApprovalModal')
     })
+
+    EventEmitter.subscribe('fetchGroups', () => {
+      this.fetchCurrentClass()
+    })
   }
 
   componentDidMount() {
@@ -141,8 +145,6 @@ class ClassPage extends Component {
         EventEmitter.publish('me', this.user)
       })
       .catch(console.error)
-
-    setInterval(() => this.fetchCurrentClass(), 5000)
   }
 
   fetchCurrentClass = () => {
@@ -265,6 +267,7 @@ class ClassPage extends Component {
       this.user.id
     )
     this.fetchCurrentClass()
+    EventEmitter.publish('newGroupCreated', this.classId)
     await this.handleSelectGroup(groupData)
   }
 
