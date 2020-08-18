@@ -18,6 +18,8 @@ import { NotificationContainer, NotificationManager } from 'react-notifications'
 import GroupJoinRequestModal from '../../components/invite/groupJoinRequestModal'
 import WaitingForRequestApprovalModal from '../../components/invite/WaitingForRequestApprovalModal'
 
+const { groupManager } = require('../../websocket/util/groupmanager')
+
 const ScreenContainer = dynamic(
   () => import('../../components/screenContainer'),
   {
@@ -80,8 +82,10 @@ class ClassPage extends Component {
           //the user is currently in a call, leave the call first
           this.leaveGroupNormal()
         }
-        this.setState({ vonageCred: { sessionId: group.sessionId, token } })
-        this.setState({ currentGroup: group })
+        this.setState({
+          vonageCred: { sessionId: group.sessionId, token },
+          currentGroup: group,
+        })
         EventEmitter.publish('currentGroupChange', group)
       })
       .catch(console.error)
@@ -226,8 +230,12 @@ class ClassPage extends Component {
   handleSelectGroup = async (group) => {
     const { role } = this.state.currentClass
 
-    if (group.type === 'office' || role === 'Professor') {
-      // you are popped off the waiting queue
+    if (
+      group.type === 'office' ||
+      group.type === 'discussion' ||
+      role === 'Professor'
+    ) {
+      // you are popped off the waiting queue or you are a TA or you are joining a public discussion
       this.joinGroup(group)
       return
     }
@@ -304,15 +312,15 @@ class ClassPage extends Component {
           minWidth: '10px',
           backgroundColor: 'transparent',
         }}
-        onClick={() =>
-          api
-            .deleteGroup(this.classId, group.id)
-            .then(() => this.fetchCurrentClass())
-        }
+        onClick={this.handleDeleteGroup}
       >
         <Icon name="delete" color="red" />
       </Button>
     )
+  }
+
+  handleDeleteGroup = async (group) => {
+    api.deleteGroup(this.classId, group.id).then(() => this.fetchCurrentClass())
   }
 
   handleCreateGroup = async (group) => {

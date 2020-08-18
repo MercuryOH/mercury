@@ -98,6 +98,24 @@ export default class StudentWebSocketClient {
         })
       )
     })
+
+    EventEmitter.subscribe('userLeaveGroup', (groupId) => {
+      this.connection.send(
+        this.prepareMessage({
+          msgType: 'userLeaveGroup',
+          msg: groupId,
+        })
+      )
+    })
+
+    EventEmitter.subscribe('userJoinGroup', (groupId) => {
+      this.connection.send(
+        this.prepareMessage({
+          msgType: 'userJoinGroup',
+          msg: groupId,
+        })
+      )
+    })
   }
 
   processConnectionOpen() {

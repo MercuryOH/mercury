@@ -3,6 +3,8 @@ const { webSocketConnectionManager } = require('../util/connectionmanager')
 const { prepareMessage } = require('../util/util')
 const models = require('../../models')
 const { userRepository } = require('../../repository/userRepository')
+const { groupManager } = require('../util/groupmanager')
+
 /**
  * Handles web socket messages sent by a student user
  */
@@ -192,6 +194,16 @@ const handleStudentMessage = async (ws, message) => {
         })
       )
 
+      break
+
+    case 'userLeaveGroup':
+      // msg - group ID
+      groupManager.removeSocketFromGroup(msg, ws)
+      break
+
+    case 'userJoinGroup':
+      // msg - group ID
+      groupManager.addSocketToGroup(msg, ws)
       break
 
     default:
