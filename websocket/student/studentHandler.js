@@ -199,6 +199,15 @@ const handleStudentMessage = async (ws, message) => {
     case 'userLeaveGroup':
       // msg - group ID
       groupManager.removeSocketFromGroup(msg, ws)
+      if (groupManager.getGroupSize(msg) === 0) {
+        webSocketConnectionManager.broadcast(
+          courseId,
+          prepareMessage({
+            msgType: 'fetchGroups',
+            msg: 'fetchGroups',
+          })
+        )
+      }
       break
 
     case 'userJoinGroup':
