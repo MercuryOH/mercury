@@ -92,6 +92,8 @@ const handleInstructorMessage = (ws, message) => {
     case 'userJoinGroup':
       // msg - group ID
       groupManager.addSocketToGroup(msg, ws)
+      break
+
     case 'sendOutInviteTA':
       const { sender, recepientId, group: currGroup } = JSON.parse(msg)
       const recepientws = webSocketConnectionManager.getSocketOfUserID(
