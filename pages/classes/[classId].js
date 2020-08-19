@@ -68,7 +68,7 @@ class ClassPage extends Component {
   }
 
   leaveGroup = () => {
-    EventEmitter.publish('userLeaveGroup', this.state.currentGroup.id)
+    EventEmitter.publish('userLeaveGroup', this.state.currentGroup)
     this.setState({
       vonageCred: null,
       currentGroup: { id: '', name: '' },
