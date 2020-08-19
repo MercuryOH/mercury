@@ -53,6 +53,7 @@ class ClassPage extends Component {
   }
 
   joinGroup(group) {
+<<<<<<< HEAD
     if (
       this.state.currentGroup.UserId === this.user.id &&
       this.state.currentGroup.type === 'group'
@@ -93,6 +94,25 @@ class ClassPage extends Component {
   }
 
   leaveGroupNormal = () => {
+=======
+    api
+      .postGroupToken(this.classId, group.id)
+      .then(({ token }) => {
+        if (this.state.currentGroup.id != '') {
+          //the user is currently in a call, leave the call first
+          this.leaveGroup()
+        }
+        this.setState({ vonageCred: { sessionId: group.sessionId, token } })
+        this.setState({ currentGroup: group })
+        EventEmitter.publish('userJoinGroup', group.id)
+        EventEmitter.publish('currentGroupChange', group)
+      })
+      .catch(console.error)
+  }
+
+  leaveGroup = () => {
+    EventEmitter.publish('userLeaveGroup', this.state.currentGroup.id)
+>>>>>>> parent of fbd2ffb... #62: delete empty groups
     this.setState({
       vonageCred: null,
       currentGroup: { id: '', name: '' },
@@ -310,15 +330,15 @@ class ClassPage extends Component {
           minWidth: '10px',
           backgroundColor: 'transparent',
         }}
-        onClick={this.handleDeleteGroup}
+        onClick={() =>
+          api
+            .deleteGroup(this.classId, group.id)
+            .then(() => this.fetchCurrentClass())
+        }
       >
         <Icon name="delete" color="red" />
       </Button>
     )
-  }
-
-  handleDeleteGroup = async (group) => {
-    api.deleteGroup(this.classId, group.id).then(() => this.fetchCurrentClass())
   }
 
   handleCreateGroup = async (group) => {
