@@ -83,10 +83,8 @@ class StudentQueueView extends Component {
     })
 
     EventEmitter.subscribe('studentDeclineTA', (TAName) => {
-      const { onJoin, currentGroup } = this.state
       EventEmitter.publish('signalDeclineTA', TAName)
       this.setState({ inQueue: false })
-      onJoin(currentGroup)
     })
 
     EventEmitter.subscribe('currentGroupChange', (currentGroup) => {
