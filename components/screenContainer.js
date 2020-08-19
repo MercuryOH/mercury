@@ -87,7 +87,6 @@ class ScreenContainer extends React.Component {
       <Button
         onClick = {() => {
           EventEmitter.publish('startScreenShare')
-          EventEmitter.publish('disableVideo')
           this.setState({ssButton: false})
           }
         }
@@ -99,7 +98,6 @@ class ScreenContainer extends React.Component {
       <Button
           onClick = {() => {
               EventEmitter.publish('stopScreenShare')
-              EventEmitter.publish('enableVideo')
               this.setState({ssButton: true})
             }
           }
@@ -130,6 +128,18 @@ class ScreenContainer extends React.Component {
         content="Enable video"
       />
     )
+  }
+
+  unexpandButton() {
+    return this.state.expand === true ? (
+      <Button
+        onClick = {() => {
+          this.setState({expand: false})
+          console.log('ore')}}
+        style = {{fontSize: '.8vw', display: 'inline-flex'}}
+        content="Unexpand video"
+      />
+    ) : null
   }
 
   componentWillMount() {
@@ -179,6 +189,7 @@ class ScreenContainer extends React.Component {
         </div>
       </div>
       {this.videoStateButton()}
+      {this.unexpandButton()}
       {this.screenShareButton()}
       <Button
         onClick={onLeave}
