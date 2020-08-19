@@ -115,6 +115,10 @@ class ClassPage extends Component {
     EventEmitter.subscribe('fetchGroups', () => {
       this.fetchCurrentClass()
     })
+
+    EventEmitter.subscribe('createNotification', (msg) => {
+      NotificationManager.info(msg)
+    })
   }
 
   componentDidMount() {

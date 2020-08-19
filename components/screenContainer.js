@@ -8,8 +8,8 @@ import { Button } from 'semantic-ui-react'
 class ScreenContainer extends React.Component {
   constructor(props) {
     super(props)
-    console.log(JSON.stringify(this.props.currGroup))
     this.state = {
+      currGroup: this.props.currGroup,
       ssButton: true,
       streams: [],
       focusStream: {},
