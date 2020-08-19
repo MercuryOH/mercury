@@ -13,7 +13,8 @@ class ScreenContainer extends React.Component {
       ssButton: true,
       streams: [],
       focusStream: {},
-      videoButton: true
+      videoButton: true,
+      expand: false
     }
 
     this.defineEventEmitterCallbacks()
@@ -68,18 +69,8 @@ class ScreenContainer extends React.Component {
     })
   }
 
-  expandButton(stream) {
-    return (
-      <Button
-        content ='Expand'
-        onClick = {() => {this.setState({focusStream: stream})}}
-        style = {{fontSize: '.5vw'}}
-      />
-    )
-  }
-
   getStreamToDisplay(){
-    return this.state.focusStream != undefined ?(
+    return this.state.expand === true ? (
       <OTSubscriber
         key={this.state.focusStream.id}
         session={this.sessionHelper.session}
@@ -168,7 +159,10 @@ class ScreenContainer extends React.Component {
           {this.state.streams.map((stream) => (
             <>
             <Button
-            onClick = {() => {this.setState({focusStream: stream})}}
+            onClick = {() => {
+              this.setState({focusStream: stream})
+              this.setState({expand: true})
+            }}
             style = {{padding: '0px', width: '100%', maxHeight: '18vh', margin: '0px'}}
             >
             <OTSubscriber
