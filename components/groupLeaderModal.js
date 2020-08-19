@@ -2,7 +2,6 @@ import React, { Component } from 'react'
 import { Modal, Button, Search, Label, Icon } from 'semantic-ui-react'
 import _ from 'lodash'
 import { EventEmitter } from './util/EventEmitter'
-import SearchBar from './invite/searchBar'
 
 const initialState = { isLoading: false, results: [], value: '' }
 

@@ -71,22 +71,19 @@ class StudentQueueView extends Component {
     EventEmitter.subscribe('studentJoinTA', (TAName) => {
       const { office, onJoin, me } = this.state
       EventEmitter.publish('signalJoinTA', { group: office, TAName, me })
-      this.setState({ inQueue: false, inCallWithTA: true })
       onJoin(office)
+      this.setState({ inQueue: false, inCallWithTA: true })
     })
 
     EventEmitter.subscribe('studentInviteTA', (TAName) => {
-      const { onJoin, currentGroup, me } = this.state
+      const { currentGroup, me } = this.state
       EventEmitter.publish('signalJoinTA', { group: currentGroup, TAName, me })
       this.setState({ inQueue: false, inCallWithTA: true })
-      onJoin(currentGroup)
     })
 
     EventEmitter.subscribe('studentDeclineTA', (TAName) => {
-      const { onJoin, currentGroup } = this.state
       EventEmitter.publish('signalDeclineTA', TAName)
       this.setState({ inQueue: false })
-      onJoin(currentGroup)
     })
 
     EventEmitter.subscribe('currentGroupChange', (currentGroup) => {

@@ -57,7 +57,14 @@ class ClassPage extends Component {
       .then(({ token }) => {
         if (this.state.currentGroup.id != '') {
           //the user is currently in a call, leave the call first
-          this.leaveGroup()
+
+          if (group.type === 'office') {
+            // this case only happens when the user is leaving a private group for the TA office
+            // do not trigger the callOver event in this case
+            this.leaveGroupForTAOffice()
+          } else {
+            this.leaveGroup()
+          }
         }
         this.setState({ vonageCred: { sessionId: group.sessionId, token } })
         this.setState({ currentGroup: group })
@@ -67,8 +74,18 @@ class ClassPage extends Component {
       .catch(console.error)
   }
 
+  leaveGroupForTAOffice = () => {
+    EventEmitter.publish('userLeaveGroup', this.state.currentGroup)
+    this.setState({
+      vonageCred: null,
+      currentGroup: { id: '', name: '' },
+      withTa: false,
+    })
+    EventEmitter.publish('currentGroupChange', { id: '', name: '' })
+  }
+
   leaveGroup = () => {
-    EventEmitter.publish('userLeaveGroup', this.state.currentGroup.id)
+    EventEmitter.publish('userLeaveGroup', this.state.currentGroup)
     this.setState({
       vonageCred: null,
       currentGroup: { id: '', name: '' },

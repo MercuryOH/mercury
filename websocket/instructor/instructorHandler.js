@@ -2,6 +2,7 @@ const { courseQueue } = require('../util/coursequeue')
 const { webSocketConnectionManager } = require('../util/connectionmanager')
 const { prepareMessage } = require('../util/util')
 const { userRepository } = require('../../repository/userRepository')
+const { groupManager } = require('../util/groupmanager')
 
 /**
  * Handles web socket messages sent by a student user
@@ -72,6 +73,25 @@ const handleInstructorMessage = (ws, message) => {
           msg: courseQueue.getCurrStudent(),
         })
       )
+      break
+
+    case 'userLeaveGroup':
+      // msg - group metadata
+      groupManager.removeSocketFromGroup(msg, ws)
+      if (groupManager.getGroupSize(msg) === 0) {
+        webSocketConnectionManager.broadcast(
+          courseId,
+          prepareMessage({
+            msgType: 'fetchGroups',
+            msg: 'fetchGroups',
+          })
+        )
+      }
+      break
+
+    case 'userJoinGroup':
+      // msg - group ID
+      groupManager.addSocketToGroup(msg, ws)
       break
 
     default:
