@@ -8,7 +8,6 @@ import Queue from '../../components/queue/queue'
 import * as api from '../../util/mercuryService'
 import CreateGroupModal from '../../components/createGroupModal'
 import StudentInviteModal from '../../components/invite/studentInviteModal'
-import GroupLeaderModal from '../../components/groupLeaderModal'
 import { EventEmitter } from '../../components/util/EventEmitter'
 import FeedbackModal from '../../components/feedbackModal'
 import StudentWebSocketClient from '../../util/studentWebSocket'
@@ -17,8 +16,6 @@ import ReceiveInviteModal from '../../components/invite/receiveInviteModal'
 import { NotificationContainer, NotificationManager } from 'react-notifications'
 import GroupJoinRequestModal from '../../components/invite/groupJoinRequestModal'
 import WaitingForRequestApprovalModal from '../../components/invite/WaitingForRequestApprovalModal'
-
-const { groupManager } = require('../../websocket/util/groupmanager')
 
 const ScreenContainer = dynamic(
   () => import('../../components/screenContainer'),
@@ -55,44 +52,23 @@ class ClassPage extends Component {
   }
 
   joinGroup(group) {
-    if (this.state.currentGroup.UserId === this.user.id && this.state.currentGroup.type === 'group') {
-      console.log('1')
-      EventEmitter.publish('leaderNeedsChange', group)
-      EventEmitter.publish('openGroupLeaderModal', true)
-      api
-        .postGroupToken(this.classId, group.id)
-        .then(({ token }) => {
-          if (this.state.currentGroup.id != '') {
-            //the user is currently in a call, leave the call first
-            this.leaveGroupNormal()
-          }
-          this.setState({ vonageCred: { sessionId: group.sessionId, token } })
-          this.setState({ currentGroup: group })
-          EventEmitter.publish('currentGroupChange', group)
-        })
-        .catch(console.error)
-    }
-    else {
-      console.log(`${this.state.currentGroup.UserId}`)
-      console.log(`${this.user.id}`)
     api
       .postGroupToken(this.classId, group.id)
       .then(({ token }) => {
         if (this.state.currentGroup.id != '') {
           //the user is currently in a call, leave the call first
-          this.leaveGroupNormal()
+          this.leaveGroup()
         }
-        this.setState({
-          vonageCred: { sessionId: group.sessionId, token },
-          currentGroup: group,
-        })
+        this.setState({ vonageCred: { sessionId: group.sessionId, token } })
+        this.setState({ currentGroup: group })
+        EventEmitter.publish('userJoinGroup', group.id)
         EventEmitter.publish('currentGroupChange', group)
       })
       .catch(console.error)
-    }
   }
 
-  leaveGroupNormal = () => {
+  leaveGroup = () => {
+    EventEmitter.publish('userLeaveGroup', this.state.currentGroup.id)
     this.setState({
       vonageCred: null,
       currentGroup: { id: '', name: '' },
@@ -100,27 +76,6 @@ class ClassPage extends Component {
     })
     EventEmitter.publish('currentGroupChange', { id: '', name: '' })
     EventEmitter.publish('callOver', this.classId)
-  }
-
-  leaveGroup = () => {
-    if (this.state.currentGroup.UserId === this.user.id && this.state.currentGroup.type === 'group') {
-      this.setState({
-        vonageCred: null,
-        currentGroup: { id: '', name: '' },
-        withTa: false,
-      })
-      EventEmitter.publish('currentGroupChange', { id: '', name: '' })
-      EventEmitter.publish('callOver', this.classId)
-    }
-    else {
-      this.setState({
-        vonageCred: null,
-        currentGroup: { id: '', name: '' },
-        withTa: false,
-      })
-      EventEmitter.publish('currentGroupChange', { id: '', name: '' })
-      EventEmitter.publish('callOver', this.classId)
-    }
   }
 
   defineEventEmitterCallbacks() {
@@ -232,10 +187,10 @@ class ClassPage extends Component {
 
     if (
       group.type === 'office' ||
-      group.type === 'discussion' ||
-      role === 'Professor'
+      role === 'Professor' ||
+      group.type === 'discussion'
     ) {
-      // you are popped off the waiting queue or you are a TA or you are joining a public discussion
+      // you are popped off the waiting queue or you are a TA
       this.joinGroup(group)
       return
     }
@@ -322,10 +277,6 @@ class ClassPage extends Component {
         <Icon name="delete" color="red" />
       </Button>
     )
-  }
-
-  handleDeleteGroup = async (group) => {
-    api.deleteGroup(this.classId, group.id).then(() => this.fetchCurrentClass())
   }
 
   handleCreateGroup = async (group) => {
@@ -568,7 +519,6 @@ class ClassPage extends Component {
           />
         )}
         <StudentInviteModal />
-        <GroupLeaderModal />
         <FeedbackModal />
         <ReceiveInviteModal onJoin={this.handleSelectGroup} />
         <GroupJoinRequestModal />
