@@ -53,48 +53,6 @@ class ClassPage extends Component {
   }
 
   joinGroup(group) {
-<<<<<<< HEAD
-    if (
-      this.state.currentGroup.UserId === this.user.id &&
-      this.state.currentGroup.type === 'group'
-    ) {
-      console.log('1')
-      EventEmitter.publish('leaderNeedsChange', group)
-      EventEmitter.publish('openGroupLeaderModal', true)
-      api
-        .postGroupToken(this.classId, group.id)
-        .then(({ token }) => {
-          if (this.state.currentGroup.id != '') {
-            //the user is currently in a call, leave the call first
-            this.leaveGroupNormal()
-          }
-          this.setState({ vonageCred: { sessionId: group.sessionId, token } })
-          this.setState({ currentGroup: group })
-          EventEmitter.publish('currentGroupChange', group)
-        })
-        .catch(console.error)
-    } else {
-      console.log(`${this.state.currentGroup.UserId}`)
-      console.log(`${this.user.id}`)
-      api
-        .postGroupToken(this.classId, group.id)
-        .then(({ token }) => {
-          if (this.state.currentGroup.id != '') {
-            //the user is currently in a call, leave the call first
-            this.leaveGroupNormal()
-          }
-          this.setState({
-            vonageCred: { sessionId: group.sessionId, token },
-            currentGroup: group,
-          })
-          EventEmitter.publish('currentGroupChange', group)
-        })
-        .catch(console.error)
-    }
-  }
-
-  leaveGroupNormal = () => {
-=======
     api
       .postGroupToken(this.classId, group.id)
       .then(({ token }) => {
@@ -112,7 +70,6 @@ class ClassPage extends Component {
 
   leaveGroup = () => {
     EventEmitter.publish('userLeaveGroup', this.state.currentGroup.id)
->>>>>>> parent of fbd2ffb... #62: delete empty groups
     this.setState({
       vonageCred: null,
       currentGroup: { id: '', name: '' },
@@ -120,29 +77,6 @@ class ClassPage extends Component {
     })
     EventEmitter.publish('currentGroupChange', { id: '', name: '' })
     EventEmitter.publish('callOver', this.classId)
-  }
-
-  leaveGroup = () => {
-    if (
-      this.state.currentGroup.UserId === this.user.id &&
-      this.state.currentGroup.type === 'group'
-    ) {
-      this.setState({
-        vonageCred: null,
-        currentGroup: { id: '', name: '' },
-        withTa: false,
-      })
-      EventEmitter.publish('currentGroupChange', { id: '', name: '' })
-      EventEmitter.publish('callOver', this.classId)
-    } else {
-      this.setState({
-        vonageCred: null,
-        currentGroup: { id: '', name: '' },
-        withTa: false,
-      })
-      EventEmitter.publish('currentGroupChange', { id: '', name: '' })
-      EventEmitter.publish('callOver', this.classId)
-    }
   }
 
   defineEventEmitterCallbacks() {
