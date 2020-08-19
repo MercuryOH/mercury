@@ -55,6 +55,16 @@ export default class TAWebSocketClient {
         })
       )
     })
+
+    EventEmitter.subscribe('classGroupSetChanged', (classId) => {
+      this.connection.send(
+        this.prepareMessage({
+          msgType: 'classGroupSetChanged',
+          msg: classId,
+        })
+      )
+    })
+
     EventEmitter.subscribe(
       'sendOutInviteTA',
       ({ sender, recepientIds, group }) => {
