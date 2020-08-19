@@ -18,14 +18,15 @@ class GroupManager {
     this.groupToSockets.get(groupId).add(ws)
   }
 
- removeSocketFromGroup(groupId, ws) {
+  async removeSocketFromGroup(groupId, ws) {
     if (this.groupToSockets.has(groupId)) {
       const sockets = this.groupToSockets.get(groupId)
       if (sockets.has(ws)) {
         sockets.delete(ws)
       }
-      if (this.groupToSockets.get(groupId).size === 0){
-        models.Group.destroy({ where: { id: groupId } })
+      if (sockets.size === 0) {
+        this.groupToSockets.delete(groupId)
+        await models.Group.destroy({ where: { id: groupId } })
       }
     }
   }
