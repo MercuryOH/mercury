@@ -99,11 +99,11 @@ export default class StudentWebSocketClient {
       )
     })
 
-    EventEmitter.subscribe('userLeaveGroup', (groupId) => {
+    EventEmitter.subscribe('userLeaveGroup', (group) => {
       this.connection.send(
         this.prepareMessage({
           msgType: 'userLeaveGroup',
-          msg: groupId,
+          msg: JSON.stringify(group),
         })
       )
     })
