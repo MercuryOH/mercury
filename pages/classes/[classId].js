@@ -115,6 +115,10 @@ class ClassPage extends Component {
     EventEmitter.subscribe('fetchGroups', () => {
       this.fetchCurrentClass()
     })
+
+    EventEmitter.subscribe('createNotification', (msg) => {
+      NotificationManager.info(msg)
+    })
   }
 
   componentDidMount() {
@@ -541,6 +545,7 @@ class ClassPage extends Component {
             sessionId={this.state.vonageCred.sessionId}
             token={this.state.vonageCred.token}
             onLeave={this.leaveGroup}
+            currGroup={this.state.currentGroup}
           />
         )}
         <UserInviteModal />

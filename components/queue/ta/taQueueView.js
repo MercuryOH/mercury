@@ -2,7 +2,6 @@ import React, { Component } from 'react'
 import { Label, Button } from 'semantic-ui-react'
 import styled from 'styled-components'
 import TaWaitingModal from './taWaitingModal'
-import { NotificationContainer, NotificationManager } from 'react-notifications'
 import { EventEmitter } from '../../util/EventEmitter'
 
 const QueueDiv = styled.div`
@@ -104,11 +103,17 @@ export default class TAQueueView extends Component {
   }
 
   createTimeoutNotification(studentName) {
-    NotificationManager.info(`${studentName}'s Invitation Has Expired`)
+    EventEmitter.publish(
+      'createNotification',
+      `${studentName}'s Invitation Has Expired`
+    )
   }
 
   createDeclineNotification(studentName) {
-    NotificationManager.info(`${studentName} Has Declined The Call`)
+    EventEmitter.publish(
+      'createNotification',
+      `${studentName} Has Declined The Call`
+    )
   }
 
   componentDidMount() {
@@ -256,8 +261,6 @@ export default class TAQueueView extends Component {
         </QueueDiv>
 
         {this.getButtonToDisplay()}
-
-        <NotificationContainer />
       </QueueDiv>
     )
   }

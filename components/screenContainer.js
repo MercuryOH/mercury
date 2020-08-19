@@ -2,19 +2,19 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import Publisher from './publisher'
 import { EventEmitter } from './util/EventEmitter'
-import { OTSession, OTPublisher, OTStreams, OTSubscriber, createSession } from 'opentok-react'
-import { Button, List } from 'semantic-ui-react'
+import { OTSubscriber, createSession } from 'opentok-react'
+import { Button } from 'semantic-ui-react'
 
 class ScreenContainer extends React.Component {
   constructor(props) {
     super(props)
-
     this.state = {
+      currGroup: this.props.currGroup,
       ssButton: true,
       streams: [],
       focusStream: {},
       videoButton: true,
-      expand: false
+      expand: false,
     }
 
     this.defineEventEmitterCallbacks()
@@ -36,8 +36,6 @@ class ScreenContainer extends React.Component {
       videoEnabled: () => {},
       videoDisabled: () => {},
     }
-
-    const { sessionId, token, onLeave } = this.props
   }
 
   handlePublish = () => {
@@ -69,13 +67,18 @@ class ScreenContainer extends React.Component {
     })
   }
 
-  getStreamToDisplay(){
+  getStreamToDisplay() {
     return this.state.expand === true ? (
       <OTSubscriber
         key={this.state.focusStream.id}
         session={this.sessionHelper.session}
         stream={this.state.focusStream}
-        properties={{ maxWidth: '75vw', maxHeight: '75vh', height: '85vh', width: '48vw' }}
+        properties={{
+          maxWidth: '75vw',
+          maxHeight: '75vh',
+          height: '85vh',
+          width: '48vw',
+        }}
         onSubscribe={this.handleSubscribe}
         onError={this.handleSubscribeError}
       />
@@ -85,28 +88,24 @@ class ScreenContainer extends React.Component {
   screenShareButton() {
     return this.state.ssButton === true ? (
       <Button
-        onClick = {() => {
+        onClick={() => {
           EventEmitter.publish('startScreenShare')
-          EventEmitter.publish('disableVideo')
-          this.setState({ssButton: false})
-          }
-        }
-        style = {{fontSize: '.8vw', display: 'inline-flex'}}
-        icon = 'tv'
-        content = "Share Screen"
+          this.setState({ ssButton: false })
+        }}
+        style={{ fontSize: '.8vw', display: 'inline-flex' }}
+        icon="tv"
+        content="Share Screen"
       />
     ) : (
       <Button
-          onClick = {() => {
-              EventEmitter.publish('stopScreenShare')
-              EventEmitter.publish('enableVideo')
-              this.setState({ssButton: true})
-            }
-          }
-          icon = 'tv'
-          style = {{fontSize: '.8vw', display: 'inline-flex'}}
-          content = "Stop Screen Share"
-        />
+        onClick={() => {
+          EventEmitter.publish('stopScreenShare')
+          this.setState({ ssButton: true })
+        }}
+        icon="tv"
+        style={{ fontSize: '.8vw', display: 'inline-flex' }}
+        content="Stop Screen Share"
+      />
     )
   }
 
@@ -116,8 +115,8 @@ class ScreenContainer extends React.Component {
         onClick={() => {
           EventEmitter.publish('disableVideo')
         }}
-        icon='hide'
-        style = {{fontSize: '.8vw', display: 'inline-flex'}}
+        icon="hide"
+        style={{ fontSize: '.8vw', display: 'inline-flex' }}
         content="Disable video"
       />
     ) : (
@@ -125,11 +124,24 @@ class ScreenContainer extends React.Component {
         onClick={() => {
           EventEmitter.publish('enableVideo')
         }}
-        icon='eye'
-        style = {{fontSize: '.8vw', display: 'inline-flex'}}
+        icon="eye"
+        style={{ fontSize: '.8vw', display: 'inline-flex' }}
         content="Enable video"
       />
     )
+  }
+
+  unexpandButton() {
+    return this.state.expand === true ? (
+      <Button
+        onClick={() => {
+          this.setState({ expand: false })
+          console.log('ore')
+        }}
+        style={{ fontSize: '.8vw', display: 'inline-flex' }}
+        content="Unexpand video"
+      />
+    ) : null
   }
 
   componentWillMount() {
@@ -138,60 +150,99 @@ class ScreenContainer extends React.Component {
       apiKey: `${process.env.NEXT_PUBLIC_VV_API_KEY}`,
       sessionId: `${sessionId}`,
       token: `${token}`,
-      onStreamsUpdated: streams => { this.setState({ streams }); }
-    });
+      onStreamsUpdated: (streams) => {
+        this.setState({ streams })
+      },
+    })
+  }
+
+  appointLeaderButton() {
+    return (
+      <Button
+        icon="chess king"
+        style={{ fontSize: '.8vw', display: 'inline-flex' }}
+        content="Appoint Leader"
+      />
+    )
   }
 
   componentWillUnmount() {
-    this.sessionHelper.disconnect();
+    this.sessionHelper.disconnect()
   }
 
   render() {
-    const { sessionId, token, onLeave } = this.props
+    const { onLeave } = this.props
     return (
       <>
-      <div style = {{display: 'inline-flex', width: '100%', maxHeight: '86vh'}}>
-        <div style = {{ width: '78%', maxHeight: '85vh', overflow: 'auto'}}>
-          {this.getStreamToDisplay()}
-        </div>
-        <div style = {{width: '22%', maxHeight: '85vh', overflow: 'auto', height: '1000px'}}>
-          <Publisher style = {{width: '13.57vw', maxWidth: '13.57vw', marginBottom: '5px'}} session={this.sessionHelper.session}/>
-          {this.state.streams.map((stream) => (
-            <>
-            <Button
-            onClick = {() => {
-              this.setState({focusStream: stream})
-              this.setState({expand: true})
+        <div
+          style={{ display: 'inline-flex', width: '100%', maxHeight: '86vh' }}
+        >
+          <div style={{ width: '78%', maxHeight: '85vh', overflow: 'auto' }}>
+            {this.getStreamToDisplay()}
+          </div>
+          <div
+            style={{
+              width: '22%',
+              maxHeight: '85vh',
+              overflow: 'auto',
+              height: '1000px',
             }}
-            style = {{padding: '0px', width: '100%', maxHeight: '18vh', margin: '0px'}}
-            >
-            <OTSubscriber
-              key={stream.id}
+          >
+            <Publisher
+              style={{
+                width: '13.57vw',
+                maxWidth: '13.57vw',
+                marginBottom: '5px',
+              }}
               session={this.sessionHelper.session}
-              stream={stream}
-              properties={{ width: '100%', height: '18vh', maxHeight: '18vh', margin: '0px' }}
-              onSubscribe={this.handleSubscribe}
-              onError={this.handleSubscribeError}
             />
-            </Button>
-            </>
-          ))}
+            {this.state.streams.map((stream) => (
+              <>
+                <Button
+                  onClick={() => {
+                    this.setState({ focusStream: stream })
+                    this.setState({ expand: true })
+                  }}
+                  style={{
+                    padding: '0px',
+                    width: '100%',
+                    maxHeight: '18vh',
+                    margin: '0px',
+                  }}
+                >
+                  <OTSubscriber
+                    key={stream.id}
+                    session={this.sessionHelper.session}
+                    stream={stream}
+                    properties={{
+                      width: '100%',
+                      height: '18vh',
+                      maxHeight: '18vh',
+                      margin: '0px',
+                    }}
+                    onSubscribe={this.handleSubscribe}
+                    onError={this.handleSubscribeError}
+                  />
+                </Button>
+              </>
+            ))}
+          </div>
         </div>
-      </div>
-      {this.videoStateButton()}
-      {this.screenShareButton()}
-      <Button
-        onClick={onLeave}
-        color="red"
-        icon="close"
-        style = {{fontSize: '.8vw', display: 'inline-flex'}}
-        content="Leave call"
-      />
+        {this.videoStateButton()}
+        {this.unexpandButton()}
+        {this.screenShareButton()}
+        {this.appointLeaderButton()}
+        <Button
+          onClick={onLeave}
+          color="red"
+          icon="close"
+          style={{ fontSize: '.8vw', display: 'inline-flex' }}
+          content="Leave call"
+        />
       </>
     )
   }
 }
-
 
 ScreenContainer.propTypes = {
   sessionId: PropTypes.string.isRequired,
