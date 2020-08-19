@@ -5,6 +5,7 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       Group.belongsTo(models.Class)
       Group.belongsTo(models.User) // the userID who created the group
+      Group.belongsToMany(models.User, { through: 'GroupUser' })
     }
   }
 
