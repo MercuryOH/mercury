@@ -96,7 +96,6 @@ class ScreenContainer extends React.Component {
       <Button
         onClick = {() => {
           EventEmitter.publish('startScreenShare')
-          EventEmitter.publish('disableVideo')
           this.setState({ssButton: false})
           }
         }
@@ -108,7 +107,6 @@ class ScreenContainer extends React.Component {
       <Button
           onClick = {() => {
               EventEmitter.publish('stopScreenShare')
-              EventEmitter.publish('enableVideo')
               this.setState({ssButton: true})
             }
           }
