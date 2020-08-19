@@ -14,31 +14,31 @@ class CreateGroupModal extends Component {
     this.state = {
       modalState: false,
       groupName: '',
-      isLoading: false,
-      results: [],
-      value: '',
-      allUsers: [],
-      selectedUser: {},
-      me: {},
-      currentGroup: { id: '', name: '' },
+      // isLoading: false,
+      // results: [],
+      // value: '',
+      // allUsers: [],
+      // selectedUser: {},
+      // me: {},
+      // currentGroup: { id: '', name: '' },
     }
 
-    this.defineEventEmitterCallbacks()
+    // this.defineEventEmitterCallbacks()
   }
 
-  defineEventEmitterCallbacks() {
-    EventEmitter.subscribe('allOtherStudentsInClass', (users) => {
-      this.setState({ allUsers: users })
-    })
+  // defineEventEmitterCallbacks() {
+  //   EventEmitter.subscribe('allOtherStudentsInClass', (users) => {
+  //     this.setState({ allUsers: users })
+  //   })
 
-    EventEmitter.subscribe('me', (me) => {
-      this.setState({ me })
-    })
+  //   EventEmitter.subscribe('me', (me) => {
+  //     this.setState({ me })
+  //   })
 
-    EventEmitter.subscribe('currentGroupChange', (currentGroup) => {
-      this.setState({ currentGroup })
-    })
-  }
+  //   EventEmitter.subscribe('currentGroupChange', (currentGroup) => {
+  //     this.setState({ currentGroup })
+  //   })
+  // }
 
   // formatAsResults = (user) => {
   //   return {
