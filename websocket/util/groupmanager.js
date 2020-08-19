@@ -4,6 +4,8 @@
  * Manages leader designation
  */
 
+const models = require('../../models')
+
 class GroupManager {
   constructor() {
     this.groupToSockets = new Map()
@@ -13,15 +15,17 @@ class GroupManager {
     if (!this.groupToSockets.has(groupId)) {
       this.groupToSockets.set(groupId, new Set())
     }
-
     this.groupToSockets.get(groupId).add(ws)
   }
 
-  removeSocketFromGroup(groupId, ws) {
+ removeSocketFromGroup(groupId, ws) {
     if (this.groupToSockets.has(groupId)) {
       const sockets = this.groupToSockets.get(groupId)
       if (sockets.has(ws)) {
         sockets.delete(ws)
+      }
+      if (this.groupToSockets.get(groupId).size === 0){
+        models.Group.destroy({ where: { id: groupId } })
       }
     }
   }

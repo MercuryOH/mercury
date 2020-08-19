@@ -185,7 +185,7 @@ const handleStudentMessage = async (ws, message) => {
 
       break
 
-    case 'newGroupCreated':
+    case 'classGroupChanged':
       webSocketConnectionManager.broadcast(
         courseId,
         prepareMessage({

@@ -63,12 +63,14 @@ class ClassPage extends Component {
         this.setState({ currentGroup: group })
         EventEmitter.publish('userJoinGroup', group.id)
         EventEmitter.publish('currentGroupChange', group)
+        EventEmitter.publish('userJoinGroup', group.id)
       })
       .catch(console.error)
   }
 
   leaveGroup = () => {
     EventEmitter.publish('userLeaveGroup', this.state.currentGroup.id)
+    EventEmitter.publish('classGroupChanged', this.classId)
     this.setState({
       vonageCred: null,
       currentGroup: { id: '', name: '' },
@@ -268,9 +270,10 @@ class ClassPage extends Component {
           backgroundColor: 'transparent',
         }}
         onClick={() =>
-          api
-            .deleteGroup(this.classId, group.id)
-            .then(() => this.fetchCurrentClass())
+          api.deleteGroup(this.classId, group.id).then(() => {
+            this.fetchCurrentClass()
+            EventEmitter.publish('classGroupChanged', this.classId)
+          })
         }
       >
         <Icon name="delete" color="red" />
@@ -286,7 +289,7 @@ class ClassPage extends Component {
       this.user.id
     )
     this.fetchCurrentClass()
-    EventEmitter.publish('newGroupCreated', this.classId)
+    EventEmitter.publish('classGroupChanged', this.classId)
     await this.handleSelectGroup(groupData)
   }
 
