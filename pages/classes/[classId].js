@@ -270,7 +270,7 @@ class ClassPage extends Component {
         onClick={() =>
           api.deleteGroup(this.classId, group.id).then(() => {
             this.fetchCurrentClass()
-            EventEmitter.publish('classGroupChanged', this.classId)
+            EventEmitter.publish('classGroupSetChanged', this.classId)
           })
         }
       >
@@ -287,7 +287,7 @@ class ClassPage extends Component {
       this.user.id
     )
     this.fetchCurrentClass()
-    EventEmitter.publish('classGroupChanged', this.classId)
+    EventEmitter.publish('classGroupSetChanged', this.classId)
     await this.handleSelectGroup(groupData)
   }
 
