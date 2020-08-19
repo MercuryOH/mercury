@@ -268,9 +268,10 @@ class ClassPage extends Component {
           backgroundColor: 'transparent',
         }}
         onClick={() =>
-          api
-            .deleteGroup(this.classId, group.id)
-            .then(() => this.fetchCurrentClass())
+          api.deleteGroup(this.classId, group.id).then(() => {
+            this.fetchCurrentClass()
+            EventEmitter.publish('classGroupChanged', this.classId)
+          })
         }
       >
         <Icon name="delete" color="red" />
@@ -286,7 +287,7 @@ class ClassPage extends Component {
       this.user.id
     )
     this.fetchCurrentClass()
-    EventEmitter.publish('newGroupCreated', this.classId)
+    EventEmitter.publish('classGroupChanged', this.classId)
     await this.handleSelectGroup(groupData)
   }
 

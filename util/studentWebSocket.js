@@ -90,10 +90,10 @@ export default class StudentWebSocketClient {
       )
     })
 
-    EventEmitter.subscribe('newGroupCreated', (classId) => {
+    EventEmitter.subscribe('classGroupChanged', (classId) => {
       this.connection.send(
         this.prepareMessage({
-          msgType: 'newGroupCreated',
+          msgType: 'classGroupChanged',
           msg: classId,
         })
       )
