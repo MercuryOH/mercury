@@ -66,10 +66,10 @@ export default class TAWebSocketClient {
     })
 
     EventEmitter.subscribe(
-      'sendOutInviteTA',
+      'sendOutInvite',
       ({ sender, recepientIds, group }) => {
         recepientIds.forEach((id) => {
-          this.sendOutInviteTA(sender, id, group)
+          this.sendOutInvite(sender, id, group)
         })
       }
     )
@@ -191,10 +191,10 @@ export default class TAWebSocketClient {
     )
   }
 
-  sendOutInviteTA(sender, recepientId, group) {
+  sendOutInvite(sender, recepientId, group) {
     this.connection.send(
       this.prepareMessage({
-        msgType: 'sendOutInviteTA',
+        msgType: 'sendOutInvite',
         msg: JSON.stringify({ sender, recepientId, group }),
       })
     )

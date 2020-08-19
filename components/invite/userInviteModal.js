@@ -6,7 +6,7 @@ import SearchBar from './searchBar'
 
 const initialState = { isLoading: false, results: [], value: '' }
 
-class StudentInviteModal extends Component {
+class UserInviteModal extends Component {
   constructor(props) {
     super(props)
 
@@ -60,14 +60,11 @@ class StudentInviteModal extends Component {
 
     if (_.isEmpty(this.state.selectedUser)) return
 
-    EventEmitter.publish(
-      this.state.me.role === 'Student' ? 'sendOutInvite' : 'sendOutInviteTA',
-      {
-        sender: this.state.me,
-        recepientIds: _.map(this.state.selectedUser, 'id'),
-        group: this.state.currentGroup,
-      }
-    )
+    EventEmitter.publish('sendOutInvite', {
+      sender: this.state.me,
+      recepientIds: _.map(this.state.selectedUser, 'id'),
+      group: this.state.currentGroup,
+    })
 
     this.setState({ value: '', selectedUser: [], modalState: false })
   }
@@ -199,4 +196,4 @@ class StudentInviteModal extends Component {
   }
 }
 
-export default StudentInviteModal
+export default UserInviteModal

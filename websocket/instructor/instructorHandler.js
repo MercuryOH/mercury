@@ -104,7 +104,7 @@ const handleInstructorMessage = (ws, message) => {
       )
       break
 
-    case 'sendOutInviteTA':
+    case 'sendOutInvite':
       const { sender, recepientId, group: currGroup } = JSON.parse(msg)
       const recepientws = webSocketConnectionManager.getSocketOfUserID(
         recepientId

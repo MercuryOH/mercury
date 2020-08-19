@@ -7,7 +7,7 @@ import { AuthRequired } from '../../components/authProvider'
 import Queue from '../../components/queue/queue'
 import * as api from '../../util/mercuryService'
 import CreateGroupModal from '../../components/createGroupModal'
-import StudentInviteModal from '../../components/invite/studentInviteModal'
+import UserInviteModal from '../../components/invite/userInviteModal'
 import { EventEmitter } from '../../components/util/EventEmitter'
 import FeedbackModal from '../../components/feedbackModal'
 import StudentWebSocketClient from '../../util/studentWebSocket'
@@ -543,7 +543,7 @@ class ClassPage extends Component {
             onLeave={this.leaveGroup}
           />
         )}
-        <StudentInviteModal />
+        <UserInviteModal />
         <FeedbackModal />
         <ReceiveInviteModal onJoin={this.handleSelectGroup} />
         <GroupJoinRequestModal />
