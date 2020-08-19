@@ -63,7 +63,6 @@ class ClassPage extends Component {
         this.setState({ currentGroup: group })
         EventEmitter.publish('userJoinGroup', group.id)
         EventEmitter.publish('currentGroupChange', group)
-        EventEmitter.publish('userJoinGroup', group.id)
       })
       .catch(console.error)
   }
