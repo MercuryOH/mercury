@@ -1,18 +1,17 @@
 import React, { Component } from 'react'
 import ScreenPublisher from './screenPublisher'
 import { OTPublisher } from 'opentok-react'
-import { Button } from 'semantic-ui-react'
 import { EventEmitter } from './util/EventEmitter'
 
 export default class Publisher extends Component {
   constructor(props) {
-    super(props);
+    super(props)
 
     this.state = {
       error: null,
       audio: true,
       video: true,
-    };
+    }
     this.defineEventEmitterCallbacks()
   }
 
@@ -28,7 +27,7 @@ export default class Publisher extends Component {
   }
 
   onError = (err) => {
-    this.setState({ error: `Failed to publish: ${err.message}` });
+    this.setState({ error: `Failed to publish: ${err.message}` })
   }
 
   render() {
@@ -41,21 +40,22 @@ export default class Publisher extends Component {
             maxWidth: '13.57vw',
             maxHeight: '8vh',
             publishVideo: this.state.video,
-            marginBottom: '5px'
+            marginBottom: '5px',
           }}
-          session = {this.props.session}
+          session={this.props.session}
           onError={this.onError}
         />
         <ScreenPublisher
-        style = {{
-          width: '13.62vw',
-          maxWidth: '13.62vw',
-          height: '500px',
-          maxHeight: '16vh',
-          marginBottom: '5px'
-        }}
-        session = {this.props.session}/>
+          style={{
+            width: '13.62vw',
+            maxWidth: '13.62vw',
+            height: '500px',
+            maxHeight: '16vh',
+            marginBottom: '5px',
+          }}
+          session={this.props.session}
+        />
       </div>
-    );
+    )
   }
 }

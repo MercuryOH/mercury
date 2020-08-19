@@ -533,6 +533,7 @@ class ClassPage extends Component {
             sessionId={this.state.vonageCred.sessionId}
             token={this.state.vonageCred.token}
             onLeave={this.leaveGroup}
+            currGroup={this.state.currentGroup}
           />
         )}
         <StudentInviteModal />
