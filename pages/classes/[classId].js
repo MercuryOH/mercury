@@ -57,7 +57,14 @@ class ClassPage extends Component {
       .then(({ token }) => {
         if (this.state.currentGroup.id != '') {
           //the user is currently in a call, leave the call first
-          this.leaveGroup()
+
+          if (group.type === 'office') {
+            // this case only happens when the user is leaving a private group for the TA office
+            // do not trigger the callOver event in this case
+            this.leaveGroupForTAOffice()
+          } else {
+            this.leaveGroup()
+          }
         }
         this.setState({ vonageCred: { sessionId: group.sessionId, token } })
         this.setState({ currentGroup: group })
@@ -65,6 +72,16 @@ class ClassPage extends Component {
         EventEmitter.publish('currentGroupChange', group)
       })
       .catch(console.error)
+  }
+
+  leaveGroupForTAOffice = () => {
+    EventEmitter.publish('userLeaveGroup', this.state.currentGroup)
+    this.setState({
+      vonageCred: null,
+      currentGroup: { id: '', name: '' },
+      withTa: false,
+    })
+    EventEmitter.publish('currentGroupChange', { id: '', name: '' })
   }
 
   leaveGroup = () => {
@@ -97,6 +114,10 @@ class ClassPage extends Component {
 
     EventEmitter.subscribe('fetchGroups', () => {
       this.fetchCurrentClass()
+    })
+
+    EventEmitter.subscribe('createNotification', (msg) => {
+      NotificationManager.info(msg)
     })
   }
 
@@ -270,7 +291,7 @@ class ClassPage extends Component {
         onClick={() =>
           api.deleteGroup(this.classId, group.id).then(() => {
             this.fetchCurrentClass()
-            EventEmitter.publish('classGroupChanged', this.classId)
+            EventEmitter.publish('classGroupSetChanged', this.classId)
           })
         }
       >
@@ -287,7 +308,7 @@ class ClassPage extends Component {
       this.user.id
     )
     this.fetchCurrentClass()
-    EventEmitter.publish('classGroupChanged', this.classId)
+    EventEmitter.publish('classGroupSetChanged', this.classId)
     await this.handleSelectGroup(groupData)
   }
 
@@ -516,6 +537,7 @@ class ClassPage extends Component {
             sessionId={this.state.vonageCred.sessionId}
             token={this.state.vonageCred.token}
             onLeave={this.leaveGroup}
+            currGroup={this.state.currentGroup}
           />
         )}
         <StudentInviteModal />

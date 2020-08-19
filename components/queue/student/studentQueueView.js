@@ -3,7 +3,6 @@ import PropTypes from 'prop-types'
 import styled from 'styled-components'
 import YourTurnModal from './yourTurnModal'
 import { Label, Button } from 'semantic-ui-react'
-import { NotificationContainer, NotificationManager } from 'react-notifications'
 import { EventEmitter } from '../../util/EventEmitter'
 
 const QueueDiv = styled.div`
@@ -71,22 +70,19 @@ class StudentQueueView extends Component {
     EventEmitter.subscribe('studentJoinTA', (TAName) => {
       const { office, onJoin, me } = this.state
       EventEmitter.publish('signalJoinTA', { group: office, TAName, me })
-      this.setState({ inQueue: false, inCallWithTA: true })
       onJoin(office)
+      this.setState({ inQueue: false, inCallWithTA: true })
     })
 
     EventEmitter.subscribe('studentInviteTA', (TAName) => {
-      const { onJoin, currentGroup, me } = this.state
+      const { currentGroup, me } = this.state
       EventEmitter.publish('signalJoinTA', { group: currentGroup, TAName, me })
       this.setState({ inQueue: false, inCallWithTA: true })
-      onJoin(currentGroup)
     })
 
     EventEmitter.subscribe('studentDeclineTA', (TAName) => {
-      const { onJoin, currentGroup } = this.state
       EventEmitter.publish('signalDeclineTA', TAName)
       this.setState({ inQueue: false })
-      onJoin(currentGroup)
     })
 
     EventEmitter.subscribe('currentGroupChange', (currentGroup) => {
@@ -123,7 +119,7 @@ class StudentQueueView extends Component {
   }
 
   createTimeoutNotification() {
-    NotificationManager.info('Your Invitation Has Expired')
+    EventEmitter.publish('createNotification', 'Your Invitation Has Expired')
   }
 
   isStudentDisplayed() {
@@ -300,8 +296,6 @@ class StudentQueueView extends Component {
           {queueLabels}
         </QueueDiv>
         {this.getButtonToDisplay()}
-
-        <NotificationContainer />
       </QueueDiv>
     )
   }

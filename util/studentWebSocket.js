@@ -90,10 +90,10 @@ export default class StudentWebSocketClient {
       )
     })
 
-    EventEmitter.subscribe('classGroupChanged', (classId) => {
+    EventEmitter.subscribe('classGroupSetChanged', (classId) => {
       this.connection.send(
         this.prepareMessage({
-          msgType: 'classGroupChanged',
+          msgType: 'classGroupSetChanged',
           msg: classId,
         })
       )
@@ -103,7 +103,7 @@ export default class StudentWebSocketClient {
       this.connection.send(
         this.prepareMessage({
           msgType: 'userLeaveGroup',
-          msg: JSON.stringify(group),
+          msg: group,
         })
       )
     })

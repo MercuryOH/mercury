@@ -37,6 +37,24 @@ export default class TAWebSocketClient {
     EventEmitter.subscribe('signalCallOver', () => {
       this.signalCallOver()
     })
+
+    EventEmitter.subscribe('userLeaveGroup', (group) => {
+      this.connection.send(
+        this.prepareMessage({
+          msgType: 'userLeaveGroup',
+          msg: group,
+        })
+      )
+    })
+
+    EventEmitter.subscribe('userJoinGroup', (groupId) => {
+      this.connection.send(
+        this.prepareMessage({
+          msgType: 'userJoinGroup',
+          msg: groupId,
+        })
+      )
+    })
   }
 
   processConnectionOpen() {

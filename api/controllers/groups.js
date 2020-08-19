@@ -12,6 +12,10 @@ const createGroupSchema = joi.object({
   userId: joi.number().required(),
 })
 
+const inviteSchema = joi.object({
+  email: joi.string().email().required(),
+})
+
 router.post('/', middleware.authRequired, async (req, res) => {
   const { value, error } = createGroupSchema.validate(req.body)
   const { userId: UserId } = req.body
@@ -53,16 +57,14 @@ router.post('/:groupId/token', middleware.authRequired, async (req, res) => {
   return res.json({ token })
 })
 
-router.get('/', middleware.authRequired, async (req, res) => {
-  const { classId: ClassId } = req.params
-
-  const groups = await models.Group.findAll({ where: { ClassId } })
-
-  return res.json(groups)
-})
-
-router.get('/:groupId', middleware.authRequired, async (req, res) => {
+router.post('/:groupId/invite', middleware.authRequired, async (req, res) => {
+  const { value, error } = inviteSchema.validate(req.body)
   const { groupId } = req.params
+
+  if (error) {
+    console.log(res.status(400).json({ error }))
+    return res.status(400).json({ error })
+  }
 
   const group = await models.Group.findByPk(groupId)
 
@@ -70,7 +72,93 @@ router.get('/:groupId', middleware.authRequired, async (req, res) => {
     return res.status(404).json({ error: 'Group not found' })
   }
 
-  return res.json(group)
+  if (group.UserId !== req.user.id) {
+    return res
+      .status(400)
+      .json({ error: 'You cannot invite people to this group' })
+  }
+
+  if (value.email.toLowerCase() === req.user.email.toLowerCase()) {
+    return res.status(400).json({ error: 'Cannot invite yourself to group' })
+  }
+
+  const user = await models.User.findOne({ where: { email: value.email } })
+
+  if (!user) {
+    return res.status(400).json({ error: 'User not found' })
+  }
+
+  const userAlreadyInGroup = await models.GroupUser.findOne({
+    where: { GroupId: group.id, UserId: user.id },
+  })
+
+  if (userAlreadyInGroup) {
+    return res.status(400).json({ error: 'User already invited to group' })
+  }
+
+  await models.GroupUser.create({
+    GroupId: group.id,
+    UserId: user.id,
+  })
+
+  return res.status(204).send()
+})
+
+router.get('/', middleware.authRequired, async (req, res) => {
+  const { classId: ClassId } = req.params
+
+  const groups = await models.Group.findAll({ where: { ClassId } })
+  const groupDtos = []
+
+  for (group of groups) {
+    groupDtos.push({
+      id: group.id,
+      name: group.name,
+      sessionId: group.sessionId,
+      ClassId: group.ClassId,
+      UserId: group.UserId,
+      users: (await group.getUsers()).map((u) => ({
+        id: u.id,
+        firstName: u.firstName,
+        lastName: u.lastName,
+        email: u.email,
+        role: u.GroupUser.role,
+      })),
+    })
+  }
+
+  return res.json(groupDtos)
+})
+
+router.get('/:groupId', middleware.authRequired, async (req, res) => {
+  const { groupId } = req.params
+
+  let group = await models.Group.findByPk(groupId, {
+    include: [models.User],
+  })
+
+  if (!group) {
+    return res.status(404).json({ error: 'Group not found' })
+  }
+
+  const users = (await group.getUsers()).map((u) => ({
+    id: u.id,
+    firstName: u.firstName,
+    lastName: u.lastName,
+    email: u.email,
+    role: u.GroupUser.role,
+  }))
+
+  group.users = users
+
+  return res.json({
+    id: group.id,
+    name: group.name,
+    sessionId: group.sessionId,
+    ClassId: group.ClassId,
+    UserId: group.UserId,
+    users,
+  })
 })
 
 router.delete('/:groupId', middleware.authRequired, async (req, res) => {
