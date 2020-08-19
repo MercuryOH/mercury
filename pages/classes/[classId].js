@@ -18,8 +18,6 @@ import { NotificationContainer, NotificationManager } from 'react-notifications'
 import GroupJoinRequestModal from '../../components/invite/groupJoinRequestModal'
 import WaitingForRequestApprovalModal from '../../components/invite/WaitingForRequestApprovalModal'
 
-const { groupManager } = require('../../websocket/util/groupmanager')
-
 const ScreenContainer = dynamic(
   () => import('../../components/screenContainer'),
   {
@@ -55,7 +53,10 @@ class ClassPage extends Component {
   }
 
   joinGroup(group) {
-    if (this.state.currentGroup.UserId === this.user.id && this.state.currentGroup.type === 'group') {
+    if (
+      this.state.currentGroup.UserId === this.user.id &&
+      this.state.currentGroup.type === 'group'
+    ) {
       console.log('1')
       EventEmitter.publish('leaderNeedsChange', group)
       EventEmitter.publish('openGroupLeaderModal', true)
@@ -71,24 +72,23 @@ class ClassPage extends Component {
           EventEmitter.publish('currentGroupChange', group)
         })
         .catch(console.error)
-    }
-    else {
+    } else {
       console.log(`${this.state.currentGroup.UserId}`)
       console.log(`${this.user.id}`)
-    api
-      .postGroupToken(this.classId, group.id)
-      .then(({ token }) => {
-        if (this.state.currentGroup.id != '') {
-          //the user is currently in a call, leave the call first
-          this.leaveGroupNormal()
-        }
-        this.setState({
-          vonageCred: { sessionId: group.sessionId, token },
-          currentGroup: group,
+      api
+        .postGroupToken(this.classId, group.id)
+        .then(({ token }) => {
+          if (this.state.currentGroup.id != '') {
+            //the user is currently in a call, leave the call first
+            this.leaveGroupNormal()
+          }
+          this.setState({
+            vonageCred: { sessionId: group.sessionId, token },
+            currentGroup: group,
+          })
+          EventEmitter.publish('currentGroupChange', group)
         })
-        EventEmitter.publish('currentGroupChange', group)
-      })
-      .catch(console.error)
+        .catch(console.error)
     }
   }
 
@@ -103,7 +103,10 @@ class ClassPage extends Component {
   }
 
   leaveGroup = () => {
-    if (this.state.currentGroup.UserId === this.user.id && this.state.currentGroup.type === 'group') {
+    if (
+      this.state.currentGroup.UserId === this.user.id &&
+      this.state.currentGroup.type === 'group'
+    ) {
       this.setState({
         vonageCred: null,
         currentGroup: { id: '', name: '' },
@@ -111,8 +114,7 @@ class ClassPage extends Component {
       })
       EventEmitter.publish('currentGroupChange', { id: '', name: '' })
       EventEmitter.publish('callOver', this.classId)
-    }
-    else {
+    } else {
       this.setState({
         vonageCred: null,
         currentGroup: { id: '', name: '' },
