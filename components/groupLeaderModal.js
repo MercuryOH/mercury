@@ -200,7 +200,7 @@ class GroupLeaderModal extends Component {
               <Button
                 color="teal"
                 style={{ width: '50%', fontSize: '1vw' }}
-                onClick={this.handleInvite}
+                onClick={this.handleInvite.bind(this)}
               >
                 Change Group Leader
               </Button>
