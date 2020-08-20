@@ -6,7 +6,7 @@ import SearchBar from './searchBar'
 
 const initialState = { isLoading: false, results: [], value: '' }
 
-class StudentInviteModal extends Component {
+class UserInviteModal extends Component {
   constructor(props) {
     super(props)
 
@@ -33,9 +33,14 @@ class StudentInviteModal extends Component {
       this.setState({ me })
     })
 
-    EventEmitter.subscribe('allOtherStudentsInClass', (users) => {
-      this.setState({ allUsers: users })
-    })
+    EventEmitter.subscribe(
+      this.state.me.role === 'Student'
+        ? 'allOtherStudentsInClass'
+        : 'allOtherTAsInClass',
+      (users) => {
+        this.setState({ allUsers: users })
+      }
+    )
 
     EventEmitter.subscribe('currentGroupChange', (currentGroup) => {
       this.setState({ currentGroup })
@@ -54,7 +59,7 @@ class StudentInviteModal extends Component {
     EventEmitter.publish('openInviteModal', false)
 
     if (_.isEmpty(this.state.selectedUser)) return
-    console.log(_.map(this.state.selectedUser, 'id'))
+
     EventEmitter.publish('sendOutInvite', {
       sender: this.state.me,
       recepientIds: _.map(this.state.selectedUser, 'id'),
@@ -101,28 +106,6 @@ class StudentInviteModal extends Component {
   }
 
   getSelectedLabels() {
-    // if (_.isEmpty(this.state.selectedUser)) {
-    //   return <></>
-    // }
-
-    // return (
-    //   <div
-    //     style={{
-    //       textAlign: 'left',
-    //       paddingLeft: 80,
-    //       paddingRight: 80,
-    //     }}
-    //   >
-    //     <Label>
-    //       {this.state.selectedUser.title}
-    //       <Icon
-    //         name="delete"
-    //         onClick={() => this.removeSelected(this.state.selectedUser)}
-    //       />
-    //     </Label>
-    //   </div>
-    // )
-
     if (_.isEmpty(this.state.selectedUser)) {
       return <></>
     }
@@ -148,7 +131,6 @@ class StudentInviteModal extends Component {
   removeSelected = (user) => {
     this.setState({
       selectedUser: this.state.selectedUser.filter((u) => u.id !== user.id),
-      // selectedUser: {},
     })
   }
 
@@ -214,4 +196,4 @@ class StudentInviteModal extends Component {
   }
 }
 
-export default StudentInviteModal
+export default UserInviteModal

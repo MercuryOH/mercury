@@ -55,6 +55,24 @@ export default class TAWebSocketClient {
         })
       )
     })
+
+    EventEmitter.subscribe('classGroupSetChanged', (classId) => {
+      this.connection.send(
+        this.prepareMessage({
+          msgType: 'classGroupSetChanged',
+          msg: classId,
+        })
+      )
+    })
+
+    EventEmitter.subscribe(
+      'sendOutInvite',
+      ({ sender, recepientIds, group }) => {
+        recepientIds.forEach((id) => {
+          this.sendOutInvite(sender, id, group)
+        })
+      }
+    )
   }
 
   processConnectionOpen() {
@@ -102,6 +120,10 @@ export default class TAWebSocketClient {
     EventEmitter.publish('fetchGroups')
   }
 
+  activateReceiveInviteModal(msg) {
+    EventEmitter.publish('activateReceiveInviteModal', msg)
+  }
+
   processConnectionMessage(e) {
     const { msgType, msg } = JSON.parse(e.data)
 
@@ -141,6 +163,11 @@ export default class TAWebSocketClient {
         this.notifyFetchGroups()
         break
 
+      case 'receiveInviteTA': // in this case, another TA invites you to their group
+        // msg - sender, group
+        this.activateReceiveInviteModal(msg)
+        break
+
       default:
         throw new Error(`Message ${msg} is incorrectly formatted`)
     }
@@ -160,6 +187,15 @@ export default class TAWebSocketClient {
       this.prepareMessage({
         msgType: 'callOver',
         msg: 'callOver',
+      })
+    )
+  }
+
+  sendOutInvite(sender, recepientId, group) {
+    this.connection.send(
+      this.prepareMessage({
+        msgType: 'sendOutInvite',
+        msg: JSON.stringify({ sender, recepientId, group }),
       })
     )
   }
