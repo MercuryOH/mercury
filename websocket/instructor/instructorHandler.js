@@ -94,6 +94,30 @@ const handleInstructorMessage = (ws, message) => {
       groupManager.addSocketToGroup(msg, ws)
       break
 
+    case 'classGroupSetChanged':
+      webSocketConnectionManager.broadcast(
+        courseId,
+        prepareMessage({
+          msgType: 'fetchGroups',
+          msg: 'fetchGroups',
+        })
+      )
+      break
+
+    case 'sendOutInvite':
+      const { sender, recepientId, group: currGroup } = JSON.parse(msg)
+      const recepientws = webSocketConnectionManager.getSocketOfUserID(
+        recepientId
+      )
+
+      recepientws.send(
+        prepareMessage({
+          msgType: 'receiveInviteTA',
+          msg: JSON.stringify({ sender, currGroup }),
+        })
+      )
+      break
+
     default:
       throw new Error(
         `Message Type ${msgType} is not recognized for instructor`
