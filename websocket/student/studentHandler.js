@@ -215,6 +215,16 @@ const handleStudentMessage = async (ws, message) => {
       groupManager.addSocketToGroup(msg, ws)
       break
 
+    case 'startLeaderAppointmentProcess':
+      // msg - the current group and the userID (i.e. the current leader)
+      ws.send(
+        prepareMessage({
+          msgType: 'retrieveAllLeaderCandidates',
+          msg: groupManager.retrieveAllLeaderCandidates(msg),
+        })
+      )
+      break
+
     default:
       throw new Error(`Message Type ${msgType} is not recognized for student`)
   }

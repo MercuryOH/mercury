@@ -116,6 +116,15 @@ export default class StudentWebSocketClient {
         })
       )
     })
+
+    EventEmitter.subscribe('startLeaderAppointmentProcess', (data) => {
+      this.connection.send(
+        this.prepareMessage({
+          msgType: 'startLeaderAppointmentProcess',
+          msg: data,
+        })
+      )
+    })
   }
 
   processConnectionOpen() {
@@ -167,6 +176,11 @@ export default class StudentWebSocketClient {
     EventEmitter.publish('fetchGroups')
   }
 
+  activateGroupLeaderModal(candidates) {
+    console.log(candidates)
+    EventEmitter.publish('activateGroupLeaderModal', candidates)
+  }
+
   processConnectionMessage(e) {
     const { msgType, msg } = JSON.parse(e.data)
 
@@ -208,6 +222,10 @@ export default class StudentWebSocketClient {
 
       case 'fetchGroups':
         this.notifyFetchGroups()
+        break
+
+      case 'retrieveAllLeaderCandidates':
+        this.activateGroupLeaderModal(msg)
         break
 
       default:

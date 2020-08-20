@@ -43,6 +43,24 @@ class GroupManager {
 
     return 0
   }
+
+  retrieveAllLeaderCandidates({ currGroupId, userId }) {
+    if (this.groupToSockets.has(currGroupId)) {
+      const sockets = this.groupToSockets.get(currGroupId)
+
+      let usersToReturn = []
+
+      sockets.forEach((wsObject) => {
+        if (wsObject.userId !== userId) {
+          usersToReturn.push(wsObject.userId)
+        }
+      })
+
+      return usersToReturn
+    }
+
+    return []
+  }
 }
 
 module.exports = {

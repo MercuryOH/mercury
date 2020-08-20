@@ -168,6 +168,12 @@ class ScreenContainer extends React.Component {
     ) {
       return (
         <Button
+          onClick={() =>
+            EventEmitter.publish('startLeaderAppointmentProcess', {
+              currGroupId: this.state.currGroup.id,
+              userId: this.state.user.id, // the current leader
+            })
+          }
           icon="chess king"
           style={{ fontSize: '.8vw', display: 'inline-flex' }}
           content="Appoint Leader"

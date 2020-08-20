@@ -73,6 +73,15 @@ export default class TAWebSocketClient {
         })
       }
     )
+
+    EventEmitter.subscribe('startLeaderAppointmentProcess', (data) => {
+      this.connection.send(
+        this.prepareMessage({
+          msgType: 'startLeaderAppointmentProcess',
+          msg: data,
+        })
+      )
+    })
   }
 
   processConnectionOpen() {
@@ -124,6 +133,10 @@ export default class TAWebSocketClient {
     EventEmitter.publish('activateReceiveInviteModal', msg)
   }
 
+  activateGroupLeaderModal(candidates) {
+    EventEmitter.publish('activateGroupLeaderModal', candidates)
+  }
+
   processConnectionMessage(e) {
     const { msgType, msg } = JSON.parse(e.data)
 
@@ -166,6 +179,10 @@ export default class TAWebSocketClient {
       case 'receiveInviteTA': // in this case, another TA invites you to their group
         // msg - sender, group
         this.activateReceiveInviteModal(msg)
+        break
+
+      case 'retrieveAllLeaderCandidates':
+        this.activateGroupLeaderModal(msg)
         break
 
       default:
