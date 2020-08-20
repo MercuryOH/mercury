@@ -538,6 +538,7 @@ class ClassPage extends Component {
             token={this.state.vonageCred.token}
             onLeave={this.leaveGroup}
             currGroup={this.state.currentGroup}
+            name = {this.user.firstName + " " + this.user.lastName}
           />
         )}
         <StudentInviteModal />
