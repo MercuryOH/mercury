@@ -24,11 +24,11 @@ class GroupLeaderModal extends Component {
 
   defineEventEmitterCallbacks() {
     EventEmitter.subscribe('activateGroupLeaderModal', (candidates) => {
-      this.setState({modalState: true, allUsers: candidates})
+      this.setState({ modalState: true, allUsers: candidates })
       /** TODO:
        *
      Please change state to display the modal and please use the list of candidate objects as things to search for
-     * The candidate objects are { userId, fullName, email }
+     * The candidate objects are { userId, fullName }
      Please also store the userID's of each candidate object for when a leader is appointed
      */
 
