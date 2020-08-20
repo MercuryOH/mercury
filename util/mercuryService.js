@@ -163,3 +163,21 @@ export async function getGroupByID(classId, groupId) {
     return null
   }
 }
+
+export async function postJoinGroup(classId, groupId, email) {
+  try {
+    const { data } = await axios.post(
+      `/api/classes/${classId}/groups/${groupId}/join`,
+      { email },
+      {
+        headers: {
+          authorization: token,
+        },
+      }
+    )
+
+    return data
+  } catch (e) {
+    return null
+  }
+}

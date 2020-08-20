@@ -57,9 +57,9 @@ router.post('/:groupId/token', middleware.authRequired, async (req, res) => {
   return res.json({ token })
 })
 
-router.post('/:groupId/invite', middleware.authRequired, async (req, res) => {
+router.post('/:groupId/join', middleware.authRequired, async (req, res) => {
   const { value, error } = inviteSchema.validate(req.body)
-  const { groupId } = req.params
+  const { classId, groupId } = req.params
 
   if (error) {
     console.log(res.status(400).json({ error }))
@@ -72,18 +72,21 @@ router.post('/:groupId/invite', middleware.authRequired, async (req, res) => {
     return res.status(404).json({ error: 'Group not found' })
   }
 
-  if (group.UserId !== req.user.id) {
-    return res
-      .status(400)
-      .json({ error: 'You cannot invite people to this group' })
-  }
+  // if (group.UserId !== req.user.id) {
+  //   return res
+  //     .status(400)
+  //     .json({ error: 'You cannot invite people to this group' })
+  // }
 
-  if (value.email.toLowerCase() === req.user.email.toLowerCase()) {
-    return res.status(400).json({ error: 'Cannot invite yourself to group' })
-  }
+  // if (value.email.toLowerCase() === req.user.email.toLowerCase()) {
+  //   return res.status(400).json({ error: 'Cannot invite yourself to group' })
+  // }
 
   const user = await models.User.findOne({ where: { email: value.email } })
-
+  const classUser = await models.ClassUser.findOne({
+    where: { ClassId: classId, UserId: user.id },
+  })
+  
   if (!user) {
     return res.status(400).json({ error: 'User not found' })
   }
@@ -99,6 +102,7 @@ router.post('/:groupId/invite', middleware.authRequired, async (req, res) => {
   await models.GroupUser.create({
     GroupId: group.id,
     UserId: user.id,
+    role: classUser.role,
   })
 
   return res.status(204).send()

@@ -30,6 +30,7 @@ router.get('/:classId', middleware.authRequired, async (req, res) => {
       type: g.type,
       sessionId: g.sessionId,
       userId: g.UserId,
+      users: g.users,
     })),
     users: currentClass.Users.map((u) => ({
       id: u.id,

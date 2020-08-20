@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { Modal, Button, Search, Label, Icon } from 'semantic-ui-react'
 import _ from 'lodash'
 import { EventEmitter } from '../util/EventEmitter'
-import SearchBar from './searchBar'
+import * as api from '../../util/mercuryService'
 
 const initialState = { isLoading: false, results: [], value: '' }
 
@@ -157,7 +157,11 @@ class UserInviteModal extends Component {
             >
               <Search
                 fluid
-                placeholder="Invite student..."
+                placeholder={
+                  this.state.me.role === 'Student'
+                    ? 'Invite student...'
+                    : 'Invite TA...'
+                }
                 input={{ fluid: true }}
                 loading={this.state.isLoading}
                 onResultSelect={this.handleResultSelect}
@@ -168,7 +172,6 @@ class UserInviteModal extends Component {
                 value={this.state.value}
               />
             </div>
-            {/* <SearchBar /> */}
 
             {this.getSelectedLabels()}
 

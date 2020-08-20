@@ -71,6 +71,8 @@ class ClassPage extends Component {
         EventEmitter.publish('userJoinGroup', group.id)
         EventEmitter.publish('currentGroupChange', group)
       })
+
+      .then(() => api.postJoinGroup(this.classId, group.id, this.user.email))
       .catch(console.error)
   }
 
