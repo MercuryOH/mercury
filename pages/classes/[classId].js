@@ -552,6 +552,7 @@ class ClassPage extends Component {
             onLeave={this.leaveGroup}
             currGroup={this.state.currentGroup}
             user={this.user}
+            name = {this.user.firstName + " " + this.user.lastName}
           />
         )}
         <UserInviteModal />

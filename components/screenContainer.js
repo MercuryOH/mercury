@@ -214,6 +214,7 @@ class ScreenContainer extends React.Component {
                 marginBottom: '5px',
               }}
               session={this.sessionHelper.session}
+              name = {this.props.name}
             />
             {this.state.streams.map((stream) => (
               <>

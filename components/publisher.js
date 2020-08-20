@@ -41,6 +41,7 @@ export default class Publisher extends Component {
             maxHeight: '8vh',
             publishVideo: this.state.video,
             marginBottom: '5px',
+            name: this.props.name,
           }}
           session={this.props.session}
           onError={this.onError}
@@ -54,6 +55,7 @@ export default class Publisher extends Component {
             marginBottom: '5px',
           }}
           session={this.props.session}
+          name = {this.props.name + "'s Screen"}
         />
       </div>
     )
