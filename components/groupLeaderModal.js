@@ -16,7 +16,7 @@ class GroupLeaderModal extends Component {
       results: [],
       value: '',
       allUsers: [],
-      selectedUser: [],
+      selectedUser: {},
     }
 
     this.defineEventEmitterCallbacks()
@@ -24,10 +24,11 @@ class GroupLeaderModal extends Component {
 
   defineEventEmitterCallbacks() {
     EventEmitter.subscribe('activateGroupLeaderModal', (candidates) => {
+      this.setState({modalState: true, allUsers: candidates})
       /** TODO:
-       * 
+       *
      Please change state to display the modal and please use the list of candidate objects as things to search for
-     * The candidate objects are { userId, fullName }
+     * The candidate objects are { userId, fullName, email }
      Please also store the userID's of each candidate object for when a leader is appointed
      */
 
@@ -35,46 +36,39 @@ class GroupLeaderModal extends Component {
     })
   }
 
-  formatAsResults = (user) => {
+  formatAsResults = (candidate) => {
     return {
-      title: user.firstName + ' ' + user.lastName,
-      id: user.id,
-      description: user.email,
+      title: candidate.fullName,
+      id: candidate.userId,
     }
   }
 
   handleInvite = () => {
-    EventEmitter.publish('openGroupLeaderModal', false)
-
     /**
      * TODO: Please publish an event called 'sendLeaderAppointmentNotification' with the data including the groupId from
      * this.state.currGroup and the userId of the selected user
      * Also, it looks like this code is not relevant to leader appointment but rather invites FYI
      */
 
-    if (_.isEmpty(this.state.selectedUser)) return
-    console.log(_.map(this.state.selectedUser, 'id'))
-    EventEmitter.publish('sendOutInvite', {
-      sender: this.state.me,
-      recepientIds: _.map(this.state.selectedUser, 'id'),
-      group: this.state.currentGroup,
+    if (this.state.selectedUser === {}) return
+
+    console.log(this.state.selectedUser)
+    EventEmitter.publish('sendLeaderAppointmentNotification', {
+      groupId: this.state.currGroup.id,
+      userId: this.state.selectedUser.id,
     })
 
-    this.setState({ value: '', selectedUser: [], modalState: false })
+    this.setState({ value: '', selectedUser: {}, modalState: false })
   }
 
   handleClose = () => {
-    this.setState({ value: '', selectedUser: [], modalState: false })
+    this.setState({ value: '', selectedUser: {}, modalState: false })
   }
 
   handleResultSelect = (e, { result }) => {
-    const filtered = this.state.selectedUser.filter(
-      (user) => user.id !== result.id
-    )
-    filtered.push(result)
     this.setState({
       value: '',
-      selectedUser: filtered,
+      selectedUser: result,
     })
   }
 
@@ -99,29 +93,7 @@ class GroupLeaderModal extends Component {
   }
 
   getSelectedLabels() {
-    // if (_.isEmpty(this.state.selectedUser)) {
-    //   return <></>
-    // }
-
-    // return (
-    //   <div
-    //     style={{
-    //       textAlign: 'left',
-    //       paddingLeft: 80,
-    //       paddingRight: 80,
-    //     }}
-    //   >
-    //     <Label>
-    //       {this.state.selectedUser.title}
-    //       <Icon
-    //         name="delete"
-    //         onClick={() => this.removeSelected(this.state.selectedUser)}
-    //       />
-    //     </Label>
-    //   </div>
-    // )
-
-    if (_.isEmpty(this.state.selectedUser)) {
+    if (this.state.selectedUser === {}) {
       return <></>
     }
 
@@ -133,20 +105,17 @@ class GroupLeaderModal extends Component {
           paddingRight: 80,
         }}
       >
-        {this.state.selectedUser.map((user) => (
-          <Label>
-            {user.title}
-            <Icon name="delete" onClick={() => this.removeSelected(user)} />
-          </Label>
-        ))}
+        <Label>
+          {this.state.selectedUser.title}
+          <Icon name="delete" onClick={() => this.removeSelected()} />
+        </Label>
       </div>
     )
   }
 
-  removeSelected = (user) => {
+  removeSelected = () => {
     this.setState({
-      selectedUser: this.state.selectedUser.filter((u) => u.id !== user.id),
-      // selectedUser: {},
+      selectedUser: {},
     })
   }
 
@@ -184,7 +153,6 @@ class GroupLeaderModal extends Component {
                 value={this.state.value}
               />
             </div>
-            {/* <SearchBar /> */}
 
             {this.getSelectedLabels()}
 
