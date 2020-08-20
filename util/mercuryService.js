@@ -181,3 +181,19 @@ export async function postJoinGroup(classId, groupId, email) {
     return null
   }
 }
+
+export async function getAllGroups(classId) {
+  try {
+    const { data } = await axios.get(
+      `/api/classes/${classId}/groups`,
+      {
+        headers: {
+          authorization: token,
+        },
+      }
+    )
+    return data
+  } catch (e) {
+    return null
+  }
+}

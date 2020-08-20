@@ -92,6 +92,13 @@ const handleInstructorMessage = (ws, message) => {
     case 'userJoinGroup':
       // msg - group ID
       groupManager.addSocketToGroup(msg, ws)
+      webSocketConnectionManager.broadcast(
+        courseId,
+        prepareMessage({
+          msgType: 'fetchGroups',
+          msg: 'fetchGroups',
+        })
+      )
       break
 
     case 'classGroupSetChanged':

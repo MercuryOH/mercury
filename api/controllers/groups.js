@@ -12,8 +12,12 @@ const createGroupSchema = joi.object({
   userId: joi.number().required(),
 })
 
-const inviteSchema = joi.object({
+const joinSchema = joi.object({
   email: joi.string().email().required(),
+})
+
+const leaveSchema = joi.object({
+  userId: joi.number().required(),
 })
 
 router.post('/', middleware.authRequired, async (req, res) => {
@@ -58,7 +62,7 @@ router.post('/:groupId/token', middleware.authRequired, async (req, res) => {
 })
 
 router.post('/:groupId/join', middleware.authRequired, async (req, res) => {
-  const { value, error } = inviteSchema.validate(req.body)
+  const { value, error } = joinSchema.validate(req.body)
   const { classId, groupId } = req.params
 
   if (error) {
@@ -86,7 +90,7 @@ router.post('/:groupId/join', middleware.authRequired, async (req, res) => {
   const classUser = await models.ClassUser.findOne({
     where: { ClassId: classId, UserId: user.id },
   })
-  
+
   if (!user) {
     return res.status(400).json({ error: 'User not found' })
   }
@@ -118,6 +122,7 @@ router.get('/', middleware.authRequired, async (req, res) => {
     groupDtos.push({
       id: group.id,
       name: group.name,
+      type: group.type,
       sessionId: group.sessionId,
       ClassId: group.ClassId,
       UserId: group.UserId,
@@ -169,6 +174,20 @@ router.delete('/:groupId', middleware.authRequired, async (req, res) => {
   const { groupId } = req.params
 
   await models.Group.destroy({ where: { id: groupId } })
+
+  res.status(204).send()
+})
+
+router.delete('/:groupId/leave', middleware.authRequired, async (req, res) => {
+  const { groupId } = req.params
+  const { value, error } = leaveSchema.validate(req.body)
+
+  if (error) {
+    console.log(res.status(400).json({ error }))
+    return res.status(400).json({ error })
+  }
+
+  await models.Group.destroy({ where: { GroupId: groupId, UserId: value.userId } })
 
   res.status(204).send()
 })
