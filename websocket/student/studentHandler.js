@@ -220,9 +220,13 @@ const handleStudentMessage = async (ws, message) => {
       ws.send(
         prepareMessage({
           msgType: 'retrieveAllLeaderCandidates',
-          msg: groupManager.retrieveAllLeaderCandidates(msg),
+          msg: groupManager.retrieveAllLeaderCandidates(msg).map((userId) => ({
+            userId,
+            fullName: userRepository.getFullName(userId),
+          })),
         })
       )
+
       break
 
     default:

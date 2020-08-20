@@ -4,6 +4,7 @@ import Publisher from './publisher'
 import { EventEmitter } from './util/EventEmitter'
 import { OTSubscriber, createSession } from 'opentok-react'
 import { Button } from 'semantic-ui-react'
+import GroupLeaderModal from './groupLeaderModal'
 
 class ScreenContainer extends React.Component {
   constructor(props) {
@@ -257,6 +258,7 @@ class ScreenContainer extends React.Component {
           style={{ fontSize: '.8vw', display: 'inline-flex' }}
           content="Leave call"
         />
+        <GroupLeaderModal props={this.state.currGroup} />
       </>
     )
   }

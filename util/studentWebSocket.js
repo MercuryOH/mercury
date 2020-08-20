@@ -177,7 +177,6 @@ export default class StudentWebSocketClient {
   }
 
   activateGroupLeaderModal(candidates) {
-    console.log(candidates)
     EventEmitter.publish('activateGroupLeaderModal', candidates)
   }
 
