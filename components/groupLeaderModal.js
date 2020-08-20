@@ -25,14 +25,6 @@ class GroupLeaderModal extends Component {
   defineEventEmitterCallbacks() {
     EventEmitter.subscribe('activateGroupLeaderModal', (candidates) => {
       this.setState({ modalState: true, allUsers: candidates })
-      /** TODO:
-       *
-     Please change state to display the modal and please use the list of candidate objects as things to search for
-     * The candidate objects are { userId, fullName }
-     Please also store the userID's of each candidate object for when a leader is appointed
-     */
-
-      console.log(candidates)
     })
   }
 
@@ -44,15 +36,7 @@ class GroupLeaderModal extends Component {
   }
 
   handleInvite = () => {
-    /**
-     * TODO: Please publish an event called 'sendLeaderAppointmentNotification' with the data including the groupId from
-     * this.state.currGroup and the userId of the selected user
-     * Also, it looks like this code is not relevant to leader appointment but rather invites FYI
-     */
-
     if (this.state.selectedUser === {}) return
-
-    console.log(this.state.selectedUser)
     EventEmitter.publish('sendLeaderAppointmentNotification', {
       groupId: this.state.currGroup.id,
       userId: this.state.selectedUser.id,
