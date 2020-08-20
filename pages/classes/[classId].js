@@ -70,7 +70,10 @@ class ClassPage extends Component {
           vonageCred: { sessionId: group.sessionId, token },
           currentGroup: group,
         })
-        EventEmitter.publish('userJoinGroup', group.id)
+        EventEmitter.publish('userJoinGroup', {
+          groupId: group.id,
+          userId: this.user.id,
+        })
         EventEmitter.publish('currentGroupChange', group)
       })
       .catch(console.error)

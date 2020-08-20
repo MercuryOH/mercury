@@ -90,7 +90,7 @@ const handleInstructorMessage = (ws, message) => {
       break
 
     case 'userJoinGroup':
-      // msg - group ID
+      // msg - JSON with group ID and user ID
       groupManager.addSocketToGroup(msg, ws)
       break
 

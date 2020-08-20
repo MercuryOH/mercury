@@ -8,7 +8,6 @@ import { Button } from 'semantic-ui-react'
 class ScreenContainer extends React.Component {
   constructor(props) {
     super(props)
-    console.log(this.props.currGroup)
     this.state = {
       user: this.props.user,
       currGroup: this.props.currGroup,
@@ -159,8 +158,6 @@ class ScreenContainer extends React.Component {
   }
 
   appointLeaderButton() {
-    console.log(this.state.user)
-
     /**
      * If this is for a private group and you are the leader, show the appoint new leader button
      */

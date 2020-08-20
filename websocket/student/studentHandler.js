@@ -211,7 +211,7 @@ const handleStudentMessage = async (ws, message) => {
       break
 
     case 'userJoinGroup':
-      // msg - group ID
+      // msg - group ID and userId
       groupManager.addSocketToGroup(msg, ws)
       break
 

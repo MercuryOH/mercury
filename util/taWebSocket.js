@@ -47,11 +47,11 @@ export default class TAWebSocketClient {
       )
     })
 
-    EventEmitter.subscribe('userJoinGroup', (groupId) => {
+    EventEmitter.subscribe('userJoinGroup', (data) => {
       this.connection.send(
         this.prepareMessage({
           msgType: 'userJoinGroup',
-          msg: groupId,
+          msg: data,
         })
       )
     })

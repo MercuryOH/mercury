@@ -108,11 +108,11 @@ export default class StudentWebSocketClient {
       )
     })
 
-    EventEmitter.subscribe('userJoinGroup', (groupId) => {
+    EventEmitter.subscribe('userJoinGroup', (data) => {
       this.connection.send(
         this.prepareMessage({
           msgType: 'userJoinGroup',
-          msg: groupId,
+          msg: data,
         })
       )
     })
