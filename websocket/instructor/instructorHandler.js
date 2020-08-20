@@ -90,8 +90,46 @@ const handleInstructorMessage = (ws, message) => {
       break
 
     case 'userJoinGroup':
-      // msg - group ID
+      // msg - JSON with group ID and user ID
       groupManager.addSocketToGroup(msg, ws)
+      break
+
+    case 'classGroupSetChanged':
+      webSocketConnectionManager.broadcast(
+        courseId,
+        prepareMessage({
+          msgType: 'fetchGroups',
+          msg: 'fetchGroups',
+        })
+      )
+      break
+
+    case 'sendOutInvite':
+      const { sender, recepientId, group: currGroup } = JSON.parse(msg)
+      const recepientws = webSocketConnectionManager.getSocketOfUserID(
+        recepientId
+      )
+
+      recepientws.send(
+        prepareMessage({
+          msgType: 'receiveInviteTA',
+          msg: JSON.stringify({ sender, currGroup }),
+        })
+      )
+      break
+
+    case 'startLeaderAppointmentProcess':
+      // msg - the current group and the userID (i.e. the current leader)
+      ws.send(
+        prepareMessage({
+          msgType: 'retrieveAllLeaderCandidates',
+          msg: groupManager.retrieveAllLeaderCandidates(msg).map((userId) => ({
+            userId,
+            fullName: userRepository.getFullName(userId),
+          })),
+        })
+      )
+
       break
 
     default:

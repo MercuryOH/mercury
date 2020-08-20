@@ -7,7 +7,7 @@ import { AuthRequired } from '../../components/authProvider'
 import Queue from '../../components/queue/queue'
 import * as api from '../../util/mercuryService'
 import CreateGroupModal from '../../components/createGroupModal'
-import StudentInviteModal from '../../components/invite/studentInviteModal'
+import UserInviteModal from '../../components/invite/userInviteModal'
 import { EventEmitter } from '../../components/util/EventEmitter'
 import FeedbackModal from '../../components/feedbackModal'
 import StudentWebSocketClient from '../../util/studentWebSocket'
@@ -66,9 +66,14 @@ class ClassPage extends Component {
             this.leaveGroup()
           }
         }
-        this.setState({ vonageCred: { sessionId: group.sessionId, token } })
-        this.setState({ currentGroup: group })
-        EventEmitter.publish('userJoinGroup', group.id)
+        this.setState({
+          vonageCred: { sessionId: group.sessionId, token },
+          currentGroup: group,
+        })
+        EventEmitter.publish('userJoinGroup', {
+          groupId: group.id,
+          userId: this.user.id,
+        })
         EventEmitter.publish('currentGroupChange', group)
       })
       .catch(console.error)
@@ -171,13 +176,21 @@ class ClassPage extends Component {
           isMounted: true,
         })
 
-        EventEmitter.publish(
-          'allOtherStudentsInClass',
-          this.state.currentClass.users.filter(
-            (user) => user.id !== this.user.id && user.role === 'Student'
+        if (role === 'Student') {
+          EventEmitter.publish(
+            'allOtherStudentsInClass',
+            this.state.currentClass.users.filter(
+              (user) => user.id !== this.user.id && user.role === 'Student'
+            )
           )
-        )
-
+        } else {
+          EventEmitter.publish(
+            'allOtherTAsInClass',
+            this.state.currentClass.users.filter(
+              (user) => user.id !== this.user.id && user.role === 'Professor'
+            )
+          )
+        }
         EventEmitter.publish('me', this.user)
       })
       .catch(console.error)
@@ -538,10 +551,11 @@ class ClassPage extends Component {
             token={this.state.vonageCred.token}
             onLeave={this.leaveGroup}
             currGroup={this.state.currentGroup}
+            user={this.user}
             name = {this.user.firstName + " " + this.user.lastName}
           />
         )}
-        <StudentInviteModal />
+        <UserInviteModal />
         <FeedbackModal />
         <ReceiveInviteModal onJoin={this.handleSelectGroup} />
         <GroupJoinRequestModal />

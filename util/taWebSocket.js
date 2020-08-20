@@ -47,11 +47,38 @@ export default class TAWebSocketClient {
       )
     })
 
-    EventEmitter.subscribe('userJoinGroup', (groupId) => {
+    EventEmitter.subscribe('userJoinGroup', (data) => {
       this.connection.send(
         this.prepareMessage({
           msgType: 'userJoinGroup',
-          msg: groupId,
+          msg: data,
+        })
+      )
+    })
+
+    EventEmitter.subscribe('classGroupSetChanged', (classId) => {
+      this.connection.send(
+        this.prepareMessage({
+          msgType: 'classGroupSetChanged',
+          msg: classId,
+        })
+      )
+    })
+
+    EventEmitter.subscribe(
+      'sendOutInvite',
+      ({ sender, recepientIds, group }) => {
+        recepientIds.forEach((id) => {
+          this.sendOutInvite(sender, id, group)
+        })
+      }
+    )
+
+    EventEmitter.subscribe('startLeaderAppointmentProcess', (data) => {
+      this.connection.send(
+        this.prepareMessage({
+          msgType: 'startLeaderAppointmentProcess',
+          msg: data,
         })
       )
     })
@@ -102,6 +129,14 @@ export default class TAWebSocketClient {
     EventEmitter.publish('fetchGroups')
   }
 
+  activateReceiveInviteModal(msg) {
+    EventEmitter.publish('activateReceiveInviteModal', msg)
+  }
+
+  activateGroupLeaderModal(candidates) {
+    EventEmitter.publish('activateGroupLeaderModal', candidates)
+  }
+
   processConnectionMessage(e) {
     const { msgType, msg } = JSON.parse(e.data)
 
@@ -141,6 +176,15 @@ export default class TAWebSocketClient {
         this.notifyFetchGroups()
         break
 
+      case 'receiveInviteTA': // in this case, another TA invites you to their group
+        // msg - sender, group
+        this.activateReceiveInviteModal(msg)
+        break
+
+      case 'retrieveAllLeaderCandidates':
+        this.activateGroupLeaderModal(msg)
+        break
+
       default:
         throw new Error(`Message ${msg} is incorrectly formatted`)
     }
@@ -160,6 +204,15 @@ export default class TAWebSocketClient {
       this.prepareMessage({
         msgType: 'callOver',
         msg: 'callOver',
+      })
+    )
+  }
+
+  sendOutInvite(sender, recepientId, group) {
+    this.connection.send(
+      this.prepareMessage({
+        msgType: 'sendOutInvite',
+        msg: JSON.stringify({ sender, recepientId, group }),
       })
     )
   }

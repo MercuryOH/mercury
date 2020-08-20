@@ -4,11 +4,13 @@ import Publisher from './publisher'
 import { EventEmitter } from './util/EventEmitter'
 import { OTSubscriber, createSession } from 'opentok-react'
 import { Button } from 'semantic-ui-react'
+import GroupLeaderModal from './groupLeaderModal'
 
 class ScreenContainer extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
+      user: this.props.user,
       currGroup: this.props.currGroup,
       ssButton: true,
       streams: [],
@@ -145,7 +147,7 @@ class ScreenContainer extends React.Component {
   }
 
   componentWillMount() {
-    const { sessionId, token, onLeave } = this.props
+    const { sessionId, token } = this.props
     this.sessionHelper = createSession({
       apiKey: `${process.env.NEXT_PUBLIC_VV_API_KEY}`,
       sessionId: `${sessionId}`,
@@ -157,13 +159,30 @@ class ScreenContainer extends React.Component {
   }
 
   appointLeaderButton() {
-    return (
-      <Button
-        icon="chess king"
-        style={{ fontSize: '.8vw', display: 'inline-flex' }}
-        content="Appoint Leader"
-      />
-    )
+    /**
+     * If this is for a private group and you are the leader, show the appoint new leader button
+     */
+
+    if (
+      this.state.currGroup.type === 'group' &&
+      this.state.user.id === this.state.currGroup.UserId
+    ) {
+      return (
+        <Button
+          onClick={() =>
+            EventEmitter.publish('startLeaderAppointmentProcess', {
+              currGroupId: this.state.currGroup.id,
+              userId: this.state.user.id, // the current leader
+            })
+          }
+          icon="chess king"
+          style={{ fontSize: '.8vw', display: 'inline-flex' }}
+          content="Appoint Leader"
+        />
+      )
+    }
+
+    return null
   }
 
   componentWillUnmount() {
@@ -240,6 +259,7 @@ class ScreenContainer extends React.Component {
           style={{ fontSize: '.8vw', display: 'inline-flex' }}
           content="Leave call"
         />
+        <GroupLeaderModal props={this.state.currGroup} />
       </>
     )
   }

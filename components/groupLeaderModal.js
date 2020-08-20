@@ -10,36 +10,28 @@ class GroupLeaderModal extends Component {
     super(props)
 
     this.state = {
+      currGroup: this.props.currGroup,
       modalState: false,
       isLoading: false,
       results: [],
       value: '',
       allUsers: [],
       selectedUser: [],
-      me: {},
-      groupToChange: { id: '', name: '' },
     }
 
     this.defineEventEmitterCallbacks()
   }
 
   defineEventEmitterCallbacks() {
-    EventEmitter.subscribe('openGroupLeaderModal', (openGroupLeaderModal) => {
-      this.setState({ modalState: openGroupLeaderModal })
-    })
+    EventEmitter.subscribe('activateGroupLeaderModal', (candidates) => {
+      /** TODO:
+       * 
+     Please change state to display the modal and please use the list of candidate objects as things to search for
+     * The candidate objects are { userId, fullName }
+     Please also store the userID's of each candidate object for when a leader is appointed
+     */
 
-    EventEmitter.subscribe('me', (me) => {
-      this.setState({ me })
-    })
-
-    EventEmitter.subscribe('allOtherStudentsInClass', (users) => {
-      this.setState({ allUsers: users })
-    })
-    //all find whre publisher is
-    // needs all other students in group
-
-    EventEmitter.subscribe('leaderNeedsChange', (groupToChange) => {
-      this.setState({ groupToChange })
+      console.log(candidates)
     })
   }
 
@@ -54,6 +46,12 @@ class GroupLeaderModal extends Component {
   handleInvite = () => {
     EventEmitter.publish('openGroupLeaderModal', false)
 
+    /**
+     * TODO: Please publish an event called 'sendLeaderAppointmentNotification' with the data including the groupId from
+     * this.state.currGroup and the userId of the selected user
+     * Also, it looks like this code is not relevant to leader appointment but rather invites FYI
+     */
+
     if (_.isEmpty(this.state.selectedUser)) return
     console.log(_.map(this.state.selectedUser, 'id'))
     EventEmitter.publish('sendOutInvite', {
@@ -65,11 +63,8 @@ class GroupLeaderModal extends Component {
     this.setState({ value: '', selectedUser: [], modalState: false })
   }
 
-  //needs to change to handleLeaderChange
-
   handleClose = () => {
     this.setState({ value: '', selectedUser: [], modalState: false })
-    EventEmitter.publish('openGroupLeaderModal', false)
   }
 
   handleResultSelect = (e, { result }) => {
@@ -205,7 +200,7 @@ class GroupLeaderModal extends Component {
               <Button
                 color="teal"
                 style={{ width: '50%', fontSize: '1vw' }}
-                onClick={this.handleInvite}
+                onClick={this.handleInvite.bind(this)}
               >
                 Change Group Leader
               </Button>
