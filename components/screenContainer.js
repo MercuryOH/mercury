@@ -80,6 +80,10 @@ class ScreenContainer extends React.Component {
           maxHeight: '75vh',
           height: '85vh',
           width: '48vw',
+          style: {
+            buttonDisplayMode: 'on',
+            nameDisplayMode: 'on'
+          }
         }}
         onSubscribe={this.handleSubscribe}
         onError={this.handleSubscribeError}
@@ -239,6 +243,10 @@ class ScreenContainer extends React.Component {
                       height: '18vh',
                       maxHeight: '18vh',
                       margin: '0px',
+                      style: {
+                        buttonDisplayMode: 'on',
+                        nameDisplayMode: 'on'
+                      }
                     }}
                     onSubscribe={this.handleSubscribe}
                     onError={this.handleSubscribeError}

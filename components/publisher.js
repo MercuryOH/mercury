@@ -42,6 +42,10 @@ export default class Publisher extends Component {
             publishVideo: this.state.video,
             marginBottom: '5px',
             name: this.props.name,
+            style: {
+              buttonDisplayMode: 'on',
+              nameDisplayMode: 'on'
+            }
           }}
           session={this.props.session}
           onError={this.onError}
