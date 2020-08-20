@@ -8,7 +8,9 @@ import { Button } from 'semantic-ui-react'
 class ScreenContainer extends React.Component {
   constructor(props) {
     super(props)
+    console.log(this.props.currGroup)
     this.state = {
+      user: this.props.user,
       currGroup: this.props.currGroup,
       ssButton: true,
       streams: [],
@@ -145,7 +147,7 @@ class ScreenContainer extends React.Component {
   }
 
   componentWillMount() {
-    const { sessionId, token, onLeave } = this.props
+    const { sessionId, token } = this.props
     this.sessionHelper = createSession({
       apiKey: `${process.env.NEXT_PUBLIC_VV_API_KEY}`,
       sessionId: `${sessionId}`,
@@ -157,13 +159,26 @@ class ScreenContainer extends React.Component {
   }
 
   appointLeaderButton() {
-    return (
-      <Button
-        icon="chess king"
-        style={{ fontSize: '.8vw', display: 'inline-flex' }}
-        content="Appoint Leader"
-      />
-    )
+    console.log(this.state.user)
+
+    /**
+     * If this is for a private group and you are the leader, show the appoint new leader button
+     */
+
+    if (
+      this.state.currGroup.type === 'group' &&
+      this.state.user.id === this.state.currGroup.UserId
+    ) {
+      return (
+        <Button
+          icon="chess king"
+          style={{ fontSize: '.8vw', display: 'inline-flex' }}
+          content="Appoint Leader"
+        />
+      )
+    }
+
+    return null
   }
 
   componentWillUnmount() {

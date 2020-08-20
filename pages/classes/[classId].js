@@ -66,8 +66,10 @@ class ClassPage extends Component {
             this.leaveGroup()
           }
         }
-        this.setState({ vonageCred: { sessionId: group.sessionId, token } })
-        this.setState({ currentGroup: group })
+        this.setState({
+          vonageCred: { sessionId: group.sessionId, token },
+          currentGroup: group,
+        })
         EventEmitter.publish('userJoinGroup', group.id)
         EventEmitter.publish('currentGroupChange', group)
       })
@@ -538,6 +540,7 @@ class ClassPage extends Component {
             token={this.state.vonageCred.token}
             onLeave={this.leaveGroup}
             currGroup={this.state.currentGroup}
+            user={this.user}
           />
         )}
         <StudentInviteModal />
