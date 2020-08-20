@@ -189,7 +189,7 @@ export default class StudentWebSocketClient {
         this.updateCurrStudent(msg)
         break
 
-      case 'receiveInvite': // in this case, another user invites you to their group
+      case 'receiveInvite': // in this case, another student invites you to their group
         // msg - sender, group
         this.activateReceiveInviteModal(msg)
         break
