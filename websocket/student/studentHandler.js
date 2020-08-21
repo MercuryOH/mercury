@@ -213,6 +213,13 @@ const handleStudentMessage = async (ws, message) => {
     case 'userJoinGroup':
       // msg - group ID and userId
       groupManager.addSocketToGroup(msg, ws)
+      webSocketConnectionManager.broadcast(
+        courseId,
+        prepareMessage({
+          msgType: 'fetchGroups',
+          msg: 'fetchGroups',
+        })
+      )
       break
 
     case 'startLeaderAppointmentProcess':
