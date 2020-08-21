@@ -71,19 +71,36 @@ class ScreenContainer extends React.Component {
 
   getStreamToDisplay() {
     return this.state.expand === true ? (
+      <Button
+        onDoubleClick={() => {
+          this.setState({ focusStream: {} })
+          this.setState({ expand: false })
+        }}
+        style={{
+          padding: '0px',
+          width: '100%',
+          maxHeight: '75vh',
+          margin: '0px',
+        }}
+      >
       <OTSubscriber
         key={this.state.focusStream.id}
         session={this.sessionHelper.session}
         stream={this.state.focusStream}
         properties={{
           maxWidth: '75vw',
-          maxHeight: '75vh',
-          height: '85vh',
+          maxHeight: '74.5vh',
+          height: '84vh',
           width: '48vw',
+          style: {
+            buttonDisplayMode: 'on',
+            nameDisplayMode: 'on'
+          }
         }}
         onSubscribe={this.handleSubscribe}
         onError={this.handleSubscribeError}
       />
+      </Button>
     ) : null
   }
 
@@ -131,19 +148,6 @@ class ScreenContainer extends React.Component {
         content="Enable video"
       />
     )
-  }
-
-  unexpandButton() {
-    return this.state.expand === true ? (
-      <Button
-        onClick={() => {
-          this.setState({ expand: false })
-          console.log('ore')
-        }}
-        style={{ fontSize: '.8vw', display: 'inline-flex' }}
-        content="Unexpand video"
-      />
-    ) : null
   }
 
   componentWillMount() {
@@ -219,7 +223,7 @@ class ScreenContainer extends React.Component {
             {this.state.streams.map((stream) => (
               <>
                 <Button
-                  onClick={() => {
+                  onDoubleClick={() => {
                     this.setState({ focusStream: stream })
                     this.setState({ expand: true })
                   }}
@@ -239,6 +243,10 @@ class ScreenContainer extends React.Component {
                       height: '18vh',
                       maxHeight: '18vh',
                       margin: '0px',
+                      style: {
+                        buttonDisplayMode: 'on',
+                        nameDisplayMode: 'on'
+                      }
                     }}
                     onSubscribe={this.handleSubscribe}
                     onError={this.handleSubscribeError}
@@ -249,7 +257,6 @@ class ScreenContainer extends React.Component {
           </div>
         </div>
         {this.videoStateButton()}
-        {this.unexpandButton()}
         {this.screenShareButton()}
         {this.appointLeaderButton()}
         <Button

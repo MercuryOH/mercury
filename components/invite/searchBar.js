@@ -22,7 +22,7 @@ class SearchBar extends Component {
   }
 
   formatAsResults = (user) => {
-    console.log({ title: user.email, ...user })
+    
     return {
       title: user.email,
       id: user.id,
@@ -34,7 +34,7 @@ class SearchBar extends Component {
 
   handleSearchChange = (e, { value }) => {
     this.setState({ isLoading: true, value })
-    console.log(this.state.allUsers)
+    
     setTimeout(() => {
       if (this.state.value.length < 1) return this.setState(initialState)
 

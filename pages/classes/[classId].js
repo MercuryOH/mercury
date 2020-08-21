@@ -41,14 +41,21 @@ class ClassPage extends Component {
       currentClass: {
         id: '',
         name: '',
-        groups: [],
+        //groups: [],
         users: [],
         role: 'Student',
       },
       vonageCred: null,
       isMounted: false,
+      allGroups: [],
     }
     this.defineEventEmitterCallbacks()
+  }
+
+  fetchAllGroups = () => {
+    api
+      .getGroups(this.state.currentClass.id)
+      .then((groups) => this.setState({ allGroups: groups }))
   }
 
   joinGroup(group) {
@@ -76,28 +83,58 @@ class ClassPage extends Component {
         })
         EventEmitter.publish('currentGroupChange', group)
       })
+
+      .then(() => {
+        api.postJoinGroup(this.classId, group.id, this.user.email)
+        EventEmitter.publish('classGroupSetChanged', this.classId)
+        EventEmitter.publish('userJoinGroup', group.id)
+      })
+      .then(() => {
+        this.fetchAllGroups()
+      })
       .catch(console.error)
   }
 
   leaveGroupForTAOffice = () => {
-    EventEmitter.publish('userLeaveGroup', this.state.currentGroup)
-    this.setState({
-      vonageCred: null,
-      currentGroup: { id: '', name: '' },
-      withTa: false,
-    })
-    EventEmitter.publish('currentGroupChange', { id: '', name: '' })
+    api
+      .deleteGroupUser(
+        this.state.currentClass.id,
+        this.state.currentGroup.id,
+        this.user.id
+      )
+      .then(() => {
+        this.fetchAllGroups()
+        EventEmitter.publish('classGroupSetChanged', this.classId)
+        EventEmitter.publish('userLeaveGroup', this.state.currentGroup)
+        this.setState({
+          vonageCred: null,
+          currentGroup: { id: '', name: '' },
+          withTa: false,
+        })
+        EventEmitter.publish('currentGroupChange', { id: '', name: '' })
+      })
   }
 
   leaveGroup = () => {
-    EventEmitter.publish('userLeaveGroup', this.state.currentGroup)
-    this.setState({
-      vonageCred: null,
-      currentGroup: { id: '', name: '' },
-      withTa: false,
-    })
-    EventEmitter.publish('currentGroupChange', { id: '', name: '' })
-    EventEmitter.publish('callOver', this.classId)
+    api
+      .deleteGroupUser(
+        this.state.currentClass.id,
+        this.state.currentGroup.id,
+        this.user.id
+      )
+      .then(() => {
+        this.fetchAllGroups()
+        EventEmitter.publish('classGroupSetChanged', this.classId)
+        EventEmitter.publish('userLeaveGroup', this.state.currentGroup)
+        this.setState({
+          vonageCred: null,
+          currentGroup: { id: '', name: '' },
+          withTa: false,
+        })
+        EventEmitter.publish('currentGroupChange', { id: '', name: '' })
+        EventEmitter.publish('callOver', this.classId)
+      })
+      .catch(console.error)
   }
 
   defineEventEmitterCallbacks() {
@@ -118,7 +155,8 @@ class ClassPage extends Component {
     })
 
     EventEmitter.subscribe('fetchGroups', () => {
-      this.fetchCurrentClass()
+      //this.fetchCurrentClass()
+      this.fetchAllGroups()
     })
 
     EventEmitter.subscribe('createNotification', (msg) => {
@@ -176,41 +214,41 @@ class ClassPage extends Component {
           isMounted: true,
         })
 
-        if (role === 'Student') {
+       
           EventEmitter.publish(
-            'allOtherStudentsInClass',
+            'allOtherUsersInClass',
             this.state.currentClass.users.filter(
-              (user) => user.id !== this.user.id && user.role === 'Student'
+              (user) => user.id !== this.user.id && user.role === role
             )
           )
-        } else {
-          EventEmitter.publish(
-            'allOtherTAsInClass',
-            this.state.currentClass.users.filter(
-              (user) => user.id !== this.user.id && user.role === 'Professor'
-            )
-          )
-        }
         EventEmitter.publish('me', this.user)
+        console.log(this.user)
       })
+      .then(() => {
+        this.fetchAllGroups()
+      })
+      .then(() => {
+        setInterval(this.fetchAllGroups, 10000)
+      })
+
       .catch(console.error)
   }
 
-  fetchCurrentClass = () => {
-    api
-      .getClass(this.classId)
-      .then((c) => {
-        const userRole = c.users.find((u) => u.id === this.user.id)
-        if (!userRole) this.props.router.push('/calendar')
-        this.setState({
-          currentClass: {
-            ...c,
-            role: userRole.role,
-          },
-        })
-      })
-      .catch(console.error)
-  }
+  // fetchCurrentClass = () => {
+  //   api
+  //     .getClass(this.classId)
+  //     .then((c) => {
+  //       const userRole = c.users.find((u) => u.id === this.user.id)
+  //       if (!userRole) this.props.router.push('/calendar')
+  //       this.setState({
+  //         currentClass: {
+  //           ...c,
+  //           role: userRole.role,
+  //         },
+  //       })
+  //     })
+  //     .catch(console.error)
+  // }
 
   handleBack = async () => {
     await this.props.router.push('/calendar')
@@ -303,7 +341,7 @@ class ClassPage extends Component {
         }}
         onClick={() =>
           api.deleteGroup(this.classId, group.id).then(() => {
-            this.fetchCurrentClass()
+            this.fetchAllGroups()
             EventEmitter.publish('classGroupSetChanged', this.classId)
           })
         }
@@ -320,9 +358,9 @@ class ClassPage extends Component {
       group.type,
       this.user.id
     )
-    this.fetchCurrentClass()
     EventEmitter.publish('classGroupSetChanged', this.classId)
     await this.handleSelectGroup(groupData)
+    this.fetchAllGroups()
   }
 
   showInviteButton(group) {
@@ -377,7 +415,7 @@ class ClassPage extends Component {
         this.state.currentGroup.type === 'office') && (
         <div style={{ paddingLeft: 20 }}>
           <List relaxed selection verticalAlign="middle">
-            {this.state.currentClass.groups
+            {this.state.allGroups
               .filter((group) => group.type === 'office')
               .map((group) => (
                 <List.Item
@@ -391,7 +429,9 @@ class ClassPage extends Component {
                 >
                   <List.Icon name="graduation cap" />
                   <List.Content>
-                    <List.Header as="a">TA Office</List.Header>
+                    <List.Header as="a">
+                      {group.name + ' (' + group.users.length + ')'}
+                    </List.Header>
                   </List.Content>
                   {this.showInviteButton(group)}
                 </List.Item>
@@ -457,7 +497,7 @@ class ClassPage extends Component {
                     style={{ paddingLeft: 20, height: 200, overflow: 'auto' }}
                   >
                     <List relaxed selection>
-                      {this.state.currentClass.groups
+                      {this.state.allGroups
                         .filter((group) => group.type === 'discussion')
                         .map((group) => (
                           <>
@@ -472,7 +512,9 @@ class ClassPage extends Component {
                             >
                               <List.Icon name="sound" />
                               <List.Content>
-                                <List.Header as="a">{group.name}</List.Header>
+                                <List.Header as="a">
+                                  {group.name + ' (' + group.users.length + ')'}
+                                </List.Header>
                               </List.Content>
                               {this.showInviteButton(group)}
                             </List.Item>
@@ -493,7 +535,7 @@ class ClassPage extends Component {
                     style={{ paddingLeft: 20, height: 200, overflow: 'auto' }}
                   >
                     <List relaxed selection>
-                      {this.state.currentClass.groups
+                      {this.state.allGroups
                         .filter((group) => group.type === 'group')
                         .map((group) => (
                           <List.Item
@@ -507,7 +549,9 @@ class ClassPage extends Component {
                           >
                             <List.Icon name="lock" />
                             <List.Content>
-                              <List.Header as="a">{group.name}</List.Header>
+                              <List.Header as="a">
+                                {group.name + ' (' + group.users.length + ')'}
+                              </List.Header>
                             </List.Content>
                             {this.showInviteButton(group)}
                           </List.Item>

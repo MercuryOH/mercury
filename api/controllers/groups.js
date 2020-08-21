@@ -12,8 +12,12 @@ const createGroupSchema = joi.object({
   userId: joi.number().required(),
 })
 
-const inviteSchema = joi.object({
+const joinSchema = joi.object({
   email: joi.string().email().required(),
+})
+
+const leaveSchema = joi.object({
+  userId: joi.number().required(),
 })
 
 router.post('/', middleware.authRequired, async (req, res) => {
@@ -57,9 +61,9 @@ router.post('/:groupId/token', middleware.authRequired, async (req, res) => {
   return res.json({ token })
 })
 
-router.post('/:groupId/invite', middleware.authRequired, async (req, res) => {
-  const { value, error } = inviteSchema.validate(req.body)
-  const { groupId } = req.params
+router.post('/:groupId/join', middleware.authRequired, async (req, res) => {
+  const { value, error } = joinSchema.validate(req.body)
+  const { classId, groupId } = req.params
 
   if (error) {
     console.log(res.status(400).json({ error }))
@@ -72,17 +76,20 @@ router.post('/:groupId/invite', middleware.authRequired, async (req, res) => {
     return res.status(404).json({ error: 'Group not found' })
   }
 
-  if (group.UserId !== req.user.id) {
-    return res
-      .status(400)
-      .json({ error: 'You cannot invite people to this group' })
-  }
+  // if (group.UserId !== req.user.id) {
+  //   return res
+  //     .status(400)
+  //     .json({ error: 'You cannot invite people to this group' })
+  // }
 
-  if (value.email.toLowerCase() === req.user.email.toLowerCase()) {
-    return res.status(400).json({ error: 'Cannot invite yourself to group' })
-  }
+  // if (value.email.toLowerCase() === req.user.email.toLowerCase()) {
+  //   return res.status(400).json({ error: 'Cannot invite yourself to group' })
+  // }
 
   const user = await models.User.findOne({ where: { email: value.email } })
+  const classUser = await models.ClassUser.findOne({
+    where: { ClassId: classId, UserId: user.id },
+  })
 
   if (!user) {
     return res.status(400).json({ error: 'User not found' })
@@ -93,12 +100,13 @@ router.post('/:groupId/invite', middleware.authRequired, async (req, res) => {
   })
 
   if (userAlreadyInGroup) {
-    return res.status(400).json({ error: 'User already invited to group' })
+    return res.status(400).json({ error: 'User already in group' })
   }
 
   await models.GroupUser.create({
     GroupId: group.id,
     UserId: user.id,
+    role: classUser.role,
   })
 
   return res.status(204).send()
@@ -114,6 +122,7 @@ router.get('/', middleware.authRequired, async (req, res) => {
     groupDtos.push({
       id: group.id,
       name: group.name,
+      type: group.type,
       sessionId: group.sessionId,
       ClassId: group.ClassId,
       UserId: group.UserId,
@@ -165,6 +174,14 @@ router.delete('/:groupId', middleware.authRequired, async (req, res) => {
   const { groupId } = req.params
 
   await models.Group.destroy({ where: { id: groupId } })
+
+  res.status(204).send()
+})
+
+router.delete('/:groupId/leave/:userId', middleware.authRequired, async (req, res) => {
+  const { groupId, userId } = req.params
+
+  await models.GroupUser.destroy({ where: { GroupId: groupId, UserId: userId } })
 
   res.status(204).send()
 })

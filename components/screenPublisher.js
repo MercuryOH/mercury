@@ -42,7 +42,11 @@ export default class ScreenPublisher extends Component {
             publishAudio: this.state.audio,
             publishVideo: this.state.video,
             videoSource: 'screen',
-            name: this.props.name
+            name: this.props.name,
+            style: {
+              buttonDisplayMode: 'on',
+              nameDisplayMode: 'on'
+            }
           }}
           session = {this.props.session}
           onError={this.onError}
