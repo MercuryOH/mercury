@@ -150,19 +150,6 @@ class ScreenContainer extends React.Component {
     )
   }
 
-  unexpandButton() {
-    return this.state.expand === true ? (
-      <Button
-        onClick={() => {
-          this.setState({ expand: false })
-          console.log('ore')
-        }}
-        style={{ fontSize: '.8vw', display: 'inline-flex' }}
-        content="Unexpand video"
-      />
-    ) : null
-  }
-
   componentWillMount() {
     const { sessionId, token } = this.props
     this.sessionHelper = createSession({
@@ -270,7 +257,6 @@ class ScreenContainer extends React.Component {
           </div>
         </div>
         {this.videoStateButton()}
-        {this.unexpandButton()}
         {this.screenShareButton()}
         {this.appointLeaderButton()}
         <Button
