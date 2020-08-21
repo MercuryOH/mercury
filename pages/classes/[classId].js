@@ -593,9 +593,6 @@ class ClassPage extends Component {
             sessionId={this.state.vonageCred.sessionId}
             token={this.state.vonageCred.token}
             onLeave={this.leaveGroup}
-            currGroup={this.state.currentGroup}
-            classId={this.classId}
-            user={this.user}
             name={this.user.firstName + ' ' + this.user.lastName}
           />
         )}

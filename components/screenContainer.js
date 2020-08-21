@@ -4,16 +4,11 @@ import Publisher from './publisher'
 import { EventEmitter } from './util/EventEmitter'
 import { OTSubscriber, createSession } from 'opentok-react'
 import { Button } from 'semantic-ui-react'
-import GroupLeaderModal from './groupLeaderModal'
-import * as api from '../util/mercuryService'
 
 class ScreenContainer extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      user: this.props.user,
-      currGroup: this.props.currGroup,
-      classId: this.props.classId,
       ssButton: true,
       streams: [],
       focusStream: {},
@@ -69,15 +64,6 @@ class ScreenContainer extends React.Component {
 
     EventEmitter.subscribe('enableVideoButton', () => {
       this.setState({ videoButton: true })
-    })
-
-    EventEmitter.subscribe('refreshScreenContainer', () => {
-      api
-        .getGroupByID(this.state.classId, this.state.currGroup.id)
-        .then((payload) => {
-          console.log(payload)
-          this.setState({ currGroup: payload })
-        })
     })
   }
 
