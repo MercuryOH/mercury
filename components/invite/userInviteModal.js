@@ -2,7 +2,6 @@ import React, { Component } from 'react'
 import { Modal, Button, Search, Label, Icon } from 'semantic-ui-react'
 import _ from 'lodash'
 import { EventEmitter } from '../util/EventEmitter'
-import * as api from '../../util/mercuryService'
 
 const initialState = { isLoading: false, results: [], value: '' }
 
@@ -41,7 +40,7 @@ class UserInviteModal extends Component {
         this.setState({ allUsers: users })
       }
     )
-
+console.log(this.state.me)
     EventEmitter.subscribe('currentGroupChange', (currentGroup) => {
       this.setState({ currentGroup })
     })

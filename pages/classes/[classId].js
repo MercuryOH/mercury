@@ -90,13 +90,23 @@ class ClassPage extends Component {
   }
 
   leaveGroupForTAOffice = () => {
-    EventEmitter.publish('userLeaveGroup', this.state.currentGroup)
-    this.setState({
-      vonageCred: null,
-      currentGroup: { id: '', name: '' },
-      withTa: false,
-    })
-    EventEmitter.publish('currentGroupChange', { id: '', name: '' })
+    api
+      .deleteGroupUser(
+        this.state.currentClass.id,
+        this.state.currentGroup.id,
+        this.user.id
+      )
+      .then(() => {
+        this.fetchAllGroups()
+        EventEmitter.publish('classGroupSetChanged', this.classId)
+        EventEmitter.publish('userLeaveGroup', this.state.currentGroup)
+        this.setState({
+          vonageCred: null,
+          currentGroup: { id: '', name: '' },
+          withTa: false,
+        })
+        EventEmitter.publish('currentGroupChange', { id: '', name: '' })
+      })
   }
 
   leaveGroup = () => {
@@ -213,7 +223,9 @@ class ClassPage extends Component {
             )
           )
         }
+
         EventEmitter.publish('me', this.user)
+        console.log(this.user)
       })
       .then(() => {
         this.fetchAllGroups()

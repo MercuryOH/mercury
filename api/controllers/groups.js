@@ -181,11 +181,6 @@ router.delete('/:groupId', middleware.authRequired, async (req, res) => {
 router.delete('/:groupId/leave/:userId', middleware.authRequired, async (req, res) => {
   const { groupId, userId } = req.params
 
-  // if (error) {
-  //   console.log(res.status(400).json({ error }))
-  //   return res.status(400).json({ error })
-  // }
-
   await models.GroupUser.destroy({ where: { GroupId: groupId, UserId: userId } })
 
   res.status(204).send()
