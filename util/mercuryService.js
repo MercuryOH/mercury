@@ -198,8 +198,7 @@ export async function getAllGroups(classId) {
 export async function deleteGroupUser(classId, groupId, userId) {
   try {
     await axios.delete(
-      `/api/classes/${classId}/groups/${groupId}/leave`,
-      { userId },
+      `/api/classes/${classId}/groups/${groupId}/leave/${userId}`,
       {
         headers: {
           authorization: token,
