@@ -4,14 +4,11 @@ import Publisher from './publisher'
 import { EventEmitter } from './util/EventEmitter'
 import { OTSubscriber, createSession } from 'opentok-react'
 import { Button } from 'semantic-ui-react'
-import GroupLeaderModal from './groupLeaderModal'
 
 class ScreenContainer extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      user: this.props.user,
-      currGroup: this.props.currGroup,
       ssButton: true,
       streams: [],
       focusStream: {},
@@ -64,6 +61,7 @@ class ScreenContainer extends React.Component {
     EventEmitter.subscribe('disableVideoButton', () => {
       this.setState({ videoButton: false })
     })
+
     EventEmitter.subscribe('enableVideoButton', () => {
       this.setState({ videoButton: true })
     })
@@ -83,23 +81,23 @@ class ScreenContainer extends React.Component {
           margin: '0px',
         }}
       >
-      <OTSubscriber
-        key={this.state.focusStream.id}
-        session={this.sessionHelper.session}
-        stream={this.state.focusStream}
-        properties={{
-          maxWidth: '75vw',
-          maxHeight: '74.5vh',
-          height: '84vh',
-          width: '48vw',
-          style: {
-            buttonDisplayMode: 'on',
-            nameDisplayMode: 'on'
-          }
-        }}
-        onSubscribe={this.handleSubscribe}
-        onError={this.handleSubscribeError}
-      />
+        <OTSubscriber
+          key={this.state.focusStream.id}
+          session={this.sessionHelper.session}
+          stream={this.state.focusStream}
+          properties={{
+            maxWidth: '75vw',
+            maxHeight: '74.5vh',
+            height: '84vh',
+            width: '48vw',
+            style: {
+              buttonDisplayMode: 'on',
+              nameDisplayMode: 'on',
+            },
+          }}
+          onSubscribe={this.handleSubscribe}
+          onError={this.handleSubscribeError}
+        />
       </Button>
     ) : null
   }
@@ -162,33 +160,6 @@ class ScreenContainer extends React.Component {
     })
   }
 
-  appointLeaderButton() {
-    /**
-     * If this is for a private group and you are the leader, show the appoint new leader button
-     */
-
-    if (
-      this.state.currGroup.type === 'group' &&
-      this.state.user.id === this.state.currGroup.UserId
-    ) {
-      return (
-        <Button
-          onClick={() =>
-            EventEmitter.publish('startLeaderAppointmentProcess', {
-              currGroupId: this.state.currGroup.id,
-              userId: this.state.user.id, // the current leader
-            })
-          }
-          icon="chess king"
-          style={{ fontSize: '.8vw', display: 'inline-flex' }}
-          content="Appoint Leader"
-        />
-      )
-    }
-
-    return null
-  }
-
   componentWillUnmount() {
     this.sessionHelper.disconnect()
   }
@@ -218,7 +189,7 @@ class ScreenContainer extends React.Component {
                 marginBottom: '5px',
               }}
               session={this.sessionHelper.session}
-              name = {this.props.name}
+              name={this.props.name}
             />
             {this.state.streams.map((stream) => (
               <>
@@ -245,8 +216,8 @@ class ScreenContainer extends React.Component {
                       margin: '0px',
                       style: {
                         buttonDisplayMode: 'on',
-                        nameDisplayMode: 'on'
-                      }
+                        nameDisplayMode: 'on',
+                      },
                     }}
                     onSubscribe={this.handleSubscribe}
                     onError={this.handleSubscribeError}
@@ -258,7 +229,6 @@ class ScreenContainer extends React.Component {
         </div>
         {this.videoStateButton()}
         {this.screenShareButton()}
-        {this.appointLeaderButton()}
         <Button
           onClick={onLeave}
           color="red"
@@ -266,7 +236,6 @@ class ScreenContainer extends React.Component {
           style={{ fontSize: '.8vw', display: 'inline-flex' }}
           content="Leave call"
         />
-        <GroupLeaderModal props={this.state.currGroup} />
       </>
     )
   }

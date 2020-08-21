@@ -125,31 +125,6 @@ const handleInstructorMessage = async (ws, message) => {
       )
       break
 
-    case 'startLeaderAppointmentProcess':
-      // msg - the current group and the userID (i.e. the current leader)
-      ws.send(
-        prepareMessage({
-          msgType: 'retrieveAllLeaderCandidates',
-          msg: groupManager.retrieveAllLeaderCandidates(msg).map((userId) => ({
-            userId,
-            fullName: userRepository.getFullName(userId),
-          })),
-        })
-      )
-
-      break
-
-    case 'leaderAppointmentNotification':
-      await groupManager.appointNewLeader(msg)
-      groupManager.broadcast(
-        msg.groupId,
-        prepareMessage({
-          msgType: 'newLeaderAppointed',
-          msg: msg.userId,
-        })
-      )
-      break
-
     default:
       throw new Error(
         `Message Type ${msgType} is not recognized for instructor`

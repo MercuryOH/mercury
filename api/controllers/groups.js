@@ -166,6 +166,7 @@ router.get('/:groupId', middleware.authRequired, async (req, res) => {
     sessionId: group.sessionId,
     ClassId: group.ClassId,
     UserId: group.UserId,
+    type: group.type,
     users,
   })
 })
@@ -178,12 +179,18 @@ router.delete('/:groupId', middleware.authRequired, async (req, res) => {
   res.status(204).send()
 })
 
-router.delete('/:groupId/leave/:userId', middleware.authRequired, async (req, res) => {
-  const { groupId, userId } = req.params
+router.delete(
+  '/:groupId/leave/:userId',
+  middleware.authRequired,
+  async (req, res) => {
+    const { groupId, userId } = req.params
 
-  await models.GroupUser.destroy({ where: { GroupId: groupId, UserId: userId } })
+    await models.GroupUser.destroy({
+      where: { GroupId: groupId, UserId: userId },
+    })
 
-  res.status(204).send()
-})
+    res.status(204).send()
+  }
+)
 
 module.exports = router

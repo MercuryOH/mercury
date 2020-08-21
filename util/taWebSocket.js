@@ -142,8 +142,8 @@ export default class TAWebSocketClient {
     EventEmitter.publish('activateReceiveInviteModal', msg)
   }
 
-  activateGroupLeaderModal(candidates) {
-    EventEmitter.publish('activateGroupLeaderModal', candidates)
+  refreshScreenContainer() {
+    EventEmitter.publish('refreshScreenContainer')
   }
 
   processConnectionMessage(e) {
@@ -190,8 +190,8 @@ export default class TAWebSocketClient {
         this.activateReceiveInviteModal(msg)
         break
 
-      case 'retrieveAllLeaderCandidates':
-        this.activateGroupLeaderModal(msg)
+      case 'newLeaderAppointed':
+        this.refreshScreenContainer()
         break
 
       default:

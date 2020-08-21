@@ -185,8 +185,8 @@ export default class StudentWebSocketClient {
     EventEmitter.publish('fetchGroups')
   }
 
-  activateGroupLeaderModal(candidates) {
-    EventEmitter.publish('activateGroupLeaderModal', candidates)
+  refreshScreenContainer() {
+    EventEmitter.publish('refreshScreenContainer')
   }
 
   processConnectionMessage(e) {
@@ -232,8 +232,8 @@ export default class StudentWebSocketClient {
         this.notifyFetchGroups()
         break
 
-      case 'retrieveAllLeaderCandidates':
-        this.activateGroupLeaderModal(msg)
+      case 'newLeaderAppointed':
+        this.refreshScreenContainer()
         break
 
       default:
