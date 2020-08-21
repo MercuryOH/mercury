@@ -222,13 +222,13 @@ const handleStudentMessage = async (ws, message) => {
       )
       break
 
-    case 'personWhoIsSharing':
+    case 'screenShareOn':
       // msg - person name and sessionId
       webSocketConnectionManager.broadcast(
         courseId,
         prepareMessage({
           msgType: 'fetchScreensharer',
-          msg: JSON.stringify(msg),
+          msg: msg,
         })
       )
       break

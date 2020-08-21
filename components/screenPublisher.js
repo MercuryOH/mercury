@@ -5,15 +5,15 @@ import { EventEmitter } from './util/EventEmitter'
 
 export default class ScreenPublisher extends Component {
   constructor(props) {
-    super(props);
+    super(props)
 
     this.state = {
       error: null,
       audio: true,
       video: true,
       videoSource: 'screen',
-      appear: false
-    };
+      appear: false,
+    }
     this.defineEventEmitterCallbacks()
   }
 
@@ -27,7 +27,7 @@ export default class ScreenPublisher extends Component {
   }
 
   onError = (err) => {
-    this.setState({ error: `Failed to publish: ${err.message}` });
+    this.setState({ error: `Failed to publish: ${err.message}` })
   }
 
   render() {
@@ -45,14 +45,19 @@ export default class ScreenPublisher extends Component {
             name: this.props.name,
             style: {
               buttonDisplayMode: 'on',
-              nameDisplayMode: 'on'
-            }
+              nameDisplayMode: 'on',
+            },
           }}
-          onPublish = {() => {EventEmitter.publish('screenShareOn', {name: this.props.name, session: this.props.session.sessionId})}}
-          session = {this.props.session}
+          onPublish={() => {
+            EventEmitter.publish('screenShareOn', {
+              name: this.props.name,
+              session: this.props.session.sessionId,
+            })
+          }}
+          session={this.props.session}
           onError={this.onError}
         />
       </>
-    );
+    )
   }
 }

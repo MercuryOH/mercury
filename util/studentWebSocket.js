@@ -138,7 +138,7 @@ export default class StudentWebSocketClient {
     EventEmitter.subscribe('screenShareOn', (data) => {
       this.connection.send(
         this.prepareMessage({
-          msgType: 'personWhoIsSharing',
+          msgType: 'screenShareOn',
           msg: data,
         })
       )
