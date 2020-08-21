@@ -176,21 +176,13 @@ class ClassPage extends Component {
           isMounted: true,
         })
 
-        if (role === 'Student') {
+       
           EventEmitter.publish(
-            'allOtherStudentsInClass',
+            'allOtherUsersInClass',
             this.state.currentClass.users.filter(
-              (user) => user.id !== this.user.id && user.role === 'Student'
+              (user) => user.id !== this.user.id && user.role === role
             )
           )
-        } else {
-          EventEmitter.publish(
-            'allOtherTAsInClass',
-            this.state.currentClass.users.filter(
-              (user) => user.id !== this.user.id && user.role === 'Professor'
-            )
-          )
-        }
         EventEmitter.publish('me', this.user)
       })
       .catch(console.error)

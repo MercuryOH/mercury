@@ -2,7 +2,6 @@ import React, { Component } from 'react'
 import { Modal, Button, Search, Label, Icon } from 'semantic-ui-react'
 import _ from 'lodash'
 import { EventEmitter } from '../util/EventEmitter'
-import SearchBar from './searchBar'
 
 const initialState = { isLoading: false, results: [], value: '' }
 
@@ -33,14 +32,9 @@ class UserInviteModal extends Component {
       this.setState({ me })
     })
 
-    EventEmitter.subscribe(
-      this.state.me.role === 'Student'
-        ? 'allOtherStudentsInClass'
-        : 'allOtherTAsInClass',
-      (users) => {
-        this.setState({ allUsers: users })
-      }
-    )
+    EventEmitter.subscribe('allOtherUsersInClass', (users) => {
+      this.setState({ allUsers: users })
+    }) // for students(TAs), it's all other students(TAs)
 
     EventEmitter.subscribe('currentGroupChange', (currentGroup) => {
       this.setState({ currentGroup })
@@ -157,7 +151,7 @@ class UserInviteModal extends Component {
             >
               <Search
                 fluid
-                placeholder="Invite student..."
+                placeholder="Invite..."
                 input={{ fluid: true }}
                 loading={this.state.isLoading}
                 onResultSelect={this.handleResultSelect}
