@@ -61,6 +61,29 @@ class GroupManager {
 
     return []
   }
+
+  async appointNewLeader({ groupId, userId }) {
+    try {
+      await models.Group.update({ UserId: userId }, { where: { id: groupId } })
+    } catch (err) {
+      console.log(err)
+    }
+  }
+
+  /**
+   * Broadcast a message to a groupId
+   * @param {*} groupId
+   * @param {*} msg
+   */
+
+  broadcast(groupId, msg) {
+    if (this.groupToSockets.has(groupId)) {
+      const sockets = this.groupToSockets.get(groupId)
+      sockets.forEach(({ ws }) => {
+        ws.send(msg)
+      })
+    }
+  }
 }
 
 module.exports = {

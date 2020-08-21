@@ -8,7 +8,7 @@ const { groupManager } = require('../util/groupmanager')
  * Handles web socket messages sent by a student user
  */
 
-const handleInstructorMessage = (ws, message) => {
+const handleInstructorMessage = async (ws, message) => {
   const { courseId, msgType, msg } = JSON.parse(message)
 
   switch (msgType) {
@@ -130,6 +130,17 @@ const handleInstructorMessage = (ws, message) => {
         })
       )
 
+      break
+
+    case 'leaderAppointmentNotification':
+      await groupManager.appointNewLeader(msg)
+      groupManager.broadcast(
+        msg.groupId,
+        prepareMessage({
+          msgType: 'newLeaderAppointed',
+          msg: msg.userId,
+        })
+      )
       break
 
     default:

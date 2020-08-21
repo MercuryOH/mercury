@@ -125,6 +125,15 @@ export default class StudentWebSocketClient {
         })
       )
     })
+
+    EventEmitter.subscribe('sendLeaderAppointmentNotification', (data) => {
+      this.connection.send(
+        this.prepareMessage({
+          msgType: 'leaderAppointmentNotification',
+          msg: data,
+        })
+      )
+    })
   }
 
   processConnectionOpen() {

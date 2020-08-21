@@ -23,7 +23,7 @@ class WebSocketServer {
             break
 
           case 'Instructor':
-            handleInstructorMessage(ws, message)
+            await handleInstructorMessage(ws, message)
             break
 
           default:

@@ -82,6 +82,15 @@ export default class TAWebSocketClient {
         })
       )
     })
+
+    EventEmitter.subscribe('sendLeaderAppointmentNotification', (data) => {
+      this.connection.send(
+        this.prepareMessage({
+          msgType: 'leaderAppointmentNotification',
+          msg: data,
+        })
+      )
+    })
   }
 
   processConnectionOpen() {
