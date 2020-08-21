@@ -14,6 +14,8 @@ class ScreenContainer extends React.Component {
       focusStream: {},
       videoButton: true,
       expand: false,
+      searchName: '',
+      searchSession: '',
     }
 
     this.defineEventEmitterCallbacks()
@@ -64,6 +66,10 @@ class ScreenContainer extends React.Component {
 
     EventEmitter.subscribe('enableVideoButton', () => {
       this.setState({ videoButton: true })
+    })
+
+    EventEmitter.subscribe('newScreensharer', (msg) => {
+      console.log('yeet')
     })
   }
 

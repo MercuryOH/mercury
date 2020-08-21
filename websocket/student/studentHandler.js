@@ -222,6 +222,17 @@ const handleStudentMessage = async (ws, message) => {
       )
       break
 
+    case 'personWhoIsSharing':
+      // msg - person name and sessionId
+      webSocketConnectionManager.broadcast(
+        courseId,
+        prepareMessage({
+          msgType: 'fetchScreensharer',
+          msg: JSON.stringify(msg),
+        })
+      )
+      break
+
     default:
       throw new Error(`Message Type ${msgType} is not recognized for student`)
   }

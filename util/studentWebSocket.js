@@ -134,6 +134,15 @@ export default class StudentWebSocketClient {
         })
       )
     })
+
+    EventEmitter.subscribe('screenShareOn', (data) => {
+      this.connection.send(
+        this.prepareMessage({
+          msgType: 'personWhoIsSharing',
+          msg: data,
+        })
+      )
+    })
   }
 
   processConnectionOpen() {
@@ -189,6 +198,10 @@ export default class StudentWebSocketClient {
     EventEmitter.publish('refreshScreenContainer')
   }
 
+  changeScreensharer(msg) {
+    EventEmitter.publish('newScreensharer', msg)
+  }
+
   processConnectionMessage(e) {
     const { msgType, msg } = JSON.parse(e.data)
 
@@ -234,6 +247,10 @@ export default class StudentWebSocketClient {
 
       case 'newLeaderAppointed':
         this.refreshScreenContainer()
+        break
+
+      case 'fetchScreensharer':
+        this.changeScreensharer(msg)
         break
 
       default:

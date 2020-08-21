@@ -48,6 +48,7 @@ export default class ScreenPublisher extends Component {
               nameDisplayMode: 'on'
             }
           }}
+          onPublish = {() => {EventEmitter.publish('screenShareOn', {name: this.props.name, session: this.props.session.sessionId})}}
           session = {this.props.session}
           onError={this.onError}
         />
