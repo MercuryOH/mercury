@@ -16,6 +16,7 @@ import ReceiveInviteModal from '../../components/invite/receiveInviteModal'
 import { NotificationContainer, NotificationManager } from 'react-notifications'
 import GroupJoinRequestModal from '../../components/invite/groupJoinRequestModal'
 import WaitingForRequestApprovalModal from '../../components/invite/WaitingForRequestApprovalModal'
+import HeadComponent from '../../components/headComponent'
 
 const ScreenContainer = dynamic(
   () => import('../../components/screenContainer'),
@@ -214,13 +215,12 @@ class ClassPage extends Component {
           isMounted: true,
         })
 
-       
-          EventEmitter.publish(
-            'allOtherUsersInClass',
-            this.state.currentClass.users.filter(
-              (user) => user.id !== this.user.id && user.role === role
-            )
+        EventEmitter.publish(
+          'allOtherUsersInClass',
+          this.state.currentClass.users.filter(
+            (user) => user.id !== this.user.id && user.role === role
           )
+        )
         EventEmitter.publish('me', this.user)
         console.log(this.user)
       })
@@ -584,28 +584,31 @@ class ClassPage extends Component {
     }
 
     return (
-      <Layout
-        left={this.leftDisplay()}
-        right={<Queue onJoin={this.handleSelectGroup} />}
-      >
-        {this.state.vonageCred && (
-          <ScreenContainer
-            style={{ width: '100%', maxHeight: '75vh' }}
-            sessionId={this.state.vonageCred.sessionId}
-            token={this.state.vonageCred.token}
-            onLeave={this.leaveGroup}
-            currGroup={this.state.currentGroup}
-            user={this.user}
-            name = {this.user.firstName + " " + this.user.lastName}
-          />
-        )}
-        <UserInviteModal />
-        <FeedbackModal />
-        <ReceiveInviteModal onJoin={this.handleSelectGroup} />
-        <GroupJoinRequestModal />
-        <WaitingForRequestApprovalModal />
-        <NotificationContainer />
-      </Layout>
+      <>
+        <HeadComponent />
+        <Layout
+          left={this.leftDisplay()}
+          right={<Queue onJoin={this.handleSelectGroup} />}
+        >
+          {this.state.vonageCred && (
+            <ScreenContainer
+              style={{ width: '100%', maxHeight: '75vh' }}
+              sessionId={this.state.vonageCred.sessionId}
+              token={this.state.vonageCred.token}
+              onLeave={this.leaveGroup}
+              currGroup={this.state.currentGroup}
+              user={this.user}
+              name={this.user.firstName + ' ' + this.user.lastName}
+            />
+          )}
+          <UserInviteModal />
+          <FeedbackModal />
+          <ReceiveInviteModal onJoin={this.handleSelectGroup} />
+          <GroupJoinRequestModal />
+          <WaitingForRequestApprovalModal />
+          <NotificationContainer />
+        </Layout>
+      </>
     )
   }
 }
