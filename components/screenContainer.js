@@ -71,14 +71,26 @@ class ScreenContainer extends React.Component {
 
   getStreamToDisplay() {
     return this.state.expand === true ? (
+      <Button
+        onDoubleClick={() => {
+          this.setState({ focusStream: {} })
+          this.setState({ expand: false })
+        }}
+        style={{
+          padding: '0px',
+          width: '100%',
+          maxHeight: '75vh',
+          margin: '0px',
+        }}
+      >
       <OTSubscriber
         key={this.state.focusStream.id}
         session={this.sessionHelper.session}
         stream={this.state.focusStream}
         properties={{
           maxWidth: '75vw',
-          maxHeight: '75vh',
-          height: '85vh',
+          maxHeight: '74.5vh',
+          height: '84vh',
           width: '48vw',
           style: {
             buttonDisplayMode: 'on',
@@ -88,6 +100,7 @@ class ScreenContainer extends React.Component {
         onSubscribe={this.handleSubscribe}
         onError={this.handleSubscribeError}
       />
+      </Button>
     ) : null
   }
 
@@ -223,7 +236,7 @@ class ScreenContainer extends React.Component {
             {this.state.streams.map((stream) => (
               <>
                 <Button
-                  onClick={() => {
+                  onDoubleClick={() => {
                     this.setState({ focusStream: stream })
                     this.setState({ expand: true })
                   }}
