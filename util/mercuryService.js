@@ -184,15 +184,29 @@ export async function postJoinGroup(classId, groupId, email) {
 
 export async function getAllGroups(classId) {
   try {
-    const { data } = await axios.get(
-      `/api/classes/${classId}/groups`,
+    const { data } = await axios.get(`/api/classes/${classId}/groups`, {
+      headers: {
+        authorization: token,
+      },
+    })
+    return data
+  } catch (e) {
+    return null
+  }
+}
+
+export async function deleteGroupUser(classId, groupId, userId) {
+  try {
+    await axios.delete(
+      `/api/classes/${classId}/groups/${groupId}/leave`,
+      { userId },
       {
         headers: {
           authorization: token,
         },
       }
     )
-    return data
+    return null
   } catch (e) {
     return null
   }

@@ -100,7 +100,7 @@ router.post('/:groupId/join', middleware.authRequired, async (req, res) => {
   })
 
   if (userAlreadyInGroup) {
-    return res.status(400).json({ error: 'User already invited to group' })
+    return res.status(400).json({ error: 'User already in group' })
   }
 
   await models.GroupUser.create({

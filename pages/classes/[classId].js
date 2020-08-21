@@ -100,14 +100,25 @@ class ClassPage extends Component {
   }
 
   leaveGroup = () => {
-    EventEmitter.publish('userLeaveGroup', this.state.currentGroup)
-    this.setState({
-      vonageCred: null,
-      currentGroup: { id: '', name: '' },
-      withTa: false,
-    })
-    EventEmitter.publish('currentGroupChange', { id: '', name: '' })
-    EventEmitter.publish('callOver', this.classId)
+    api
+      .deleteGroupUser(
+        this.state.currentClass.id,
+        this.state.currentGroup.id,
+        this.user.id
+      )
+      .then(() => {
+        this.fetchAllGroups()
+        EventEmitter.publish('classGroupSetChanged', this.classId)
+        EventEmitter.publish('userLeaveGroup', this.state.currentGroup)
+        this.setState({
+          vonageCred: null,
+          currentGroup: { id: '', name: '' },
+          withTa: false,
+        })
+        EventEmitter.publish('currentGroupChange', { id: '', name: '' })
+        EventEmitter.publish('callOver', this.classId)
+      })
+      .catch(console.error)
   }
 
   defineEventEmitterCallbacks() {
