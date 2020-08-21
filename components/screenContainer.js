@@ -5,6 +5,7 @@ import { EventEmitter } from './util/EventEmitter'
 import { OTSubscriber, createSession } from 'opentok-react'
 import { Button } from 'semantic-ui-react'
 import GroupLeaderModal from './groupLeaderModal'
+import * as api from '../util/mercuryService'
 
 class ScreenContainer extends React.Component {
   constructor(props) {
@@ -12,6 +13,7 @@ class ScreenContainer extends React.Component {
     this.state = {
       user: this.props.user,
       currGroup: this.props.currGroup,
+      classId: this.props.classId,
       ssButton: true,
       streams: [],
       focusStream: {},
@@ -64,8 +66,18 @@ class ScreenContainer extends React.Component {
     EventEmitter.subscribe('disableVideoButton', () => {
       this.setState({ videoButton: false })
     })
+
     EventEmitter.subscribe('enableVideoButton', () => {
       this.setState({ videoButton: true })
+    })
+
+    EventEmitter.subscribe('refreshScreenContainer', () => {
+      api
+        .getGroupByID(this.state.classId, this.state.currGroup.id)
+        .then((payload) => {
+          console.log(payload)
+          this.setState({ currGroup: payload })
+        })
     })
   }
 
@@ -83,23 +95,23 @@ class ScreenContainer extends React.Component {
           margin: '0px',
         }}
       >
-      <OTSubscriber
-        key={this.state.focusStream.id}
-        session={this.sessionHelper.session}
-        stream={this.state.focusStream}
-        properties={{
-          maxWidth: '75vw',
-          maxHeight: '74.5vh',
-          height: '84vh',
-          width: '48vw',
-          style: {
-            buttonDisplayMode: 'on',
-            nameDisplayMode: 'on'
-          }
-        }}
-        onSubscribe={this.handleSubscribe}
-        onError={this.handleSubscribeError}
-      />
+        <OTSubscriber
+          key={this.state.focusStream.id}
+          session={this.sessionHelper.session}
+          stream={this.state.focusStream}
+          properties={{
+            maxWidth: '75vw',
+            maxHeight: '74.5vh',
+            height: '84vh',
+            width: '48vw',
+            style: {
+              buttonDisplayMode: 'on',
+              nameDisplayMode: 'on',
+            },
+          }}
+          onSubscribe={this.handleSubscribe}
+          onError={this.handleSubscribeError}
+        />
       </Button>
     ) : null
   }
@@ -218,7 +230,7 @@ class ScreenContainer extends React.Component {
                 marginBottom: '5px',
               }}
               session={this.sessionHelper.session}
-              name = {this.props.name}
+              name={this.props.name}
             />
             {this.state.streams.map((stream) => (
               <>
@@ -245,8 +257,8 @@ class ScreenContainer extends React.Component {
                       margin: '0px',
                       style: {
                         buttonDisplayMode: 'on',
-                        nameDisplayMode: 'on'
-                      }
+                        nameDisplayMode: 'on',
+                      },
                     }}
                     onSubscribe={this.handleSubscribe}
                     onError={this.handleSubscribeError}
@@ -266,7 +278,7 @@ class ScreenContainer extends React.Component {
           style={{ fontSize: '.8vw', display: 'inline-flex' }}
           content="Leave call"
         />
-        <GroupLeaderModal props={this.state.currGroup} />
+        <GroupLeaderModal currGroup={this.state.currGroup} />
       </>
     )
   }

@@ -146,6 +146,10 @@ export default class TAWebSocketClient {
     EventEmitter.publish('activateGroupLeaderModal', candidates)
   }
 
+  refreshScreenContainer() {
+    EventEmitter.publish('refreshScreenContainer')
+  }
+
   processConnectionMessage(e) {
     const { msgType, msg } = JSON.parse(e.data)
 
@@ -192,6 +196,10 @@ export default class TAWebSocketClient {
 
       case 'retrieveAllLeaderCandidates':
         this.activateGroupLeaderModal(msg)
+        break
+
+      case 'newLeaderAppointed':
+        this.refreshScreenContainer()
         break
 
       default:

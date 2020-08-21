@@ -214,13 +214,12 @@ class ClassPage extends Component {
           isMounted: true,
         })
 
-       
-          EventEmitter.publish(
-            'allOtherUsersInClass',
-            this.state.currentClass.users.filter(
-              (user) => user.id !== this.user.id && user.role === role
-            )
+        EventEmitter.publish(
+          'allOtherUsersInClass',
+          this.state.currentClass.users.filter(
+            (user) => user.id !== this.user.id && user.role === role
           )
+        )
         EventEmitter.publish('me', this.user)
         console.log(this.user)
       })
@@ -595,8 +594,9 @@ class ClassPage extends Component {
             token={this.state.vonageCred.token}
             onLeave={this.leaveGroup}
             currGroup={this.state.currentGroup}
+            classId={this.classId}
             user={this.user}
-            name = {this.user.firstName + " " + this.user.lastName}
+            name={this.user.firstName + ' ' + this.user.lastName}
           />
         )}
         <UserInviteModal />
