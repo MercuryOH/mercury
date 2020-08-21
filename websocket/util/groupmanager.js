@@ -11,19 +11,24 @@ class GroupManager {
     this.groupToSockets = new Map()
   }
 
-  addSocketToGroup(groupId, ws) {
+  addSocketToGroup({ groupId, userId }, ws) {
     if (!this.groupToSockets.has(groupId)) {
       this.groupToSockets.set(groupId, new Set())
     }
-    this.groupToSockets.get(groupId).add(ws)
+
+    this.groupToSockets.get(groupId).add({ userId, ws })
   }
 
-  async removeSocketFromGroup({ id: groupId, type }, ws) {
+  async removeSocketFromGroup({ id: groupId, type }, sender) {
     if (this.groupToSockets.has(groupId)) {
       const sockets = this.groupToSockets.get(groupId)
-      if (sockets.has(ws)) {
-        sockets.delete(ws)
-      }
+
+      sockets.forEach((wsObject) => {
+        if (wsObject.ws === sender) {
+          sockets.delete(wsObject)
+        }
+      })
+
       if (sockets.size === 0 && type === 'group') {
         this.groupToSockets.delete(groupId)
         await models.Group.destroy({ where: { id: groupId } })
@@ -37,6 +42,24 @@ class GroupManager {
     }
 
     return 0
+  }
+
+  retrieveAllLeaderCandidates({ currGroupId, userId }) {
+    if (this.groupToSockets.has(currGroupId)) {
+      const sockets = this.groupToSockets.get(currGroupId)
+
+      let usersToReturn = []
+
+      sockets.forEach((wsObject) => {
+        if (wsObject.userId !== userId) {
+          usersToReturn.push(wsObject.userId)
+        }
+      })
+
+      return usersToReturn
+    }
+
+    return []
   }
 }
 

@@ -32,15 +32,10 @@ class UserInviteModal extends Component {
       this.setState({ me })
     })
 
-    EventEmitter.subscribe(
-      this.state.me.role === 'Student'
-        ? 'allOtherStudentsInClass'
-        : 'allOtherTAsInClass',
-      (users) => {
-        this.setState({ allUsers: users })
-      }
-    )
-console.log(this.state.me)
+    EventEmitter.subscribe('allOtherUsersInClass', (users) => {
+      this.setState({ allUsers: users })
+    }) // for students(TAs), it's all other students(TAs)
+
     EventEmitter.subscribe('currentGroupChange', (currentGroup) => {
       this.setState({ currentGroup })
     })
@@ -156,11 +151,7 @@ console.log(this.state.me)
             >
               <Search
                 fluid
-                placeholder={
-                  this.state.me.role === 'Student'
-                    ? 'Invite student...'
-                    : 'Invite TA...'
-                }
+                placeholder="Invite..."
                 input={{ fluid: true }}
                 loading={this.state.isLoading}
                 onResultSelect={this.handleResultSelect}

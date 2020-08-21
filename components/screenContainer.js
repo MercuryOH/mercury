@@ -4,11 +4,13 @@ import Publisher from './publisher'
 import { EventEmitter } from './util/EventEmitter'
 import { OTSubscriber, createSession } from 'opentok-react'
 import { Button } from 'semantic-ui-react'
+import GroupLeaderModal from './groupLeaderModal'
 
 class ScreenContainer extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
+      user: this.props.user,
       currGroup: this.props.currGroup,
       ssButton: true,
       streams: [],
@@ -69,19 +71,36 @@ class ScreenContainer extends React.Component {
 
   getStreamToDisplay() {
     return this.state.expand === true ? (
+      <Button
+        onDoubleClick={() => {
+          this.setState({ focusStream: {} })
+          this.setState({ expand: false })
+        }}
+        style={{
+          padding: '0px',
+          width: '100%',
+          maxHeight: '75vh',
+          margin: '0px',
+        }}
+      >
       <OTSubscriber
         key={this.state.focusStream.id}
         session={this.sessionHelper.session}
         stream={this.state.focusStream}
         properties={{
           maxWidth: '75vw',
-          maxHeight: '75vh',
-          height: '85vh',
+          maxHeight: '74.5vh',
+          height: '84vh',
           width: '48vw',
+          style: {
+            buttonDisplayMode: 'on',
+            nameDisplayMode: 'on'
+          }
         }}
         onSubscribe={this.handleSubscribe}
         onError={this.handleSubscribeError}
       />
+      </Button>
     ) : null
   }
 
@@ -131,21 +150,8 @@ class ScreenContainer extends React.Component {
     )
   }
 
-  unexpandButton() {
-    return this.state.expand === true ? (
-      <Button
-        onClick={() => {
-          this.setState({ expand: false })
-          console.log('ore')
-        }}
-        style={{ fontSize: '.8vw', display: 'inline-flex' }}
-        content="Unexpand video"
-      />
-    ) : null
-  }
-
   componentWillMount() {
-    const { sessionId, token, onLeave } = this.props
+    const { sessionId, token } = this.props
     this.sessionHelper = createSession({
       apiKey: `${process.env.NEXT_PUBLIC_VV_API_KEY}`,
       sessionId: `${sessionId}`,
@@ -157,13 +163,30 @@ class ScreenContainer extends React.Component {
   }
 
   appointLeaderButton() {
-    return (
-      <Button
-        icon="chess king"
-        style={{ fontSize: '.8vw', display: 'inline-flex' }}
-        content="Appoint Leader"
-      />
-    )
+    /**
+     * If this is for a private group and you are the leader, show the appoint new leader button
+     */
+
+    if (
+      this.state.currGroup.type === 'group' &&
+      this.state.user.id === this.state.currGroup.UserId
+    ) {
+      return (
+        <Button
+          onClick={() =>
+            EventEmitter.publish('startLeaderAppointmentProcess', {
+              currGroupId: this.state.currGroup.id,
+              userId: this.state.user.id, // the current leader
+            })
+          }
+          icon="chess king"
+          style={{ fontSize: '.8vw', display: 'inline-flex' }}
+          content="Appoint Leader"
+        />
+      )
+    }
+
+    return null
   }
 
   componentWillUnmount() {
@@ -195,11 +218,12 @@ class ScreenContainer extends React.Component {
                 marginBottom: '5px',
               }}
               session={this.sessionHelper.session}
+              name = {this.props.name}
             />
             {this.state.streams.map((stream) => (
               <>
                 <Button
-                  onClick={() => {
+                  onDoubleClick={() => {
                     this.setState({ focusStream: stream })
                     this.setState({ expand: true })
                   }}
@@ -219,6 +243,10 @@ class ScreenContainer extends React.Component {
                       height: '18vh',
                       maxHeight: '18vh',
                       margin: '0px',
+                      style: {
+                        buttonDisplayMode: 'on',
+                        nameDisplayMode: 'on'
+                      }
                     }}
                     onSubscribe={this.handleSubscribe}
                     onError={this.handleSubscribeError}
@@ -229,7 +257,6 @@ class ScreenContainer extends React.Component {
           </div>
         </div>
         {this.videoStateButton()}
-        {this.unexpandButton()}
         {this.screenShareButton()}
         {this.appointLeaderButton()}
         <Button
@@ -239,6 +266,7 @@ class ScreenContainer extends React.Component {
           style={{ fontSize: '.8vw', display: 'inline-flex' }}
           content="Leave call"
         />
+        <GroupLeaderModal props={this.state.currGroup} />
       </>
     )
   }

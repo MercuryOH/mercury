@@ -211,7 +211,7 @@ const handleStudentMessage = async (ws, message) => {
       break
 
     case 'userJoinGroup':
-      // msg - group ID
+      // msg - group ID and userId
       groupManager.addSocketToGroup(msg, ws)
       webSocketConnectionManager.broadcast(
         courseId,
@@ -220,6 +220,20 @@ const handleStudentMessage = async (ws, message) => {
           msg: 'fetchGroups',
         })
       )
+      break
+
+    case 'startLeaderAppointmentProcess':
+      // msg - the current group and the userID (i.e. the current leader)
+      ws.send(
+        prepareMessage({
+          msgType: 'retrieveAllLeaderCandidates',
+          msg: groupManager.retrieveAllLeaderCandidates(msg).map((userId) => ({
+            userId,
+            fullName: userRepository.getFullName(userId),
+          })),
+        })
+      )
+
       break
 
     default:

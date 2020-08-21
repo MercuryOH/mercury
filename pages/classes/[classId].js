@@ -73,8 +73,14 @@ class ClassPage extends Component {
             this.leaveGroup()
           }
         }
-        this.setState({ vonageCred: { sessionId: group.sessionId, token } })
-        this.setState({ currentGroup: group })
+        this.setState({
+          vonageCred: { sessionId: group.sessionId, token },
+          currentGroup: group,
+        })
+        EventEmitter.publish('userJoinGroup', {
+          groupId: group.id,
+          userId: this.user.id,
+        })
         EventEmitter.publish('currentGroupChange', group)
       })
 
@@ -208,22 +214,13 @@ class ClassPage extends Component {
           isMounted: true,
         })
 
-        if (role === 'Student') {
+       
           EventEmitter.publish(
-            'allOtherStudentsInClass',
+            'allOtherUsersInClass',
             this.state.currentClass.users.filter(
-              (user) => user.id !== this.user.id && user.role === 'Student'
+              (user) => user.id !== this.user.id && user.role === role
             )
           )
-        } else {
-          EventEmitter.publish(
-            'allOtherTAsInClass',
-            this.state.currentClass.users.filter(
-              (user) => user.id !== this.user.id && user.role === 'Professor'
-            )
-          )
-        }
-
         EventEmitter.publish('me', this.user)
         console.log(this.user)
       })
@@ -598,6 +595,8 @@ class ClassPage extends Component {
             token={this.state.vonageCred.token}
             onLeave={this.leaveGroup}
             currGroup={this.state.currentGroup}
+            user={this.user}
+            name = {this.user.firstName + " " + this.user.lastName}
           />
         )}
         <UserInviteModal />
