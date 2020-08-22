@@ -5,6 +5,7 @@
  */
 
 const models = require('../../models')
+const { prepareMessage } = require('./util')
 
 class GroupManager {
   constructor() {
@@ -23,15 +24,45 @@ class GroupManager {
     if (this.groupToSockets.has(groupId)) {
       const sockets = this.groupToSockets.get(groupId)
 
-      sockets.forEach((wsObject) => {
-        if (wsObject.ws === sender) {
-          sockets.delete(wsObject)
-        }
-      })
+      const socketObjectToFind = [...sockets].filter(
+        (wsObject) => wsObject.ws === sender
+      )
 
-      if (sockets.size === 0 && type === 'group') {
-        this.groupToSockets.delete(groupId)
-        await models.Group.destroy({ where: { id: groupId } })
+      if (socketObjectToFind.length > 1) {
+        throw new Error('Duplicate Socket Found')
+      }
+
+      /**
+       * If the socket is found, then we can delete the socket
+       */
+
+      if (socketObjectToFind.length > 0) {
+        sockets.delete(socketObjectToFind[0])
+
+        /**First, check if the groupType is a private group */
+        if (type === 'group') {
+          /**If the group is now empty */
+          if (sockets.size === 0) {
+            // destroy the group
+            this.groupToSockets.delete(groupId)
+            await models.Group.destroy({ where: { id: groupId } })
+          } else {
+            // find the group and see if the leader has left
+            const group = await models.Group.findOne({ where: { id: groupId } })
+
+            // the leader has left
+            if (group.UserId === socketObjectToFind[0].userId) {
+              // notify everyone that the leader has left, and include the old leader Id
+              this.broadcast(
+                groupId,
+                prepareMessage({
+                  msgType: 'oldLeaderHasLeft',
+                  msg: { groupId, userId: group.UserId },
+                })
+              )
+            }
+          }
+        }
       }
     }
   }
@@ -44,29 +75,26 @@ class GroupManager {
     return 0
   }
 
-  retrieveAllLeaderCandidates({ currGroupId, userId }) {
-    if (this.groupToSockets.has(currGroupId)) {
-      const sockets = this.groupToSockets.get(currGroupId)
+  async appointNewLeader({ newLeader, oldLeader, groupId }) {
+    const group = await models.Group.findOne({ where: { id: groupId } })
+    if (group.UserId === oldLeader) {
+      // the first guy to get here gets appointed as leader
+      try {
+        await models.Group.update(
+          { UserId: newLeader },
+          { where: { id: groupId } }
+        )
 
-      let usersToReturn = []
-
-      sockets.forEach((wsObject) => {
-        if (wsObject.userId !== userId) {
-          usersToReturn.push(wsObject.userId)
-        }
-      })
-
-      return usersToReturn
-    }
-
-    return []
-  }
-
-  async appointNewLeader({ groupId, userId }) {
-    try {
-      await models.Group.update({ UserId: userId }, { where: { id: groupId } })
-    } catch (err) {
-      console.log(err)
+        this.broadcast(
+          groupId,
+          prepareMessage({
+            msgType: 'wonLeaderBid',
+            msg: newLeader,
+          })
+        )
+      } catch (err) {
+        console.log(err)
+      }
     }
   }
 

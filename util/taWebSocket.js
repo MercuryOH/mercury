@@ -74,20 +74,12 @@ export default class TAWebSocketClient {
       }
     )
 
-    EventEmitter.subscribe('startLeaderAppointmentProcess', (data) => {
+    EventEmitter.subscribe('bidForLeaderPosition', ({ userId, groupId }) => {
       this.connection.send(
+        'bidForLeaderPosition',
         this.prepareMessage({
-          msgType: 'startLeaderAppointmentProcess',
-          msg: data,
-        })
-      )
-    })
-
-    EventEmitter.subscribe('sendLeaderAppointmentNotification', (data) => {
-      this.connection.send(
-        this.prepareMessage({
-          msgType: 'leaderAppointmentNotification',
-          msg: data,
+          msgType: 'bidForLeaderPosition',
+          msg: { newLeader: this.id, oldLeader: userId, groupId },
         })
       )
     })
@@ -146,6 +138,14 @@ export default class TAWebSocketClient {
     EventEmitter.publish('refreshScreenContainer')
   }
 
+  activateWaitingForNewLeaderModal(data) {
+    EventEmitter.publish('activateWaitingForNewLeaderModal', data)
+  }
+
+  removeWaitingForNewLeaderModal(newLeaderId) {
+    EventEmitter.publish('removeWaitingForNewLeaderModal', newLeaderId)
+  }
+
   processConnectionMessage(e) {
     const { msgType, msg } = JSON.parse(e.data)
 
@@ -193,6 +193,14 @@ export default class TAWebSocketClient {
       case 'newLeaderAppointed':
         this.refreshScreenContainer()
         break
+
+      case 'oldLeaderHasLeft':
+        // msg - the old leader Id and the group id
+        this.activateWaitingForNewLeaderModal(msg)
+        break
+
+      case 'wonLeaderBid':
+        this.removeWaitingForNewLeaderModal(msg)
 
       default:
         throw new Error(`Message ${msg} is incorrectly formatted`)
