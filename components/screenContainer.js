@@ -1,6 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import Publisher from './publisher'
+import _ from 'lodash'
 import { EventEmitter } from './util/EventEmitter'
 import { OTSubscriber, createSession } from 'opentok-react'
 import { Button } from 'semantic-ui-react'
@@ -14,6 +15,8 @@ class ScreenContainer extends React.Component {
       focusStream: {},
       videoButton: true,
       expand: false,
+      searchName: '',
+      searchSession: '',
     }
 
     this.defineEventEmitterCallbacks()
@@ -65,10 +68,17 @@ class ScreenContainer extends React.Component {
     EventEmitter.subscribe('enableVideoButton', () => {
       this.setState({ videoButton: true })
     })
+
+    EventEmitter.subscribe('newScreensharer', (msg) => {
+      if (this.props.sessionId === msg.sessionId) {
+        this.setState({focusStream: _.find(this.state.streams, {'name': msg.name }), expand: true})
+        console.log(this.state.focusStream)
+      }
+    })
   }
 
   getStreamToDisplay() {
-    return this.state.expand === true ? (
+    return this.state.expand === true && this.state.focusStream != undefined ? (
       <Button
         onDoubleClick={() => {
           this.setState({ focusStream: {} })

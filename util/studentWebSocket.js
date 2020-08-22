@@ -125,6 +125,15 @@ export default class StudentWebSocketClient {
         })
       )
     })
+
+    EventEmitter.subscribe('screenShareOn', (data) => {
+      this.connection.send(
+        this.prepareMessage({
+          msgType: 'screenShareOn',
+          msg: data,
+        })
+      )
+    })
   }
 
   processConnectionOpen() {
@@ -180,6 +189,9 @@ export default class StudentWebSocketClient {
     EventEmitter.publish('refreshScreenContainer')
   }
 
+  changeScreensharer(msg) {
+    EventEmitter.publish('newScreensharer', msg)
+    
   activateWaitingForNewLeaderModal(data) {
     console.log(JSON.stringify(data))
     EventEmitter.publish('activateWaitingForNewLeaderModal', data)
@@ -235,6 +247,9 @@ export default class StudentWebSocketClient {
       case 'newLeaderAppointed':
         this.refreshScreenContainer()
         break
+
+      case 'fetchScreensharer':
+        this.changeScreensharer(msg)
 
       case 'oldLeaderHasLeft':
         // msg - the old leader Id and the group id

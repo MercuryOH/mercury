@@ -222,6 +222,16 @@ const handleStudentMessage = async (ws, message) => {
       )
       break
 
+    case 'screenShareOn':
+      // msg - person name and sessionId
+      webSocketConnectionManager.broadcast(
+        courseId,
+        prepareMessage({
+          msgType: 'fetchScreensharer',
+          msg: msg,
+        })
+      )
+
     case 'bidForLeaderPosition':
       // msg - new leader Id, old Leader Id, groupId
       await groupManager.appointNewLeader(msg)
