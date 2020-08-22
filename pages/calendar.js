@@ -2,9 +2,9 @@ import React, { useState, useEffect } from 'react'
 import LargeLabel from '../components/largeLabel'
 import DropDown from '../components/dropDown'
 import Layout from '../components/layout'
+import HeadComponent from '../components/headComponent'
 
 import { AuthRequired } from '../components/authProvider'
-
 import * as api from '../util/mercuryService'
 
 function Calendar() {
@@ -41,23 +41,26 @@ function Calendar() {
   }
 
   return (
-    <Layout
-      left={
-        <div style={{ paddingLeft: 20, paddingRight: 20 }}>
-          <LargeLabel content={<p>Classes</p>}></LargeLabel>
-          <DropDown></DropDown>
-        </div>
-      }
-    >
-      <iframe
-        src={mergeCal(classes)}
-        style={{ border: '0' }}
-        width={'100%'}
-        height={'100%'}
-        frameBorder={0}
-        scrolling="no"
-      ></iframe>
-    </Layout>
+    <>
+      <HeadComponent />
+      <Layout
+        left={
+          <div style={{ paddingLeft: 20, paddingRight: 20 }}>
+            <LargeLabel content={<p>Classes</p>}></LargeLabel>
+            <DropDown></DropDown>
+          </div>
+        }
+      >
+        <iframe
+          src={mergeCal(classes)}
+          style={{ border: '0' }}
+          width={'100%'}
+          height={'100%'}
+          frameBorder={0}
+          scrolling="no"
+        ></iframe>
+      </Layout>
+    </>
   )
 }
 
