@@ -17,6 +17,7 @@ import { NotificationContainer, NotificationManager } from 'react-notifications'
 import GroupJoinRequestModal from '../../components/invite/groupJoinRequestModal'
 import WaitingForRequestApprovalModal from '../../components/invite/WaitingForRequestApprovalModal'
 import HeadComponent from '../../components/headComponent'
+import WaitingForNewLeaderModal from '../../components/WaitingForNewLeaderModal'
 
 const ScreenContainer = dynamic(
   () => import('../../components/screenContainer'),
@@ -88,7 +89,6 @@ class ClassPage extends Component {
       .then(() => {
         api.postJoinGroup(this.classId, group.id, this.user.email)
         EventEmitter.publish('classGroupSetChanged', this.classId)
-        EventEmitter.publish('userJoinGroup', group.id)
       })
       .then(() => {
         this.fetchAllGroups()
@@ -584,31 +584,27 @@ class ClassPage extends Component {
     }
 
     return (
-      <>
-        <HeadComponent />
-        <Layout
-          left={this.leftDisplay()}
-          right={<Queue onJoin={this.handleSelectGroup} />}
-        >
-          {this.state.vonageCred && (
-            <ScreenContainer
-              style={{ width: '100%', maxHeight: '75vh' }}
-              sessionId={this.state.vonageCred.sessionId}
-              token={this.state.vonageCred.token}
-              onLeave={this.leaveGroup}
-              currGroup={this.state.currentGroup}
-              user={this.user}
-              name={this.user.firstName + ' ' + this.user.lastName}
-            />
-          )}
-          <UserInviteModal />
-          <FeedbackModal />
-          <ReceiveInviteModal onJoin={this.handleSelectGroup} />
-          <GroupJoinRequestModal />
-          <WaitingForRequestApprovalModal />
-          <NotificationContainer />
-        </Layout>
-      </>
+      <Layout
+        left={this.leftDisplay()}
+        right={<Queue onJoin={this.handleSelectGroup} />}
+      >
+        {this.state.vonageCred && (
+          <ScreenContainer
+            style={{ width: '100%', maxHeight: '75vh' }}
+            sessionId={this.state.vonageCred.sessionId}
+            token={this.state.vonageCred.token}
+            onLeave={this.leaveGroup}
+            name={this.user.firstName + ' ' + this.user.lastName}
+          />
+        )}
+        <UserInviteModal />
+        <FeedbackModal />
+        <ReceiveInviteModal onJoin={this.handleSelectGroup} />
+        <GroupJoinRequestModal />
+        <WaitingForRequestApprovalModal />
+        <NotificationContainer />
+        <WaitingForNewLeaderModal user={this.user.id} />
+      </Layout>
     )
   }
 }
