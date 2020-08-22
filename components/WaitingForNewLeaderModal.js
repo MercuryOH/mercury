@@ -3,6 +3,10 @@ import { Modal, Header } from 'semantic-ui-react'
 import { EventEmitter } from './util/EventEmitter'
 import Loader from 'react-loader-spinner'
 
+function sleep(ms) {
+  return new Promise((resolve) => setTimeout(resolve, ms))
+}
+
 export default class WaitingForNewLeaderModal extends Component {
   constructor(props) {
     super(props)
@@ -12,8 +16,11 @@ export default class WaitingForNewLeaderModal extends Component {
     }
 
     EventEmitter.subscribe('activateWaitingForNewLeaderModal', (data) => {
-      this.setState({ modalState: true })
-      EventEmitter.publish('bidForLeaderPosition', data)
+      this.setState({ modalState: true }, () => {
+        sleep(3000).then(() => {
+          EventEmitter.publish('bidForLeaderPosition', data)
+        })
+      })
     })
 
     EventEmitter.subscribe('removeWaitingForNewLeaderModal', (winnerId) => {
