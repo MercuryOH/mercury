@@ -147,9 +147,9 @@ export default class TAWebSocketClient {
     EventEmitter.publish('refreshScreenContainer')
   }
 
-
   changeScreensharer(msg) {
     EventEmitter.publish('newScreensharer', msg)
+  }
 
   activateWaitingForNewLeaderModal(data) {
     EventEmitter.publish('activateWaitingForNewLeaderModal', data)
@@ -157,7 +157,6 @@ export default class TAWebSocketClient {
 
   removeWaitingForNewLeaderModal(newLeaderId) {
     EventEmitter.publish('removeWaitingForNewLeaderModal', newLeaderId)
-
   }
 
   processConnectionMessage(e) {
@@ -208,10 +207,9 @@ export default class TAWebSocketClient {
         this.refreshScreenContainer()
         break
 
-
-        case 'fetchScreensharer':
-          this.changeScreensharer(msg)
-          break
+      case 'fetchScreensharer':
+        this.changeScreensharer(msg)
+        break
 
       case 'oldLeaderHasLeft':
         // msg - the old leader Id and the group id

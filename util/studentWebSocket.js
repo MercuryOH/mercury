@@ -191,7 +191,8 @@ export default class StudentWebSocketClient {
 
   changeScreensharer(msg) {
     EventEmitter.publish('newScreensharer', msg)
-    
+  }
+
   activateWaitingForNewLeaderModal(data) {
     console.log(JSON.stringify(data))
     EventEmitter.publish('activateWaitingForNewLeaderModal', data)
