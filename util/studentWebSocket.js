@@ -117,20 +117,11 @@ export default class StudentWebSocketClient {
       )
     })
 
-    EventEmitter.subscribe('startLeaderAppointmentProcess', (data) => {
+    EventEmitter.subscribe('bidForLeaderPosition', ({ userId, groupId }) => {
       this.connection.send(
         this.prepareMessage({
-          msgType: 'startLeaderAppointmentProcess',
-          msg: data,
-        })
-      )
-    })
-
-    EventEmitter.subscribe('sendLeaderAppointmentNotification', (data) => {
-      this.connection.send(
-        this.prepareMessage({
-          msgType: 'leaderAppointmentNotification',
-          msg: data,
+          msgType: 'bidForLeaderPosition',
+          msg: { newLeader: this.id, oldLeader: userId, groupId },
         })
       )
     })
@@ -200,6 +191,14 @@ export default class StudentWebSocketClient {
 
   changeScreensharer(msg) {
     EventEmitter.publish('newScreensharer', msg)
+    
+  activateWaitingForNewLeaderModal(data) {
+    console.log(JSON.stringify(data))
+    EventEmitter.publish('activateWaitingForNewLeaderModal', data)
+  }
+
+  removeWaitingForNewLeaderModal(newLeaderId) {
+    EventEmitter.publish('removeWaitingForNewLeaderModal', newLeaderId)
   }
 
   processConnectionMessage(e) {
@@ -251,6 +250,14 @@ export default class StudentWebSocketClient {
 
       case 'fetchScreensharer':
         this.changeScreensharer(msg)
+
+      case 'oldLeaderHasLeft':
+        // msg - the old leader Id and the group id
+        this.activateWaitingForNewLeaderModal(msg)
+        break
+
+      case 'wonLeaderBid':
+        this.removeWaitingForNewLeaderModal(msg)
         break
 
       default:

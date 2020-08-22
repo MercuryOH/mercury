@@ -231,6 +231,10 @@ const handleStudentMessage = async (ws, message) => {
           msg: msg,
         })
       )
+
+    case 'bidForLeaderPosition':
+      // msg - new leader Id, old Leader Id, groupId
+      await groupManager.appointNewLeader(msg)
       break
 
     default:

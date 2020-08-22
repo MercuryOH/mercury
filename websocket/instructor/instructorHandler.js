@@ -136,6 +136,11 @@ const handleInstructorMessage = async (ws, message) => {
         )
         break
 
+    case 'bidForLeaderPosition':
+      // msg - new leader Id, old Leader Id, groupId
+      await groupManager.appointNewLeader(msg)
+      break
+
     default:
       throw new Error(
         `Message Type ${msgType} is not recognized for instructor`
