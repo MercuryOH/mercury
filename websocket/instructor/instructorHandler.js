@@ -125,6 +125,17 @@ const handleInstructorMessage = async (ws, message) => {
       )
       break
 
+      case 'screenShareOn':
+        // msg - person name and sessionId
+        webSocketConnectionManager.broadcast(
+          courseId,
+          prepareMessage({
+            msgType: 'fetchScreensharer',
+            msg: msg,
+          })
+        )
+        break
+
     default:
       throw new Error(
         `Message Type ${msgType} is not recognized for instructor`

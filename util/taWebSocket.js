@@ -91,6 +91,15 @@ export default class TAWebSocketClient {
         })
       )
     })
+
+    EventEmitter.subscribe('screenShareOn', (data) => {
+      this.connection.send(
+        this.prepareMessage({
+          msgType: 'screenShareOn',
+          msg: data,
+        })
+      )
+    })
   }
 
   processConnectionOpen() {
@@ -146,6 +155,10 @@ export default class TAWebSocketClient {
     EventEmitter.publish('refreshScreenContainer')
   }
 
+  changeScreensharer(msg) {
+    EventEmitter.publish('newScreensharer', msg)
+  }
+
   processConnectionMessage(e) {
     const { msgType, msg } = JSON.parse(e.data)
 
@@ -193,6 +206,10 @@ export default class TAWebSocketClient {
       case 'newLeaderAppointed':
         this.refreshScreenContainer()
         break
+
+        case 'fetchScreensharer':
+          this.changeScreensharer(msg)
+          break
 
       default:
         throw new Error(`Message ${msg} is incorrectly formatted`)
