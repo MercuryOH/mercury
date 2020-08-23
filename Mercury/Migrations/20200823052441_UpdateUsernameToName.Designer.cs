@@ -2,15 +2,17 @@
 using Mercury.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace Mercury.Migrations
 {
     [DbContext(typeof(MercuryContext))]
-    partial class MercuryContextModelSnapshot : ModelSnapshot
+    [Migration("20200823052441_UpdateUsernameToName")]
+    partial class UpdateUsernameToName
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

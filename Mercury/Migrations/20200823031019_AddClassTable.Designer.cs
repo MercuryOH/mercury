@@ -2,15 +2,17 @@
 using Mercury.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace Mercury.Migrations
 {
     [DbContext(typeof(MercuryContext))]
-    partial class MercuryContextModelSnapshot : ModelSnapshot
+    [Migration("20200823031019_AddClassTable")]
+    partial class AddClassTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -58,22 +60,6 @@ namespace Mercury.Migrations
                     b.HasIndex("ClassId");
 
                     b.ToTable("Groups");
-                });
-
-            modelBuilder.Entity("Mercury.Entities.User", b =>
-                {
-                    b.Property<string>("Id")
-                        .HasColumnType("text");
-
-                    b.Property<string>("Email")
-                        .HasColumnType("text");
-
-                    b.Property<string>("Name")
-                        .HasColumnType("text");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Users");
                 });
 
             modelBuilder.Entity("Mercury.Entities.Group", b =>

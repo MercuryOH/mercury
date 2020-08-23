@@ -14,5 +14,9 @@ namespace Mercury.Entities
 
         [StringRange(AllowedValues = new string[] { "Group", "Discussion", "Office"})]
         public string Type { get; set; }
+
+        public string ClassId { get; set; }
+        
+        public Class Class { get; set; }
     }
 }

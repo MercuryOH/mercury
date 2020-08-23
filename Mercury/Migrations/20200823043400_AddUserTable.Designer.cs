@@ -2,15 +2,17 @@
 using Mercury.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace Mercury.Migrations
 {
     [DbContext(typeof(MercuryContext))]
-    partial class MercuryContextModelSnapshot : ModelSnapshot
+    [Migration("20200823043400_AddUserTable")]
+    partial class AddUserTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -68,7 +70,7 @@ namespace Mercury.Migrations
                     b.Property<string>("Email")
                         .HasColumnType("text");
 
-                    b.Property<string>("Name")
+                    b.Property<string>("Username")
                         .HasColumnType("text");
 
                     b.HasKey("Id");

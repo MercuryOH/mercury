@@ -4,11 +4,12 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
+using System.Linq;
 
 namespace Mercury.Controllers
 {
     [Produces("application/json")]
-    [Route("api/[controller]")]
+    [Route("api/classes/{classId}/[controller]")]
     [ApiController]
     public class GroupsController : ControllerBase
     {
@@ -22,13 +23,20 @@ namespace Mercury.Controllers
         }
 
         [HttpPost]
-        [Authorize]
-        public IActionResult Post([FromBody] GroupCreateDto model)
+        public IActionResult PostGroup(string classId, [FromBody] GroupCreateDto model)
         {
+            var currentClass = _context.Classes.FirstOrDefault(x => x.Id == classId);
+            
+            if (currentClass == null)
+            {
+                return BadRequest();
+            }
+
             var group = new Group
             {
                 Type = model.Type,
-                SessionId = "session-goes-here"
+                SessionId = "session-goes-here",
+                ClassId = currentClass.Id
             };
 
             try
@@ -37,7 +45,8 @@ namespace Mercury.Controllers
                 _context.SaveChanges();
 
                 return Ok(group);
-            } catch (Exception e)
+            }
+            catch (Exception e)
             {
                 _logger.LogError(e.Message);
                 return BadRequest();

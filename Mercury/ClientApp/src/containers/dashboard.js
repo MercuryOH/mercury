@@ -1,8 +1,9 @@
 import React from 'react'
 import { withAuthenticationRequired } from '@auth0/auth0-react'
+import Layout from '../components/layout'
 
 function DashboardContainer() {
-  return <p>Protected Dashboard Page</p>
+  return <Layout>Hello World</Layout>
 }
 
 export default withAuthenticationRequired(DashboardContainer)
