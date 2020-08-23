@@ -27,30 +27,19 @@ class ModifyClassesModal extends Component {
       .then((meData) => {
         this.user = meData
       })
-      .then(() => api.getClasses())
+      .then(() => api.getAllClasses())
       .then((classes) => {
+        console.log(classes)
         classes.map((c) => {
           api.getClass(c.id).then((c) => {
             const userRole = c.users.find((u) => u.id === this.user.id)
-            if (!userRole) {
-              classRoles.push({
-                classId: c.id,
-                className: c.name,
-                classRole: '',
-              })
-              console.log(classRoles)
-            } else {
-              const { role } = userRole
-              classRoles.push({
-                classId: c.id,
-                className: c.name,
-                classRole: role,
-              })
-              console.log(classRoles)
-            }
+            classRoles.push({
+              classId: c.id,
+              className: c.name,
+              classRole: userRole ? userRole.role : '',
+            })
           })
         })
-        console.log(classRoles)
         this.setState({ classRoles })
       })
 
@@ -63,10 +52,8 @@ class ModifyClassesModal extends Component {
   }
 
   getTACell(classRole) {
-    return classRole === 'Student' ? (
-      <Input />
-    ) : classRole === '' ? (
-      <></>
+    return classRole === 'Student' || classRole === '' ? (
+      <Input placeholder={'Enter permission code...'}/>
     ) : (
       <Header as="h4">
         <Header.Content>{'verified ' + classRole}</Header.Content>
@@ -119,7 +106,7 @@ class ModifyClassesModal extends Component {
                       Student
                     </Table.HeaderCell>
                     <Table.HeaderCell style={{ textAlign: 'center' }}>
-                      TA
+                      TA/Professor
                     </Table.HeaderCell>
                   </Table.Row>
                 </Table.Header>

@@ -22,19 +22,17 @@ function Calendar() {
   //   '4ctv2ua6npuegf05gh00iukd5g@group.calendar.google.com',
   // ]
 
-  // var randomColor = "000000".replace(/0/g,function(){return (~~(Math.random()*16)).toString(16);});
   const colors = ['D50000', 'F4511E', 'F6BF26', 'C0CA33', '0B8043', '009688']
 
   function mergeCal(classList) {
     var src = 'https://calendar.google.com/calendar/embed?mode=WEEK&showTitle=0'
     classList.forEach((c) => {
-      //src = src + '&src=' + c.calendarId + "&color=#" + Math.floor(Math.random()*16777215).toString(16)
       src =
         src +
         '&src=' +
         c.calendarId +
         '&color=%23' +
-        colors[(c.id - 2) % colors.length] //Is there a reason why class ids start from 2??
+        colors[(c.id - 2) % colors.length] 
     })
 
     return src

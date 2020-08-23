@@ -13,7 +13,7 @@ router.get('/', middleware.authRequired, async (req, res) => {
   return res.json(classes)
 })
 
-router.get('/:classId', middleware.authRequired, async (req, res) => {
+router.get('/class/:classId', middleware.authRequired, async (req, res) => {
   const { classId: ClassId } = req.params
 
   const currentClass = await models.Class.findByPk(ClassId, {
@@ -40,6 +40,18 @@ router.get('/:classId', middleware.authRequired, async (req, res) => {
       role: u.ClassUser.role,
     })),
   })
+})
+
+router.get('/allClasses', middleware.authRequired, async (req, res) => {
+
+  const allClasses = await models.Class.findAll()
+  const all = allClasses.map((c) => ({
+    id: c.id,
+    name: c.name,
+    calendarId: c.calendarId,
+  }))
+
+  return res.json(all)
 })
 
 module.exports = router
