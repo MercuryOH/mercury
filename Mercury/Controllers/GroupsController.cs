@@ -1,10 +1,12 @@
 ﻿using Mercury.Entities;
 using Mercury.Models.Groups;
+using Mercury.Utils;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Linq;
+using System.Security.Claims;
 
 namespace Mercury.Controllers
 {
@@ -23,8 +25,10 @@ namespace Mercury.Controllers
         }
 
         [HttpPost]
+        [Authorize]
         public IActionResult PostGroup(string classId, [FromBody] GroupCreateDto model)
         {
+            var id = Auth.GetUserId(User);
             var currentClass = _context.Classes.FirstOrDefault(x => x.Id == classId);
             
             if (currentClass == null)

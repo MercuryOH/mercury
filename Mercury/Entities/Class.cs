@@ -16,5 +16,6 @@ namespace Mercury.Entities
         public string CalendarId { get; set; }
 
         public IEnumerable<Group> Groups { get; set; }
+        public IEnumerable<ClassUser> ClassUsers { get; set; }
     }
 }

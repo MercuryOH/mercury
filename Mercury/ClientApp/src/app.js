@@ -10,6 +10,7 @@ const baseUrl = document.getElementsByTagName('base')[0].getAttribute('href')
 function App() {
   return (
     <Auth0Provider
+      audience="https://api.mercury"
       domain="mercury-development.us.auth0.com"
       clientId="GVN3BPWdu5p0T12gZGpBx42F5sV0VBu7"
       redirectUri={window.location.origin}

@@ -10,6 +10,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.IdentityModel.Logging;
 using System.Security.Claims;
 
 namespace Mercury
@@ -36,21 +37,18 @@ namespace Mercury
             {
                 opt.Authority = domain;
                 opt.Audience = Configuration["Auth0:ApiIdentifier"];
-                opt.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters
-                {
-                    NameClaimType = ClaimTypes.NameIdentifier
-                };
             });
+            
+            services.AddSingleton<IAuthorizationHandler, HasScopeHandler>();
 
             services.AddDbContext<MercuryContext>(opt =>
             {
                 opt.UseNpgsql(Configuration.GetConnectionString("Postgres"));
             });
-            
-            services.AddSingleton<IAuthorizationHandler, HasScopeHandler>();
-            
-            services.AddControllersWithViews();
+
             services.AddSwaggerGen();
+
+            services.AddControllersWithViews();
 
             // In production, the React files will be served from this directory
             services.AddSpaStaticFiles(configuration =>
@@ -83,9 +81,11 @@ namespace Mercury
             app.UseStaticFiles();
             app.UseSpaStaticFiles();
 
+            app.UseAuthentication();
             app.UseRouting();
 
             app.UseAuthorization();
+            
 
             app.UseEndpoints(endpoints =>
             {

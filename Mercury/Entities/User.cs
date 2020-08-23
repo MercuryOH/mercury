@@ -1,4 +1,6 @@
-﻿namespace Mercury.Entities
+﻿using System.Collections.Generic;
+
+namespace Mercury.Entities
 {
     public class User
     {
