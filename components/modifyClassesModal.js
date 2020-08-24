@@ -10,6 +10,7 @@ import {
 } from 'semantic-ui-react'
 import _ from 'lodash'
 import * as api from '../util/mercuryService'
+import { EventEmitter } from './util/EventEmitter'
 
 class ModifyClassesModal extends Component {
   constructor(props) {
@@ -20,6 +21,7 @@ class ModifyClassesModal extends Component {
       classRoles: [],
     }
   }
+
   componentDidMount() {
     const classRoles = []
     api
@@ -30,13 +32,12 @@ class ModifyClassesModal extends Component {
       .then(() => api.getAllClasses())
       .then((classes) => {
         console.log(classes)
-        classes.map((c) => {
-          api.getClass(c.id).then((c) => {
+        classes.map((cc) => {
+          api.getClass(cc.id).then((c) => {
             const userRole = c.users.find((u) => u.id === this.user.id)
             classRoles.push({
-              classId: c.id,
-              className: c.name,
-              classRole: userRole ? userRole.role : '',
+              ...cc,
+              role: userRole ? userRole.role : '',
             })
           })
         })
@@ -48,12 +49,12 @@ class ModifyClassesModal extends Component {
 
   handleSubmit = () => {
     this.setState({ modalState: false })
-    // this.props.onSubmit(this.state.classRoles)
+    EventEmitter.publish('currentlyEnrolled', this.state.classRoles)
   }
 
   getTACell(classRole) {
     return classRole === 'Student' || classRole === '' ? (
-      <Input placeholder={'Enter permission code...'}/>
+      <Input placeholder={'Enter permission code...'} />
     ) : (
       <Header as="h4">
         <Header.Content>{'verified ' + classRole}</Header.Content>
@@ -113,22 +114,40 @@ class ModifyClassesModal extends Component {
 
                 <Table.Body>
                   {this.state.classRoles.map((c) => (
-                    <Table.Row key={c.classId}>
+                    <Table.Row key={c.id}>
                       <Table.Cell style={{ textAlign: 'center' }}>
                         <Header as="h4">
-                          <Header.Content>{c.className}</Header.Content>
+                          <Header.Content>{c.name}</Header.Content>
                         </Header>
                       </Table.Cell>
                       <Table.Cell style={{ textAlign: 'center' }}>
                         <Checkbox
                           disabled={
-                            c.classRole === 'Professor' || c.classRole === 'TA'
+                            c.role === 'Professor' || c.role === 'TA'
                           }
-                          checked={c.classRole === 'Student'}
+                          checked={c.role === 'Student'}
+                          onChange={() =>
+                            this.setState({
+                              classRoles: this.state.classRoles.map((cc) => {
+                                if (
+                                  cc.id === c.id &&
+                                  (cc.role === '' ||
+                                    cc.role === 'Student')
+                                ) {
+                                  return {
+                                    ...cc,
+                                    role:
+                                      cc.role === '' ? 'Student' : '',
+                                  }
+                                }
+                                return cc
+                              }),
+                            })
+                          }
                         />
                       </Table.Cell>
                       <Table.Cell style={{ textAlign: 'center' }}>
-                        {this.getTACell(c.classRole)}
+                        {this.getTACell(c.role)}
                       </Table.Cell>
                     </Table.Row>
                   ))}
@@ -157,10 +176,6 @@ class ModifyClassesModal extends Component {
       </div>
     )
   }
-}
-
-ModifyClassesModal.propTypes = {
-  onSubmit: PropTypes.func.isRequired,
 }
 
 export default ModifyClassesModal
