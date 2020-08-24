@@ -169,7 +169,12 @@ class ClassPage extends Component {
 
     EventEmitter.subscribe('createTAOffice', (classUser) => {
       this.fetchAllGroups()
-      this.handleCreateTAOffice({classId: classUser.classId, name: this.user.firstName + " " + this.user.lastName + "'s Office", type: 'office', userId: classUser.userId})
+      this.handleCreateTAOffice({
+        classId: classUser.classId,
+        name: this.user.firstName + ' ' + this.user.lastName + "'s Office",
+        type: 'office',
+        userId: classUser.userId,
+      })
     })
   }
 
@@ -359,7 +364,10 @@ class ClassPage extends Component {
   }
 
   handleCreateTAOffice = async (group) => {
-    if (this.state.allGroups.filter((check) => check.name === group.name ).length === 0){
+    if (
+      this.state.allGroups.filter((check) => check.name === group.name)
+        .length === 0
+    ) {
       const groupData = await api.postGroup(
         group.classId,
         group.name,
@@ -369,8 +377,8 @@ class ClassPage extends Component {
       console.log('yeet')
       EventEmitter.publish('classGroupSetChanged', this.classId)
       this.fetchAllGroups()
+    } else {
     }
-    else {}
   }
 
   handleCreateGroup = async (group) => {
@@ -596,12 +604,15 @@ class ClassPage extends Component {
         </div>
       </div>
     ) : (
-      <div style={{ height: '100%', marginLeft: '2.5%' }} >
-      <Button
-      fluid
-      style={{ fontSize: '1vw' }}
-      content = {'Please leave your current call to join another call. You are currently in ' + `${this.state.currentGroup.name}`}
-      />
+      <div style={{ height: '100%', marginLeft: '2.5%' }}>
+        <Button
+          fluid
+          style={{ fontSize: '1vw' }}
+          content={
+            'Please leave your current call to join another call. You are currently in ' +
+            `${this.state.currentGroup.name}`
+          }
+        />
       </div>
     )
   }
