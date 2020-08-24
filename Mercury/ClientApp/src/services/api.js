@@ -3,6 +3,7 @@ import axios from 'axios'
 let token = ''
 
 export function setToken(t) {
+  console.log(t)
   token = t
 }
 

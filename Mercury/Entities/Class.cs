@@ -15,6 +15,9 @@ namespace Mercury.Entities
         [Required]
         public string CalendarId { get; set; }
 
+        [Required]
+        public string Color { get; set; }
+
         public IEnumerable<Group> Groups { get; set; }
         public IEnumerable<ClassUser> ClassUsers { get; set; }
     }

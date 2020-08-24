@@ -3,7 +3,8 @@ import { BrowserRouter, Route } from 'react-router-dom'
 import { Auth0Provider } from '@auth0/auth0-react'
 
 import Home from './containers/home'
-import Dashboard from './containers/dashboard'
+import Calendar from './containers/calendar'
+import ClassDetail from './containers/classDetail'
 
 const baseUrl = document.getElementsByTagName('base')[0].getAttribute('href')
 
@@ -16,7 +17,8 @@ function App() {
       redirectUri={window.location.origin}
     >
       <BrowserRouter basename={baseUrl}>
-        <Route path="/dashboard" component={Dashboard} />
+        <Route path="/classes/:classId" component={ClassDetail} />
+        <Route path="/calendar" component={Calendar} />
         <Route exact path="/" component={Home} />
       </BrowserRouter>
     </Auth0Provider>
