@@ -134,6 +134,15 @@ export default class StudentWebSocketClient {
         })
       )
     })
+
+    EventEmitter.subscribe('declineWaitingForRequestApproval', (group) => {
+      this.connection.send(
+        this.prepareMessage({
+          msgType: 'declineWaitingForRequestApproval',
+          msg: group,
+        })
+      )
+    })
   }
 
   processConnectionOpen() {
@@ -202,6 +211,10 @@ export default class StudentWebSocketClient {
     EventEmitter.publish('removeWaitingForNewLeaderModal', newLeaderId)
   }
 
+  removeGroupJoinRequestModal() {
+    EventEmitter.publish('removeGroupJoinRequestModal')
+  }
+
   processConnectionMessage(e) {
     const { msgType, msg } = JSON.parse(e.data)
 
@@ -259,6 +272,10 @@ export default class StudentWebSocketClient {
 
       case 'wonLeaderBid':
         this.removeWaitingForNewLeaderModal(msg)
+        break
+
+      case 'inviteStoppedWaitingForApproval':
+        this.removeGroupJoinRequestModal()
         break
 
       default:

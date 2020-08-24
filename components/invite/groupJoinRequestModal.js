@@ -33,6 +33,16 @@ export default class GroupJoinRequestModal extends Component {
         this.startTimer
       )
     })
+
+    EventEmitter.subscribe('removeGroupJoinRequestModal', () => {
+      clearTimeout(timeOut)
+      this.setState({
+        modalState: false,
+        studentId: -1,
+        group: {},
+        studentRequestingToJoin: '',
+      })
+    })
   }
 
   startTimer() {

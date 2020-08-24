@@ -237,6 +237,21 @@ const handleStudentMessage = async (ws, message) => {
       await groupManager.appointNewLeader(msg)
       break
 
+    case 'declineWaitingForRequestApproval':
+      const { UserId: leaderToSend } = msg
+      const leaderToSendSocket = webSocketConnectionManager.getSocketOfUserID(
+        leaderToSend
+      )
+      if (leaderToSendSocket) {
+        leaderToSendSocket.send(
+          prepareMessage({
+            msgType: 'inviteStoppedWaitingForApproval',
+            msg: 'inviteStoppedWaitingForApproval',
+          })
+        )
+      }
+      break
+
     default:
       throw new Error(`Message Type ${msgType} is not recognized for student`)
   }
