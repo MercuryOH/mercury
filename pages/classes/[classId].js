@@ -76,6 +76,10 @@ class ClassPage extends Component {
             this.leaveGroup()
           }
         }
+
+        return { token }
+      })
+      .then(({ token }) => {
         this.setState({
           vonageCred: { sessionId: group.sessionId, token },
           currentGroup: group,
@@ -87,7 +91,6 @@ class ClassPage extends Component {
         })
         EventEmitter.publish('currentGroupChange', group)
       })
-
       .then(() => {
         api.postJoinGroup(this.classId, group.id, this.user.email)
         EventEmitter.publish('classGroupSetChanged', this.classId)
