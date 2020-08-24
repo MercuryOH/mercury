@@ -16,7 +16,6 @@ import ReceiveInviteModal from '../../components/invite/receiveInviteModal'
 import { NotificationContainer, NotificationManager } from 'react-notifications'
 import GroupJoinRequestModal from '../../components/invite/groupJoinRequestModal'
 import WaitingForRequestApprovalModal from '../../components/invite/WaitingForRequestApprovalModal'
-import HeadComponent from '../../components/headComponent'
 import WaitingForNewLeaderModal from '../../components/WaitingForNewLeaderModal'
 
 const ScreenContainer = dynamic(
@@ -62,6 +61,7 @@ class ClassPage extends Component {
   }
 
   joinGroup(group) {
+    console.log(JSON.stringify(group))
     api
       .postGroupToken(this.classId, group.id)
       .then(({ token }) => {
