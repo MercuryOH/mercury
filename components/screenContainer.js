@@ -72,7 +72,6 @@ class ScreenContainer extends React.Component {
     EventEmitter.subscribe('newScreensharer', (msg) => {
       if (this.props.sessionId === msg.sessionId) {
         this.setState({focusStream: _.find(this.state.streams, {'name': msg.name }), expand: true})
-        console.log(this.state.focusStream)
       }
     })
   }

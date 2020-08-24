@@ -67,7 +67,7 @@ export async function getMe() {
 }
 
 export async function getClass(classId) {
-  const { data } = await axios.get(`/api/classes/${classId}`, {
+  const { data } = await axios.get(`/api/classes/class/${classId}`, {
     headers: {
       authorization: token,
     },
@@ -103,9 +103,25 @@ export async function getGroups(classId) {
     return []
   }
 }
+/** get the classes the user is enrolled in */
 export async function getClasses() {
   try {
     const { data } = await axios.get(`/api/classes/`, {
+      headers: {
+        authorization: token,
+      },
+    })
+
+    return data
+  } catch (e) {
+    return []
+  }
+}
+
+/** get all classes available */
+export async function getAllClasses() {
+  try {
+    const { data } = await axios.get(`/api/classes/allClasses`, {
       headers: {
         authorization: token,
       },
