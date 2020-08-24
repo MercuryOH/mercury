@@ -1,51 +1,46 @@
-import React, { Component, useEffect, useState } from 'react'
+import React, { Component } from 'react'
 import { Accordion, List, Button } from 'semantic-ui-react'
-import { useRouter } from 'next/router'
+import { withRouter } from 'next/router'
 import { AuthRequired } from '../components/authProvider'
+import { EventEmitter } from '../components/util/EventEmitter'
 import * as api from '../util/mercuryService'
+import _ from 'lodash'
 import Link from 'next/Link'
 
-function DropDown() {
-  const [classes, setClasses] = useState([])
+class DropDown extends Component {
+  constructor(props) {
+    super(props)
 
-  useEffect(() => {
+    this.state = {
+      userId: '',
+      classes: [],
+      colors: [
+        'red',
+        'orange',
+        'yellow',
+        'olive',
+        'green',
+        'teal',
+        'blue',
+        'violet',
+        'purple',
+        'pink',
+        'brown',
+        'gray',
+        'black',
+      ]
+    }
+  }
+
+  componentDidMount() {
     api
       .getClasses()
-      .then((classes) => setClasses(classes))
-      .catch(console.error)
-  }, [])
-
-  const colors = [
-    'red',
-    'orange',
-    'yellow',
-    'olive',
-    'green',
-    'teal',
-    'blue',
-    'violet',
-    'purple',
-    'pink',
-    'brown',
-    'gray',
-    'black',
-  ]
-
-  function zip() {
-    var args = [].slice.call(arguments)
-    var shortest =
-      args.length == 0
-        ? []
-        : args.reduce(function (a, b) {
-            return a.length < b.length ? a : b
-          })
-
-    return shortest.map(function (_, i) {
-      return args.map(function (array) {
-        return array[i]
-      })
-    })
+      .then((classes) => this.setState({classes: classes}))
+      .then(() => api.getMe())
+      .then((me) => {this.setState({userId: me.id})})
   }
+
+  render() {
 
   return (
     <div>
@@ -63,7 +58,7 @@ function DropDown() {
                 <div>
                   <List relaxed>
                     <>
-                    {zip(colors,classes).filter((zipped) => zipped[1].role === 'Student').map((zipped) => (
+                    {_.zip(_.dropRight(this.state.colors, this.state.colors.length - this.state.classes.length),this.state.classes).filter((zipped) => zipped[1].role === 'Student').map((zipped) => (
                       <List.Item key={`class_${zipped[1].id}`}>
                         <List.Content>
                           <Link href={`/classes/${zipped[1].id}`}>
@@ -93,10 +88,9 @@ function DropDown() {
               content: (
                 <div>
                   <List relaxed>
-                  {zip(colors,classes).filter((zipped) => zipped[1].role === 'Professor').map((zipped) => (
+                  {_.zip(_.dropRight(this.state.colors, this.state.colors.length - this.state.classes.length),this.state.classes).filter((zipped) => zipped[1].role === 'Professor').map((zipped) => (
                     <List.Item key={`class_${zipped[1].id}`}>
                       <List.Content>
-                        <Link href={`/classes/${zipped[1].id}`}>
                           <Button
                             style={{
                               fontSize: '1vw',
@@ -105,8 +99,11 @@ function DropDown() {
                             }}
                             color={zipped[0]}
                             content={zipped[1].name}
+                            onClick={()  => {
+                              EventEmitter.publish('createTAOffice', {classId: zipped[1].id, userId: this.state.userId})
+                              this.props.router.push(`/classes/${zipped[1].id}`)
+                            }}
                           />
-                        </Link>
                       </List.Content>
                     </List.Item>
                   ))}
@@ -120,5 +117,5 @@ function DropDown() {
     </div>
   )
 }
-
-export default DropDown
+}
+export default (withRouter(DropDown))

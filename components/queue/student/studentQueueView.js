@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import styled from 'styled-components'
+import * as api from '../../../util/mercuryService'
 import YourTurnModal from './yourTurnModal'
 import { Label, Button } from 'semantic-ui-react'
 import { EventEmitter } from '../../util/EventEmitter'
@@ -33,6 +34,7 @@ class StudentQueueView extends Component {
       inCallWithTA: false,
       currentGroup: { id: '', name: '' },
       onJoin: this.props.onJoin,
+      groups: [],
     }
 
     this.defineEventEmitterCallbacks()
@@ -69,8 +71,8 @@ class StudentQueueView extends Component {
 
     EventEmitter.subscribe('studentJoinTA', (TAName) => {
       const { office, onJoin, me } = this.state
-      EventEmitter.publish('signalJoinTA', { group: office, TAName, me })
-      onJoin(office)
+      EventEmitter.publish('signalJoinTA', { group: this.state.groups.filter((check) => check.type === 'office' && Number(check.UserId) === Number(TAName))[0], TAName, me })
+      onJoin(this.state.groups.filter((check) => check.type === 'office' && Number(check.UserId) === Number(TAName))[0])
       this.setState({ inQueue: false, inCallWithTA: true })
     })
 
@@ -204,6 +206,11 @@ class StudentQueueView extends Component {
   componentDidMount() {
     EventEmitter.publish('greeting')
     this.setState({ isReadyToRender: true })
+    api
+      .getGroups(Number(this.props.classId))
+      .then((groups) => this.setState({groups: groups}))
+
+      //wrong typing on courseId
   }
 
   createCurrStudentLabel() {

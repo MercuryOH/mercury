@@ -62,7 +62,7 @@ class Queue extends Component {
 
     if (this.getRoleForClass() === 'Student') {
       return (
-        <StudentQueueView me={me} onJoin={this.props.onJoin} office={office} />
+        <StudentQueueView me={me} onJoin={this.props.onJoin} office={office} classId = {this.courseId}/>
       )
     }
 
