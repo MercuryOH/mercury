@@ -37,6 +37,7 @@ class ClassPage extends Component {
   constructor(props) {
     super(props)
     this.state = {
+      inCall: false,
       withTa: false,
       clicked: 'none',
       currentGroup: { id: '', name: '' },
@@ -78,6 +79,7 @@ class ClassPage extends Component {
         this.setState({
           vonageCred: { sessionId: group.sessionId, token },
           currentGroup: group,
+          inCall: true,
         })
         EventEmitter.publish('userJoinGroup', {
           groupId: group.id,
@@ -131,6 +133,7 @@ class ClassPage extends Component {
           vonageCred: null,
           currentGroup: { id: '', name: '' },
           withTa: false,
+          inCall: false,
         })
         EventEmitter.publish('currentGroupChange', { id: '', name: '' })
         EventEmitter.publish('callOver', this.classId)
@@ -162,6 +165,11 @@ class ClassPage extends Component {
 
     EventEmitter.subscribe('createNotification', (msg) => {
       NotificationManager.info(msg)
+    })
+
+    EventEmitter.subscribe('createTAOffice', (classUser) => {
+      this.fetchAllGroups()
+      this.handleCreateTAOffice({classId: classUser.classId, name: this.user.firstName + " " + this.user.lastName + "'s Office", type: 'office', userId: classUser.userId})
     })
   }
 
@@ -222,7 +230,6 @@ class ClassPage extends Component {
           )
         )
         EventEmitter.publish('me', this.user)
-        console.log(this.user)
       })
       .then(() => {
         this.fetchAllGroups()
@@ -351,6 +358,21 @@ class ClassPage extends Component {
     )
   }
 
+  handleCreateTAOffice = async (group) => {
+    if (this.state.allGroups.filter((check) => check.name === group.name ).length === 0){
+      const groupData = await api.postGroup(
+        group.classId,
+        group.name,
+        group.type,
+        group.userId
+      )
+      console.log('yeet')
+      EventEmitter.publish('classGroupSetChanged', this.classId)
+      this.fetchAllGroups()
+    }
+    else {}
+  }
+
   handleCreateGroup = async (group) => {
     const groupData = await api.postGroup(
       this.classId,
@@ -419,7 +441,7 @@ class ClassPage extends Component {
               .filter((group) => group.type === 'office')
               .map((group) => (
                 <List.Item
-                  key={`office`}
+                  key={`${group.name}`}
                   onClick={() => {
                     if (this.state.currentGroup.id !== group.id) {
                       this.handleSelectGroup(group)
@@ -443,7 +465,7 @@ class ClassPage extends Component {
   }
 
   leftDisplay() {
-    return this.state.withTa === false ? (
+    return this.state.withTa === false && this.state.inCall === false ? (
       <div style={{ height: '100%', marginLeft: '2.5%' }}>
         <Button.Group
           size="huge"
@@ -574,7 +596,13 @@ class ClassPage extends Component {
         </div>
       </div>
     ) : (
-      <div> </div>
+      <div style={{ height: '100%', marginLeft: '2.5%' }} >
+      <Button
+      fluid
+      style={{ fontSize: '1vw' }}
+      content = {'Please leave your current call to join another call. You are currently in ' + `${this.state.currentGroup.name}`}
+      />
+      </div>
     )
   }
 
