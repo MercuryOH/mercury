@@ -106,17 +106,17 @@ class ClassPage extends Component {
         this.user.id
       )
       .catch(console.error)
-      //.then(() => {
-        this.fetchAllGroups()
-        EventEmitter.publish('classGroupSetChanged', this.classId)
-        EventEmitter.publish('userLeaveGroup', this.state.currentGroup)
-        this.setState({
-          vonageCred: null,
-          currentGroup: { id: '', name: '' },
-          withTa: false,
-        })
-        EventEmitter.publish('currentGroupChange', { id: '', name: '' })
-      //})
+    //.then(() => {
+    this.fetchAllGroups()
+    EventEmitter.publish('classGroupSetChanged', this.classId)
+    EventEmitter.publish('userLeaveGroup', this.state.currentGroup)
+    this.setState({
+      vonageCred: null,
+      currentGroup: { id: '', name: '' },
+      withTa: false,
+    })
+    EventEmitter.publish('currentGroupChange', { id: '', name: '' })
+    //})
   }
 
   leaveGroup = () => {
@@ -127,18 +127,18 @@ class ClassPage extends Component {
         this.user.id
       )
       .catch(console.error)
-      //.then(() => {
-        this.fetchAllGroups()
-        EventEmitter.publish('classGroupSetChanged', this.classId)
-        EventEmitter.publish('userLeaveGroup', this.state.currentGroup)
-        this.setState({
-          vonageCred: null,
-          currentGroup: { id: '', name: '' },
-          withTa: false,
-        })
-        EventEmitter.publish('currentGroupChange', { id: '', name: '' })
-        EventEmitter.publish('callOver', this.classId)
-      //})
+    //.then(() => {
+    this.fetchAllGroups()
+    EventEmitter.publish('classGroupSetChanged', this.classId)
+    EventEmitter.publish('userLeaveGroup', this.state.currentGroup)
+    this.setState({
+      vonageCred: null,
+      currentGroup: { id: '', name: '' },
+      withTa: false,
+    })
+    EventEmitter.publish('currentGroupChange', { id: '', name: '' })
+    EventEmitter.publish('callOver', this.classId)
+    //})
   }
 
   defineEventEmitterCallbacks() {
