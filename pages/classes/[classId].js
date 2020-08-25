@@ -36,7 +36,6 @@ class ClassPage extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      inCall: false,
       withTa: false,
       clicked: 'none',
       currentGroup: { id: '', name: '' },
@@ -61,7 +60,6 @@ class ClassPage extends Component {
   }
 
   joinGroup(group) {
-    console.log(JSON.stringify(group))
     api
       .postGroupToken(this.classId, group.id)
       .then(({ token }) => {
@@ -83,7 +81,6 @@ class ClassPage extends Component {
         this.setState({
           vonageCred: { sessionId: group.sessionId, token },
           currentGroup: group,
-          inCall: true,
         })
         EventEmitter.publish('userJoinGroup', {
           groupId: group.id,
@@ -108,7 +105,8 @@ class ClassPage extends Component {
         this.state.currentGroup.id,
         this.user.id
       )
-      .then(() => {
+      .catch(console.error)
+      //.then(() => {
         this.fetchAllGroups()
         EventEmitter.publish('classGroupSetChanged', this.classId)
         EventEmitter.publish('userLeaveGroup', this.state.currentGroup)
@@ -118,7 +116,7 @@ class ClassPage extends Component {
           withTa: false,
         })
         EventEmitter.publish('currentGroupChange', { id: '', name: '' })
-      })
+      //})
   }
 
   leaveGroup = () => {
@@ -128,7 +126,8 @@ class ClassPage extends Component {
         this.state.currentGroup.id,
         this.user.id
       )
-      .then(() => {
+      .catch(console.error)
+      //.then(() => {
         this.fetchAllGroups()
         EventEmitter.publish('classGroupSetChanged', this.classId)
         EventEmitter.publish('userLeaveGroup', this.state.currentGroup)
@@ -136,12 +135,10 @@ class ClassPage extends Component {
           vonageCred: null,
           currentGroup: { id: '', name: '' },
           withTa: false,
-          inCall: false,
         })
         EventEmitter.publish('currentGroupChange', { id: '', name: '' })
         EventEmitter.publish('callOver', this.classId)
-      })
-      .catch(console.error)
+      //})
   }
 
   defineEventEmitterCallbacks() {
@@ -377,7 +374,6 @@ class ClassPage extends Component {
         group.type,
         group.userId
       )
-      console.log('yeet')
       EventEmitter.publish('classGroupSetChanged', this.classId)
       this.fetchAllGroups()
     } else {
@@ -476,7 +472,7 @@ class ClassPage extends Component {
   }
 
   leftDisplay() {
-    return this.state.withTa === false && this.state.inCall === false ? (
+    return this.state.withTa === false ? (
       <div style={{ height: '100%', marginLeft: '2.5%' }}>
         <Button.Group
           size="huge"
@@ -607,16 +603,7 @@ class ClassPage extends Component {
         </div>
       </div>
     ) : (
-      <div style={{ height: '100%', marginLeft: '2.5%' }}>
-        <Button
-          fluid
-          style={{ fontSize: '1vw' }}
-          content={
-            'Please leave your current call to join another call. You are currently in ' +
-            `${this.state.currentGroup.name}`
-          }
-        />
-      </div>
+      <div></div>
     )
   }
 
