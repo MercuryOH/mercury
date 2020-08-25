@@ -78,19 +78,26 @@ class ClassPage extends Component {
         return { token }
       })
       .then(({ token }) => {
-        this.setState({
-          vonageCred: { sessionId: group.sessionId, token },
-          currentGroup: group,
-        })
-        EventEmitter.publish('userJoinGroup', {
-          groupId: group.id,
-          userId: this.user.id,
-        })
-        EventEmitter.publish('currentGroupChange', group)
+        this.setState(
+          {
+            vonageCred: { sessionId: group.sessionId, token },
+            currentGroup: group,
+          },
+          () => {
+            EventEmitter.publish('userJoinGroup', {
+              groupId: group.id,
+              userId: this.user.id,
+            })
+            EventEmitter.publish('currentGroupChange', group)
+          }
+        )
       })
       .then(() => {
-        api.postJoinGroup(this.classId, group.id, this.user.email)
-        EventEmitter.publish('classGroupSetChanged', this.classId)
+        api
+          .postJoinGroup(this.classId, group.id, this.user.email)
+          .then(() =>
+            EventEmitter.publish('classGroupSetChanged', this.classId)
+          )
       })
       .then(() => {
         this.fetchAllGroups()
