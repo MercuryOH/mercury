@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { withRouter } from 'next/router'
 import dynamic from 'next/dynamic'
 import Layout from '../../components/layout'
-import { Button, Accordion, List, Icon } from 'semantic-ui-react'
+import { Button, Accordion, List, Icon, Label } from 'semantic-ui-react'
 import { AuthRequired } from '../../components/authProvider'
 import Queue from '../../components/queue/queue'
 import * as api from '../../util/mercuryService'
@@ -17,6 +17,7 @@ import { NotificationContainer, NotificationManager } from 'react-notifications'
 import GroupJoinRequestModal from '../../components/invite/groupJoinRequestModal'
 import WaitingForRequestApprovalModal from '../../components/invite/WaitingForRequestApprovalModal'
 import WaitingForNewLeaderModal from '../../components/WaitingForNewLeaderModal'
+import AccessDeniedModal from '../../components/accessDeniedModal'
 
 const ScreenContainer = dynamic(
   () => import('../../components/screenContainer'),
@@ -159,7 +160,6 @@ class ClassPage extends Component {
     })
 
     EventEmitter.subscribe('fetchGroups', () => {
-      //this.fetchCurrentClass()
       this.fetchAllGroups()
     })
 
@@ -175,6 +175,10 @@ class ClassPage extends Component {
         type: 'office',
         userId: classUser.userId,
       })
+    })
+
+    EventEmitter.subscribe('leaveCallOnError', () => {
+      this.leaveGroup()
     })
   }
 
@@ -245,22 +249,6 @@ class ClassPage extends Component {
 
       .catch(console.error)
   }
-
-  // fetchCurrentClass = () => {
-  //   api
-  //     .getClass(this.classId)
-  //     .then((c) => {
-  //       const userRole = c.users.find((u) => u.id === this.user.id)
-  //       if (!userRole) this.props.router.push('/calendar')
-  //       this.setState({
-  //         currentClass: {
-  //           ...c,
-  //           role: userRole.role,
-  //         },
-  //       })
-  //     })
-  //     .catch(console.error)
-  // }
 
   handleBack = async () => {
     await this.props.router.push('/calendar')
@@ -492,17 +480,6 @@ class ClassPage extends Component {
             }}
             onClick={this.handleBack}
           />
-          {/* <Button
-            compact
-            icon="setting"
-            style={{
-              fontSize: '1.5vw',
-              textAlign: 'center',
-              width: '15%',
-              marginBottom: '2%',
-              minWidth: '14px',
-            }}
-          /> */}
         </Button.Group>
         {this.showOffice()}
         <Accordion
@@ -603,7 +580,37 @@ class ClassPage extends Component {
         </div>
       </div>
     ) : (
-      <div></div>
+      <div style={{ height: '100%', marginLeft: '2.5%' }}>
+        <Button.Group
+          size="huge"
+          style={{ marginBottom: 12, width: '100%' }}
+          fluid
+        >
+          <Button
+            compact
+            content={this.state.currentClass.name}
+            style={{
+              fontSize: '1.5vw',
+              textAlign: 'left',
+              width: '75%',
+              marginBottom: '2%',
+              minWidth: '41px',
+            }}
+          />
+        </Button.Group>
+        <Label
+          size="massive"
+          style={{
+            fontSize: '1vw',
+            textAlign: 'center',
+            width: '100%',
+            marginBottom: '4%',
+            minWidth: '41px',
+          }}
+        >
+          You are currently in a TA's office. Please click the leave call button to join another group.
+        </Label>
+      </div>
     )
   }
 
@@ -626,6 +633,7 @@ class ClassPage extends Component {
             name={this.user.firstName + ' ' + this.user.lastName}
           />
         )}
+        <AccessDeniedModal />
         <UserInviteModal />
         <FeedbackModal />
         <ReceiveInviteModal onJoin={this.handleSelectGroup} />

@@ -28,12 +28,13 @@ export default class Publisher extends Component {
 
   onError = (err) => {
     this.setState({ error: `Failed to publish: ${err.message}` })
+    EventEmitter.publish('leaveCallOnError')
   }
 
   render() {
     return (
       <div>
-        {this.state.error ? <div>{this.state.error}</div> : null}
+        {this.state.error ? <div>{"We noticed you denied access to your microphone or camera. Please click the camera/microphone blocked icon in your browser's address bar, allow access, and then refresh the page and rejoin the call. You will be able to mute yourself or disable your video once you join a call."}</div> : null}
         <OTPublisher
           properties={{
             width: '13.57vw',

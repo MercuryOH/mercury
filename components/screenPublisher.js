@@ -28,12 +28,13 @@ export default class ScreenPublisher extends Component {
 
   onError = (err) => {
     this.setState({ error: `Failed to publish: ${err.message}` })
+    EventEmitter.publish('leaveCallOnError')
   }
 
   render() {
     return this.state.appear === false ? null : (
       <>
-        {this.state.error ? <div>{this.state.error}</div> : null}
+        {this.state.error ? <div>{"We noticed you denied access to your screen. Please click the screen blocked icon in your browser's address bar, allow access, and then refresh the page and rejoin the call."}</div> : null}
         <OTPublisher
           properties={{
             width: '13.62vw',
