@@ -136,17 +136,20 @@ class ClassPage extends Component {
         this.user.id
       )
       .catch(console.error)
-    //.then(() => {
-    this.fetchAllGroups()
-    EventEmitter.publish('classGroupSetChanged', this.classId)
-    EventEmitter.publish('userLeaveGroup', this.state.currentGroup)
+
+    this.fetchAllGroups() // re-fetch current groups
+    EventEmitter.publish('classGroupSetChanged', this.classId) // tell everyone to re-fetch their groups in the class
+    EventEmitter.publish('userLeaveGroup', this.state.currentGroup) // notify backend that you have left the call
+
     this.setState({
+      // leave the call
       vonageCred: null,
       currentGroup: { id: '', name: '' },
       withTa: false,
     })
-    EventEmitter.publish('currentGroupChange', { id: '', name: '' })
-    EventEmitter.publish('callOver', this.classId)
+
+    EventEmitter.publish('currentGroupChange', { id: '', name: '' }) // change current group
+    EventEmitter.publish('callOver', this.classId) // signal call over, which triggers feedback modal and curr student update on the queue
     //})
   }
 
