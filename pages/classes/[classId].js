@@ -88,6 +88,7 @@ class ClassPage extends Component {
             EventEmitter.publish('userJoinGroup', {
               groupId: group.id,
               userId: this.user.id,
+              groupType: group.type,
             })
             EventEmitter.publish('currentGroupChange', group)
           }

@@ -1,5 +1,6 @@
 const WebSocket = require('ws')
 const { webSocketConnectionManager } = require('./util/connectionmanager')
+const { groupManager } = require('./util/groupmanager')
 const { handleInstructorMessage } = require('./instructor/instructorHandler')
 const { handleStudentMessage } = require('./student/studentHandler')
 
@@ -35,8 +36,9 @@ class WebSocketServer {
        * Handle when the client disconnects
        */
 
-      ws.on('close', () => {
+      ws.on('close', async () => {
         webSocketConnectionManager.removeSocket(ws)
+        await groupManager.removeSocket(ws)
       })
     })
   }
