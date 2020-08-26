@@ -18,6 +18,7 @@ import GroupJoinRequestModal from '../../components/invite/groupJoinRequestModal
 import WaitingForRequestApprovalModal from '../../components/invite/WaitingForRequestApprovalModal'
 import WaitingForNewLeaderModal from '../../components/WaitingForNewLeaderModal'
 import AccessDeniedModal from '../../components/accessDeniedModal'
+import { confirmAlert } from 'react-confirm-alert' // Import
 
 const ScreenContainer = dynamic(
   () => import('../../components/screenContainer'),
@@ -50,7 +51,9 @@ class ClassPage extends Component {
       vonageCred: null,
       isMounted: false,
       allGroups: [],
+      toRejoin: false, // activate rejoin option confirm alert
     }
+
     this.defineEventEmitterCallbacks()
   }
 
@@ -91,6 +94,12 @@ class ClassPage extends Component {
               groupType: group.type,
             })
             EventEmitter.publish('currentGroupChange', group)
+
+            // log the credentials of your most recent call
+            localStorage.setItem(
+              'lastCallEntered',
+              JSON.stringify({ group, token })
+            )
           }
         )
       })
@@ -125,6 +134,7 @@ class ClassPage extends Component {
       withTa: false,
     })
     EventEmitter.publish('currentGroupChange', { id: '', name: '' })
+    localStorage.removeItem('lastCallEntered')
     //})
   }
 
@@ -150,6 +160,7 @@ class ClassPage extends Component {
 
     EventEmitter.publish('currentGroupChange', { id: '', name: '' }) // change current group
     EventEmitter.publish('callOver', this.classId) // signal call over, which triggers feedback modal and curr student update on the queue
+    localStorage.removeItem('lastCallEntered')
     //})
   }
 
@@ -210,6 +221,7 @@ class ClassPage extends Component {
         if (!userRole) this.props.router.push('/calendar')
         const { role } = userRole
 
+        let toRejoin = false
         /**
          * Start the appropriate web socket handler depending on the user role
          */
@@ -233,6 +245,11 @@ class ClassPage extends Component {
             courseId: this.classId,
             onJoin: this.handleSelectGroup,
           })
+
+          if (localStorage.getItem('lastCallEntered')) {
+            // if you were previously involved in a call, please allow rejoin option
+            toRejoin = true
+          }
         }
 
         this.setState({
@@ -240,7 +257,7 @@ class ClassPage extends Component {
             ...c,
             role: userRole.role,
           },
-          isMounted: true,
+          toRejoin,
         })
 
         EventEmitter.publish(
@@ -257,7 +274,9 @@ class ClassPage extends Component {
       .then(() => {
         setInterval(this.fetchAllGroups, 10000)
       })
-
+      .then(() => {
+        this.setState({ isMounted: true })
+      })
       .catch(console.error)
   }
 
@@ -629,6 +648,44 @@ class ClassPage extends Component {
   render() {
     if (!this.state.isMounted) {
       return null
+    }
+
+    if (this.state.toRejoin) {
+      const { group, token } = JSON.parse(
+        localStorage.getItem('lastCallEntered')
+      )
+
+      confirmAlert({
+        title: 'Rejoin Call',
+        message:
+          'It appears you did not leave your last call. Would you like to rejoin it?',
+        buttons: [
+          {
+            label: 'Yes',
+            onClick: () => {
+              this.setState(
+                {
+                  vonageCred: { sessionId: group.sessionId, token },
+                  currentGroup: group,
+                  toRejoin: false,
+                },
+                () => {
+                  EventEmitter.publish('TARejoinCall')
+                }
+              )
+            },
+          },
+          {
+            label: 'No',
+            onClick: () => {
+              localStorage.removeItem('lastCallEntered')
+              this.setState({
+                toRejoin: false,
+              })
+            },
+          },
+        ],
+      })
     }
 
     return (

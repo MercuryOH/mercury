@@ -45,6 +45,7 @@
     "pg-hstore": "^2.3.3",
     "prop-types": "^15.7.2",
     "react": "^16.13.1",
+    "react-confirm-alert": "^2.6.1",
     "react-dom": "^16.13.1",
     "react-loader-spinner": "^3.1.14",
     "react-notifications": "^1.6.0",
