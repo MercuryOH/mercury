@@ -19,22 +19,6 @@ class WebSocketConnectionManager {
 
   addSocketForCourse(courseId, socket) {
     /**
-     * Clean up the socket from any previous courses
-     */
-
-    // this socket was previously in another class - we need to remove it from that class
-    if (this.socketToCourse.has(socket)) {
-      const prevCourse = this.socketToCourse.get(socket)
-
-      if (this.courseToSockets.has(prevCourse)) {
-        const connections = this.courseToSockets.get(prevCourse)
-        if (connections.has(socket)) {
-          connections.delete(socket)
-        }
-      }
-    }
-
-    /**
      * Update the data structures to account for the new socket
      */
 
