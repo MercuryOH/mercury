@@ -615,7 +615,8 @@ class ClassPage extends Component {
             minWidth: '41px',
           }}
         >
-          You are currently in a TA's office. Please click the leave call button to join another group.
+          You are currently in a TA's office. Please click the leave call button
+          to join another group.
         </Label>
       </div>
     )
