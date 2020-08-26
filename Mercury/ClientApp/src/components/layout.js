@@ -1,8 +1,6 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import styled from 'styled-components'
-import { useAuth0 } from '@auth0/auth0-react'
 import { Grid, Segment } from 'semantic-ui-react'
-import * as api from '../services/api'
 import Navbar from './navbar'
 
 const SideSegment = styled(Segment)`
@@ -18,18 +16,6 @@ const SideColumn = styled(Grid.Column)`
 `
 
 function Layout({ children, left, right }) {
-  const { getAccessTokenSilently } = useAuth0()
-
-  useEffect(() => {
-    getAccessTokenSilently()
-      .then((token) => {
-        api.setToken(`Bearer ${token}`)
-      })
-      .catch((e) => {
-        console.error(e)
-      })
-  }, [])
-
   return (
     <>
       <Navbar />

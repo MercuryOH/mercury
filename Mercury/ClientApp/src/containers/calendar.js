@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react'
 import { withAuthenticationRequired } from '@auth0/auth0-react'
+import { Link } from 'react-router-dom'
 import { Label, Accordion, List, Button } from 'semantic-ui-react'
 import * as api from '../services/api'
 import Layout from '../components/layout'
-import { Link } from 'react-router-dom'
+import GoogleCalendar from '../components/googleCalendar'
 
 function CalendarContainer() {
   const [classes, setClasses] = useState([])
@@ -46,11 +47,38 @@ function CalendarContainer() {
                       .map((x) => (
                         <List.Item key={`class_${x.id}`}>
                           <List.Content>
-                            <Link href={`/classes/${x.id}`}>
+                            <Link to={`/classes/${x.id}`}>
                               <Button
-                                color={x.color}
                                 content={x.name}
                                 style={{
+                                  backgroundColor: x.color,
+                                  fontSize: '1vw',
+                                  width: '100%',
+                                  minWidth: '41px',
+                                }}
+                              />
+                            </Link>
+                          </List.Content>
+                        </List.Item>
+                      ))}
+                  </List>
+                ),
+              },
+              {
+                key: 'ta',
+                title: 'TA',
+                content: (
+                  <List relaxed>
+                    {classes
+                      .filter((x) => x.role === 'TA')
+                      .map((x) => (
+                        <List.Item key={`class_${x.id}`}>
+                          <List.Content>
+                            <Link to={`/classes/${x.id}`}>
+                              <Button
+                                content={x.name}
+                                style={{
+                                  backgroundColor: x.color,
                                   fontSize: '1vw',
                                   width: '100%',
                                   minWidth: '41px',
@@ -68,7 +96,7 @@ function CalendarContainer() {
         </div>
       }
     >
-      Hello World
+      <GoogleCalendar classes={classes} />
     </Layout>
   )
 }

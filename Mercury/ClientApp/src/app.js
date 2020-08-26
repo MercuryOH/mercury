@@ -1,6 +1,7 @@
 import React from 'react'
 import { BrowserRouter, Route } from 'react-router-dom'
 import { Auth0Provider } from '@auth0/auth0-react'
+import Protected from './components/protected'
 
 import Home from './containers/home'
 import Calendar from './containers/calendar'
@@ -17,8 +18,10 @@ function App() {
       redirectUri={window.location.origin}
     >
       <BrowserRouter basename={baseUrl}>
-        <Route path="/classes/:classId" component={ClassDetail} />
-        <Route path="/calendar" component={Calendar} />
+        <Protected>
+          <Route path="/classes/:classId" component={ClassDetail} />
+          <Route path="/calendar" component={Calendar} />
+        </Protected>
         <Route exact path="/" component={Home} />
       </BrowserRouter>
     </Auth0Provider>
