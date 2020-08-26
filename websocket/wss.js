@@ -3,6 +3,7 @@ const { webSocketConnectionManager } = require('./util/connectionmanager')
 const { groupManager } = require('./util/groupmanager')
 const { handleInstructorMessage } = require('./instructor/instructorHandler')
 const { handleStudentMessage } = require('./student/studentHandler')
+const models = require('../models')
 
 class WebSocketServer {
   start() {
@@ -37,8 +38,17 @@ class WebSocketServer {
        */
 
       ws.on('close', async () => {
+        const userId = webSocketConnectionManager.getSocketUserId(ws)
+        const groupId = groupManager.getSocketGroupId(ws)
+
         webSocketConnectionManager.removeSocket(ws)
         await groupManager.removeSocket(ws)
+
+        if (userId && groupId) {
+          await models.GroupUser.destroy({
+            where: { GroupId: groupId, UserId: userId },
+          })
+        }
       })
     })
   }

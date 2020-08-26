@@ -100,6 +100,22 @@ class WebSocketConnectionManager {
 
     return null
   }
+
+  getSocketCourseID(ws) {
+    if (this.socketToCourse.has(ws)) {
+      return this.socketToCourse.get(ws)
+    }
+
+    return null
+  }
+
+  getSocketUserId(ws) {
+    if (this.socketToId.has(ws)) {
+      return this.socketToId.get(ws)
+    }
+
+    return null
+  }
 }
 
 module.exports = {

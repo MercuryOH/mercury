@@ -122,6 +122,14 @@ class GroupManager {
       })
     }
   }
+
+  getSocketGroupId(ws) {
+    if (this.socketToGroup.has(ws)) {
+      return this.socketToGroup.get(ws).groupId
+    }
+
+    return null
+  }
 }
 
 module.exports = {
