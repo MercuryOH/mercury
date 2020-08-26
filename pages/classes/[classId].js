@@ -96,10 +96,7 @@ class ClassPage extends Component {
             EventEmitter.publish('currentGroupChange', group)
 
             // log the credentials of your most recent call
-            localStorage.setItem(
-              'lastCallEntered',
-              JSON.stringify({ group, token })
-            )
+            localStorage.setItem('lastCallEntered', JSON.stringify(group))
           }
         )
       })
@@ -651,9 +648,7 @@ class ClassPage extends Component {
     }
 
     if (this.state.toRejoin) {
-      const { group, token } = JSON.parse(
-        localStorage.getItem('lastCallEntered')
-      )
+      const group = JSON.parse(localStorage.getItem('lastCallEntered'))
 
       confirmAlert({
         title: 'Rejoin Call',
@@ -663,10 +658,9 @@ class ClassPage extends Component {
           {
             label: 'Yes',
             onClick: () => {
+              this.joinGroup(group)
               this.setState(
                 {
-                  vonageCred: { sessionId: group.sessionId, token },
-                  currentGroup: group,
                   toRejoin: false,
                 },
                 () => {
