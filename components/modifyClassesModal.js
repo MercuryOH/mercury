@@ -88,7 +88,7 @@ class ModifyClassesModal extends Component {
           closeOnEscape={false}
           closeIcon
         >
-          <Modal.Content style={{ borderless: 'true' }}>
+          <Modal.Content style={{ borderless: 'true' }} scrolling>
             <div
               style={{
                 textAlign: 'center',
@@ -122,22 +122,18 @@ class ModifyClassesModal extends Component {
                       </Table.Cell>
                       <Table.Cell style={{ textAlign: 'center' }}>
                         <Checkbox
-                          disabled={
-                            c.role === 'Professor' || c.role === 'TA'
-                          }
+                          disabled={c.role === 'Professor' || c.role === 'TA'}
                           checked={c.role === 'Student'}
                           onChange={() =>
                             this.setState({
                               classRoles: this.state.classRoles.map((cc) => {
                                 if (
                                   cc.id === c.id &&
-                                  (cc.role === '' ||
-                                    cc.role === 'Student')
+                                  (cc.role === '' || cc.role === 'Student')
                                 ) {
                                   return {
                                     ...cc,
-                                    role:
-                                      cc.role === '' ? 'Student' : '',
+                                    role: cc.role === '' ? 'Student' : '',
                                   }
                                 }
                                 return cc

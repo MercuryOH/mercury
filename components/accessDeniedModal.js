@@ -11,7 +11,7 @@ class AccessDeniedModal extends Component {
     }
 
     EventEmitter.subscribe('leaveCallOnError', () => {
-      this.setState({modalState: true})
+      this.setState({ modalState: true })
     })
   }
 
@@ -44,7 +44,9 @@ class AccessDeniedModal extends Component {
                   minWidth: '41px',
                 }}
               >
-                {"We noticed that you denied access to your microphone, camera, or screen. Please click the camera/microphone/screen blocked icon in your browser's address bar, allow access, and then refresh the page and rejoin the call. You will be able to mute yourself or disable your video once you join a call."}
+                {
+                  "We noticed that you denied access to your microphone, camera, or screen. Please click the camera/microphone/screen blocked icon in your browser's address bar, allow access, and then refresh the page and rejoin the call. You will be able to mute yourself or disable your video once you join a call."
+                }
               </Label>
             </div>
           </Modal.Content>
