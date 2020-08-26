@@ -4,8 +4,6 @@ const { groupManager } = require('./util/groupmanager')
 const { handleInstructorMessage } = require('./instructor/instructorHandler')
 const { handleStudentMessage } = require('./student/studentHandler')
 const models = require('../models')
-const { courseQueue } = require('./util/coursequeue')
-const { prepareMessage } = require('./util/util')
 
 class WebSocketServer {
   start() {
@@ -44,7 +42,6 @@ class WebSocketServer {
          * Retrieve all relevant metadata
          */
 
-        const courseId = webSocketConnectionManager.getSocketCourseID(ws)
         const userId = webSocketConnectionManager.getSocketUserId(ws)
         const groupId = groupManager.getSocketGroupId(ws)
 
@@ -62,22 +59,6 @@ class WebSocketServer {
           await models.GroupUser.destroy({
             where: { GroupId: groupId, UserId: userId },
           })
-        }
-
-        /**
-         * Check to see if the queue needs to be updated as well, and send out notifications to the class if so
-         */
-
-        if (courseQueue.getCurrStudentID() === userId) {
-          // you happen to be the student who was currently being helped on the queue
-          courseQueue.setCurrStudent(-1)
-          webSocketConnectionManager.broadcast(
-            courseId,
-            prepareMessage({
-              msgType: 'currStudentUpdate',
-              msg: courseQueue.getCurrStudent(),
-            })
-          )
         }
       })
     })
