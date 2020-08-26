@@ -90,7 +90,7 @@ const handleInstructorMessage = async (ws, message) => {
       break
 
     case 'userJoinGroup':
-      // msg - JSON with group ID and user ID
+      // msg - JSON with group ID and user ID and groupType
       groupManager.addSocketToGroup(msg, ws)
       webSocketConnectionManager.broadcast(
         courseId,
