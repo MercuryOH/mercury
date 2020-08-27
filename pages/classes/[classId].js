@@ -68,7 +68,7 @@ class ClassPage extends Component {
     api
       .postGroupToken(this.classId, group.id)
       .then(({ token }) => {
-        if (this.state.currentGroup.id != '') {
+        if (this.state.currentGroup.id !== '') {
           //the user is currently in a call, leave the call first
 
           if (group.type === 'office') {
