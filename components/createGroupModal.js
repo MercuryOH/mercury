@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
-import { Modal, Button, Header, Search, Input } from 'semantic-ui-react'
+import { Modal, Button, Header, Input } from 'semantic-ui-react'
 import _ from 'lodash'
 
 class CreateGroupModal extends Component {

@@ -18,6 +18,8 @@ import GroupJoinRequestModal from '../../components/invite/groupJoinRequestModal
 import WaitingForRequestApprovalModal from '../../components/invite/WaitingForRequestApprovalModal'
 import WaitingForNewLeaderModal from '../../components/WaitingForNewLeaderModal'
 import AccessDeniedModal from '../../components/accessDeniedModal'
+import OfficeAccessModal from '../../components/officeAccessModal'
+import { confirmAlert } from 'react-confirm-alert' // Import
 
 const ScreenContainer = dynamic(
   () => import('../../components/screenContainer'),
@@ -50,7 +52,9 @@ class ClassPage extends Component {
       vonageCred: null,
       isMounted: false,
       allGroups: [],
+      toRejoin: false, // activate rejoin option confirm alert
     }
+
     this.defineEventEmitterCallbacks()
   }
 
@@ -64,7 +68,7 @@ class ClassPage extends Component {
     api
       .postGroupToken(this.classId, group.id)
       .then(({ token }) => {
-        if (this.state.currentGroup.id != '') {
+        if (this.state.currentGroup.id !== '') {
           //the user is currently in a call, leave the call first
 
           if (group.type === 'office') {
@@ -76,9 +80,6 @@ class ClassPage extends Component {
           }
         }
 
-        return { token }
-      })
-      .then(({ token }) => {
         this.setState(
           {
             vonageCred: { sessionId: group.sessionId, token },
@@ -88,8 +89,12 @@ class ClassPage extends Component {
             EventEmitter.publish('userJoinGroup', {
               groupId: group.id,
               userId: this.user.id,
+              groupType: group.type,
             })
             EventEmitter.publish('currentGroupChange', group)
+
+            // log the credentials of your most recent call
+            localStorage.setItem('lastCallEntered', JSON.stringify(group))
           }
         )
       })
@@ -114,7 +119,7 @@ class ClassPage extends Component {
         this.user.id
       )
       .catch(console.error)
-    //.then(() => {
+
     this.fetchAllGroups()
     EventEmitter.publish('classGroupSetChanged', this.classId)
     EventEmitter.publish('userLeaveGroup', this.state.currentGroup)
@@ -124,7 +129,7 @@ class ClassPage extends Component {
       withTa: true,
     })
     EventEmitter.publish('currentGroupChange', { id: '', name: '' })
-    //})
+    localStorage.removeItem('lastCallEntered')
   }
 
   leaveGroup = () => {
@@ -135,18 +140,21 @@ class ClassPage extends Component {
         this.user.id
       )
       .catch(console.error)
-    //.then(() => {
-    this.fetchAllGroups()
-    EventEmitter.publish('classGroupSetChanged', this.classId)
-    EventEmitter.publish('userLeaveGroup', this.state.currentGroup)
+
+    this.fetchAllGroups() // re-fetch current groups
+    EventEmitter.publish('classGroupSetChanged', this.classId) // tell everyone to re-fetch their groups in the class
+    EventEmitter.publish('userLeaveGroup', this.state.currentGroup) // notify backend that you have left the call
+
     this.setState({
+      // leave the call
       vonageCred: null,
       currentGroup: { id: '', name: '' },
       withTa: false,
     })
-    EventEmitter.publish('currentGroupChange', { id: '', name: '' })
-    EventEmitter.publish('callOver', this.classId)
-    //})
+
+    EventEmitter.publish('currentGroupChange', { id: '', name: '' }) // change current group
+    EventEmitter.publish('callOver', this.classId) // signal call over, which triggers feedback modal and curr student update on the queue
+    localStorage.removeItem('lastCallEntered')
   }
 
   defineEventEmitterCallbacks() {
@@ -206,6 +214,7 @@ class ClassPage extends Component {
         if (!userRole) this.props.router.push('/calendar')
         const { role } = userRole
 
+        let toRejoin = false
         /**
          * Start the appropriate web socket handler depending on the user role
          */
@@ -229,6 +238,11 @@ class ClassPage extends Component {
             courseId: this.classId,
             onJoin: this.handleSelectGroup,
           })
+
+          if (localStorage.getItem('lastCallEntered')) {
+            // if you were previously involved in a call, please allow rejoin option
+            toRejoin = true
+          }
         }
 
         this.setState({
@@ -236,7 +250,7 @@ class ClassPage extends Component {
             ...c,
             role: userRole.role,
           },
-          isMounted: true,
+          toRejoin,
         })
 
         EventEmitter.publish(
@@ -253,7 +267,9 @@ class ClassPage extends Component {
       .then(() => {
         setInterval(this.fetchAllGroups, 10000)
       })
-
+      .then(() => {
+        this.setState({ isMounted: true })
+      })
       .catch(console.error)
   }
 
@@ -435,34 +451,33 @@ class ClassPage extends Component {
 
   showOffice() {
     return (
-      (this.state.currentClass.role !== 'Student' ||
-        this.state.currentGroup.type === 'office') && (
-        <div style={{ paddingLeft: 20 }}>
-          <List relaxed selection verticalAlign="middle">
-            {this.state.allGroups
-              .filter((group) => group.type === 'office')
-              .map((group) => (
-                <List.Item
-                  key={`${group.name}`}
-                  onClick={() => {
-                    if (this.state.currentGroup.id !== group.id) {
-                      this.handleSelectGroup(group)
-                    }
-                  }}
-                  style={this.getListItemStyle(group)}
-                >
-                  <List.Icon name="graduation cap" />
-                  <List.Content>
-                    <List.Header as="a">
-                      {group.name + ' (' + group.users.length + ')'}
-                    </List.Header>
-                  </List.Content>
-                  {this.showInviteButton(group)}
-                </List.Item>
-              ))}
-          </List>
-        </div>
-      )
+      <div style={{ paddingLeft: 20 }}>
+        <List relaxed selection verticalAlign="middle">
+          {this.state.allGroups
+            .filter((group) => group.type === 'office')
+            .map((group) => (
+              <List.Item
+                key={`${group.name}`}
+                onClick={() => {
+                  if (this.state.currentClass.role === 'Student') {
+                    EventEmitter.publish('openOfficeAccessModal', true)
+                  } else if (this.state.currentGroup.id !== group.id) {
+                    this.handleSelectGroup(group)
+                  }
+                }}
+                style={this.getListItemStyle(group)}
+              >
+                <List.Icon name="graduation cap" />
+                <List.Content>
+                  <List.Header as="a">
+                    {group.name + ' (' + group.users.length + ')'}
+                  </List.Header>
+                </List.Content>
+                {this.showInviteButton(group)}
+              </List.Item>
+            ))}
+        </List>
+      </div>
     )
   }
 
@@ -615,7 +630,8 @@ class ClassPage extends Component {
             minWidth: '41px',
           }}
         >
-          You are currently in a TA's office. Please click the leave call button to join another group.
+          You are currently in a TA's office. Please click the leave call button
+          to join another group.
         </Label>
       </div>
     )
@@ -624,6 +640,41 @@ class ClassPage extends Component {
   render() {
     if (!this.state.isMounted) {
       return null
+    }
+
+    if (this.state.toRejoin) {
+      const group = JSON.parse(localStorage.getItem('lastCallEntered'))
+
+      confirmAlert({
+        title: 'Rejoin Call',
+        message:
+          'It appears you did not leave your last call. Would you like to rejoin it?',
+        buttons: [
+          {
+            label: 'Yes',
+            onClick: () => {
+              this.joinGroup(group)
+              this.setState(
+                {
+                  toRejoin: false,
+                },
+                () => {
+                  EventEmitter.publish('TARejoinCall')
+                }
+              )
+            },
+          },
+          {
+            label: 'No',
+            onClick: () => {
+              localStorage.removeItem('lastCallEntered')
+              this.setState({
+                toRejoin: false,
+              })
+            },
+          },
+        ],
+      })
     }
 
     return (
@@ -640,6 +691,7 @@ class ClassPage extends Component {
             name={this.user.firstName + ' ' + this.user.lastName}
           />
         )}
+        <OfficeAccessModal />
         <AccessDeniedModal />
         <UserInviteModal />
         <FeedbackModal />

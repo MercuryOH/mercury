@@ -90,7 +90,7 @@ const handleInstructorMessage = async (ws, message) => {
       break
 
     case 'userJoinGroup':
-      // msg - JSON with group ID and user ID
+      // msg - JSON with group ID and user ID and groupType
       groupManager.addSocketToGroup(msg, ws)
       webSocketConnectionManager.broadcast(
         courseId,
@@ -125,16 +125,16 @@ const handleInstructorMessage = async (ws, message) => {
       )
       break
 
-      case 'screenShareOn':
-        // msg - person name and sessionId
-        webSocketConnectionManager.broadcast(
-          courseId,
-          prepareMessage({
-            msgType: 'fetchScreensharer',
-            msg: msg,
-          })
-        )
-        break
+    case 'screenShareOn':
+      // msg - person name and sessionId
+      webSocketConnectionManager.broadcast(
+        courseId,
+        prepareMessage({
+          msgType: 'fetchScreensharer',
+          msg: msg,
+        })
+      )
+      break
 
     case 'bidForLeaderPosition':
       // msg - new leader Id, old Leader Id, groupId

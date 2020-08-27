@@ -22,11 +22,10 @@ class Calendar extends Component {
     EventEmitter.subscribe('currentlyEnrolled', (classes) => {
       this.setState({ classes })
     })
-    console.log(this.state.classes)
   }
 
   mergeCal(classList) {
-    var src = 'https://calendar.google.com/calendar/embed?mode=WEEK&showTitle=0'
+    let src = 'https://calendar.google.com/calendar/embed?mode=WEEK&showTitle=0'
     classList
       .filter((cc) => cc.role !== '')
       .forEach((c) => {
@@ -40,7 +39,7 @@ class Calendar extends Component {
 
     return src
   }
-  
+
   render() {
     return (
       <>
@@ -48,8 +47,8 @@ class Calendar extends Component {
         <Layout
           left={
             <div style={{ paddingLeft: 20, paddingRight: 20 }}>
-              <LargeLabel content={<p>Classes</p>}></LargeLabel>
-              <DropDown></DropDown>
+              <LargeLabel content={<p>Classes</p>} />
+              <DropDown />
             </div>
           }
         >
@@ -60,7 +59,7 @@ class Calendar extends Component {
             height={'100%'}
             frameBorder={0}
             scrolling="no"
-          ></iframe>
+          />
         </Layout>
       </>
     )

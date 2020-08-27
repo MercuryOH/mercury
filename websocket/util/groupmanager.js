@@ -10,14 +10,24 @@ const { prepareMessage } = require('./util')
 class GroupManager {
   constructor() {
     this.groupToSockets = new Map()
+    this.socketToGroup = new Map()
   }
 
-  addSocketToGroup({ groupId, userId }, ws) {
+  addSocketToGroup({ groupId, userId, groupType }, ws) {
     if (!this.groupToSockets.has(groupId)) {
       this.groupToSockets.set(groupId, new Set())
     }
 
-    this.groupToSockets.get(groupId).add({ userId, ws })
+    this.groupToSockets.get(groupId).add({ userId, groupType, ws })
+    this.socketToGroup.set(ws, { groupId, groupType })
+  }
+
+  async removeSocket(ws) {
+    if (this.socketToGroup.has(ws)) {
+      const { groupId, groupType } = this.socketToGroup.get(ws)
+      await this.removeSocketFromGroup({ id: groupId, type: groupType }, ws)
+      this.socketToGroup.delete(ws)
+    }
   }
 
   async removeSocketFromGroup({ id: groupId, type }, sender) {
@@ -111,6 +121,14 @@ class GroupManager {
         ws.send(msg)
       })
     }
+  }
+
+  getSocketGroupId(ws) {
+    if (this.socketToGroup.has(ws)) {
+      return this.socketToGroup.get(ws).groupId
+    }
+
+    return null
   }
 }
 

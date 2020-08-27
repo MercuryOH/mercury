@@ -17,6 +17,10 @@ class Queue {
     return userRepository.getFullName(this.currStudent)
   }
 
+  getCurrStudentID() {
+    return this.currStudent
+  }
+
   /**
    * Add a student to the waiting queue for a course
    * @param course - the courseId to be updated

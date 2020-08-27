@@ -5,7 +5,10 @@
 class WebSocketConnectionManager {
   constructor() {
     this.courseToSockets = new Map()
-    this.nameToSocket = new Map()
+    this.idToSocket = new Map()
+
+    this.socketToCourse = new Map() // reverse mapping for deletion
+    this.socketToId = new Map()
   }
 
   /**
@@ -15,13 +18,17 @@ class WebSocketConnectionManager {
    */
 
   addSocketForCourse(courseId, socket) {
+    /**
+     * Update the data structures to account for the new socket
+     */
+
     if (!this.courseToSockets.has(courseId)) {
       this.courseToSockets.set(courseId, new Set())
     }
 
     const currentConnections = this.courseToSockets.get(courseId)
     currentConnections.add(socket)
-    this.courseToSockets.set(courseId, currentConnections)
+    this.socketToCourse.set(socket, courseId)
   }
 
   /**
@@ -40,33 +47,71 @@ class WebSocketConnectionManager {
   }
 
   removeSocket(socket) {
-    this.courseToSockets.forEach((socketSet, courseId) => {
-      if (socketSet.has(socket)) {
-        socketSet.delete(socket)
+    /**
+     * First, delete socket from socket-course mappings
+     */
+
+    if (this.socketToCourse.has(socket)) {
+      const currCourse = this.socketToCourse.get(socket)
+
+      if (this.courseToSockets.has(currCourse)) {
+        const correspondingSocketSet = this.courseToSockets.get(currCourse)
+
+        if (correspondingSocketSet.has(socket)) {
+          correspondingSocketSet.delete(socket)
+        }
+
+        if (correspondingSocketSet.size == 0) {
+          this.courseToSockets.delete(currCourse)
+        }
       }
 
-      if (socketSet.size == 0) {
-        this.courseToSockets.delete(courseId)
-      }
-    })
+      this.socketToCourse.delete(socket)
+    }
 
-    this.nameToSocket.forEach((currSocket, name) => {
-      if (socket === currSocket) {
-        this.nameToSocket.delete(name)
+    /**
+     * Second, delete socket from socket-id mappings
+     */
+
+    if (this.socketToId.has(socket)) {
+      const userId = this.socketToId.get(socket)
+
+      if (this.idToSocket.has(userId)) {
+        this.idToSocket.delete(userId)
       }
-    })
+
+      this.socketToId.delete(socket)
+    }
   }
 
   associateUserWithSocket(id, socket) {
-    this.nameToSocket.set(id, socket)
+    this.idToSocket.set(id, socket)
+    this.socketToId.set(socket, id)
   }
 
-  getSocketOfUserID(name) {
-    if (name == null) {
-      throw new Error('null socket name')
+  getSocketOfUserID(id) {
+    if (id == null) {
+      throw new Error('null socket id')
     }
-    if (this.nameToSocket.has(name)) {
-      return this.nameToSocket.get(name)
+
+    if (this.idToSocket.has(id)) {
+      return this.idToSocket.get(id)
+    }
+
+    return null
+  }
+
+  getSocketCourseID(ws) {
+    if (this.socketToCourse.has(ws)) {
+      return this.socketToCourse.get(ws)
+    }
+
+    return null
+  }
+
+  getSocketUserId(ws) {
+    if (this.socketToId.has(ws)) {
+      return this.socketToId.get(ws)
     }
 
     return null

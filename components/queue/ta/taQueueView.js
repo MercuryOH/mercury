@@ -39,6 +39,10 @@ export default class TAQueueView extends Component {
       })
     })
 
+    EventEmitter.subscribe('TARejoinCall', () => {
+      this.setState({ inCallWithStudent: true })
+    })
+
     EventEmitter.subscribe('removeTAWaitingModalOnTimeout', () => {
       const { nextStudentName } = this.state
       this.createTimeoutNotification(nextStudentName)

@@ -71,8 +71,20 @@ class StudentQueueView extends Component {
 
     EventEmitter.subscribe('studentJoinTA', (TAName) => {
       const { office, onJoin, me } = this.state
-      EventEmitter.publish('signalJoinTA', { group: this.state.groups.filter((check) => check.type === 'office' && Number(check.UserId) === Number(TAName))[0], TAName, me })
-      onJoin(this.state.groups.filter((check) => check.type === 'office' && Number(check.UserId) === Number(TAName))[0])
+      EventEmitter.publish('signalJoinTA', {
+        group: this.state.groups.filter(
+          (check) =>
+            check.type === 'office' && Number(check.UserId) === Number(TAName)
+        )[0],
+        TAName,
+        me,
+      })
+      onJoin(
+        this.state.groups.filter(
+          (check) =>
+            check.type === 'office' && Number(check.UserId) === Number(TAName)
+        )[0]
+      )
       this.setState({ inQueue: false, inCallWithTA: true })
     })
 
@@ -208,9 +220,9 @@ class StudentQueueView extends Component {
     this.setState({ isReadyToRender: true })
     api
       .getGroups(Number(this.props.classId))
-      .then((groups) => this.setState({groups: groups}))
+      .then((groups) => this.setState({ groups: groups }))
 
-      //wrong typing on courseId
+    //wrong typing on courseId
   }
 
   createCurrStudentLabel() {

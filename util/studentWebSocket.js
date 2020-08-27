@@ -146,12 +146,12 @@ export default class StudentWebSocketClient {
   }
 
   processConnectionOpen() {
-    this.connection.send(
-      this.prepareMessage({
-        msgType: 'greeting',
-        msg: this.id,
-      })
-    ) // notify the server which courseId this websocket belongs to
+    // this.connection.send(
+    //   this.prepareMessage({
+    //     msgType: 'greeting',
+    //     msg: this.id,
+    //   })
+    // ) // notify the server which courseId this websocket belongs to
   }
 
   processConnectionError(error) {
