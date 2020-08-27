@@ -2,15 +2,7 @@ import React, { Component } from 'react'
 import { withRouter } from 'next/router'
 import dynamic from 'next/dynamic'
 import Layout from '../../components/layout'
-import {
-  Button,
-  Accordion,
-  List,
-  Icon,
-  Label,
-  Modal,
-  Header,
-} from 'semantic-ui-react'
+import { Button, Accordion, List, Icon, Label } from 'semantic-ui-react'
 import { AuthRequired } from '../../components/authProvider'
 import Queue from '../../components/queue/queue'
 import * as api from '../../util/mercuryService'
