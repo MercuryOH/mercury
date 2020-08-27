@@ -2,7 +2,15 @@ import React, { Component } from 'react'
 import { withRouter } from 'next/router'
 import dynamic from 'next/dynamic'
 import Layout from '../../components/layout'
-import { Button, Accordion, List, Icon, Label } from 'semantic-ui-react'
+import {
+  Button,
+  Accordion,
+  List,
+  Icon,
+  Label,
+  Modal,
+  Header,
+} from 'semantic-ui-react'
 import { AuthRequired } from '../../components/authProvider'
 import Queue from '../../components/queue/queue'
 import * as api from '../../util/mercuryService'
@@ -18,6 +26,7 @@ import GroupJoinRequestModal from '../../components/invite/groupJoinRequestModal
 import WaitingForRequestApprovalModal from '../../components/invite/WaitingForRequestApprovalModal'
 import WaitingForNewLeaderModal from '../../components/WaitingForNewLeaderModal'
 import AccessDeniedModal from '../../components/accessDeniedModal'
+import OfficeAccessModal from '../../components/officeAccessModal'
 import { confirmAlert } from 'react-confirm-alert' // Import
 
 const ScreenContainer = dynamic(
@@ -79,9 +88,6 @@ class ClassPage extends Component {
           }
         }
 
-        return { token }
-      })
-      .then(({ token }) => {
         this.setState(
           {
             vonageCred: { sessionId: group.sessionId, token },
@@ -121,7 +127,7 @@ class ClassPage extends Component {
         this.user.id
       )
       .catch(console.error)
-    //.then(() => {
+
     this.fetchAllGroups()
     EventEmitter.publish('classGroupSetChanged', this.classId)
     EventEmitter.publish('userLeaveGroup', this.state.currentGroup)
@@ -132,7 +138,6 @@ class ClassPage extends Component {
     })
     EventEmitter.publish('currentGroupChange', { id: '', name: '' })
     localStorage.removeItem('lastCallEntered')
-    //})
   }
 
   leaveGroup = () => {
@@ -158,7 +163,7 @@ class ClassPage extends Component {
     EventEmitter.publish('currentGroupChange', { id: '', name: '' }) // change current group
     EventEmitter.publish('callOver', this.classId) // signal call over, which triggers feedback modal and curr student update on the queue
     localStorage.removeItem('lastCallEntered')
-    //})
+    
   }
 
   defineEventEmitterCallbacks() {
@@ -455,34 +460,33 @@ class ClassPage extends Component {
 
   showOffice() {
     return (
-      (this.state.currentClass.role !== 'Student' ||
-        this.state.currentGroup.type === 'office') && (
-        <div style={{ paddingLeft: 20 }}>
-          <List relaxed selection verticalAlign="middle">
-            {this.state.allGroups
-              .filter((group) => group.type === 'office')
-              .map((group) => (
-                <List.Item
-                  key={`${group.name}`}
-                  onClick={() => {
-                    if (this.state.currentGroup.id !== group.id) {
-                      this.handleSelectGroup(group)
-                    }
-                  }}
-                  style={this.getListItemStyle(group)}
-                >
-                  <List.Icon name="graduation cap" />
-                  <List.Content>
-                    <List.Header as="a">
-                      {group.name + ' (' + group.users.length + ')'}
-                    </List.Header>
-                  </List.Content>
-                  {this.showInviteButton(group)}
-                </List.Item>
-              ))}
-          </List>
-        </div>
-      )
+      <div style={{ paddingLeft: 20 }}>
+        <List relaxed selection verticalAlign="middle">
+          {this.state.allGroups
+            .filter((group) => group.type === 'office')
+            .map((group) => (
+              <List.Item
+                key={`${group.name}`}
+                onClick={() => {
+                  if (this.state.currentClass.role === 'Student') {
+                    EventEmitter.publish('openOfficeAccessModal', true)
+                  } else if (this.state.currentGroup.id !== group.id) {
+                    this.handleSelectGroup(group)
+                  }
+                }}
+                style={this.getListItemStyle(group)}
+              >
+                <List.Icon name="graduation cap" />
+                <List.Content>
+                  <List.Header as="a">
+                    {group.name + ' (' + group.users.length + ')'}
+                  </List.Header>
+                </List.Content>
+                {this.showInviteButton(group)}
+              </List.Item>
+            ))}
+        </List>
+      </div>
     )
   }
 
@@ -696,6 +700,7 @@ class ClassPage extends Component {
             name={this.user.firstName + ' ' + this.user.lastName}
           />
         )}
+        <OfficeAccessModal />
         <AccessDeniedModal />
         <UserInviteModal />
         <FeedbackModal />
