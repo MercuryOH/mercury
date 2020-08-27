@@ -163,7 +163,6 @@ class ClassPage extends Component {
     EventEmitter.publish('currentGroupChange', { id: '', name: '' }) // change current group
     EventEmitter.publish('callOver', this.classId) // signal call over, which triggers feedback modal and curr student update on the queue
     localStorage.removeItem('lastCallEntered')
-    
   }
 
   defineEventEmitterCallbacks() {
