@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react'
-import { withAuthenticationRequired } from '@auth0/auth0-react'
 import { Link } from 'react-router-dom'
 import { Label, Accordion, List, Button } from 'semantic-ui-react'
 import * as api from '../services/api'
@@ -101,4 +100,4 @@ function CalendarContainer() {
   )
 }
 
-export default withAuthenticationRequired(CalendarContainer)
+export default CalendarContainer

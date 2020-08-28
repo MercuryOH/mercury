@@ -68,6 +68,10 @@ namespace Mercury.Migrations
                     b.Property<string>("ClassId")
                         .HasColumnType("text");
 
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("text");
+
                     b.Property<string>("SessionId")
                         .IsRequired()
                         .HasColumnType("text");
@@ -80,6 +84,21 @@ namespace Mercury.Migrations
                     b.HasIndex("ClassId");
 
                     b.ToTable("Groups");
+                });
+
+            modelBuilder.Entity("Mercury.Entities.GroupUser", b =>
+                {
+                    b.Property<string>("GroupId")
+                        .HasColumnType("text");
+
+                    b.Property<string>("UserId")
+                        .HasColumnType("text");
+
+                    b.HasKey("GroupId", "UserId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("GroupUsers");
                 });
 
             modelBuilder.Entity("Mercury.Entities.User", b =>
@@ -118,6 +137,21 @@ namespace Mercury.Migrations
                     b.HasOne("Mercury.Entities.Class", "Class")
                         .WithMany("Groups")
                         .HasForeignKey("ClassId");
+                });
+
+            modelBuilder.Entity("Mercury.Entities.GroupUser", b =>
+                {
+                    b.HasOne("Mercury.Entities.Group", "Group")
+                        .WithMany("GroupUsers")
+                        .HasForeignKey("GroupId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Mercury.Entities.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 #pragma warning restore 612, 618
         }

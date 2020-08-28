@@ -13,3 +13,19 @@ export async function getClasses() {
 
   return data
 }
+
+export async function getClass(classId) {
+  const { data } = await axios.get(`/api/classes/${classId}`, {
+    headers: { Authorization: token },
+  })
+
+  return data
+}
+
+export async function postGroup(classId, group) {
+  const { data } = await axios.post(`/api/classes/${classId}/groups`, group, {
+    headers: { Authorization: token },
+  })
+
+  return data
+}

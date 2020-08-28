@@ -20,9 +20,8 @@ function App() {
       <BrowserRouter basename={baseUrl}>
         <Protected>
           <Route path="/classes/:classId" component={ClassDetail} />
-          <Route path="/calendar" component={Calendar} />
+          <Route path="/" component={Calendar} />
         </Protected>
-        <Route exact path="/" component={Home} />
       </BrowserRouter>
     </Auth0Provider>
   )

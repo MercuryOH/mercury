@@ -1,5 +1,6 @@
 ﻿using Mercury.Entities;
 using Mercury.Models.Classes;
+using Mercury.Models.Groups;
 using Mercury.Utils;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -56,6 +57,7 @@ namespace Mercury.Controllers
             }
         }
 
+        [ProducesResponseType(typeof(ClassDto), StatusCodes.Status200OK)]
         [HttpGet]
         [Authorize]
         public IActionResult Get()
@@ -78,6 +80,48 @@ namespace Mercury.Controllers
                 Color = x.Class.Color,
                 Role = x.Role
             }));
+        }
+
+        [ProducesResponseType(typeof(ClassWithGroupsDto), StatusCodes.Status200OK)]
+        [HttpGet("{classId}")]
+        [Authorize]
+        public IActionResult Get(string classId)
+        {
+            var userId = Auth.GetUserId(User);
+            var user = _context.Users.FirstOrDefault(x => x.Id == userId);
+
+            if (user == null)
+            {
+                return BadRequest();
+            }
+
+            var hasClassAccess = _context.ClassUsers
+                .Include(x => x.Class)
+                .Include(x => x.Class.Groups)
+                .FirstOrDefault(x => x.ClassId == classId && x.UserId == userId);
+
+            if (hasClassAccess == null)
+            {
+                return Unauthorized();
+            }
+
+            var currentClass = hasClassAccess.Class;
+
+            return Ok(new ClassWithGroupsDto
+            {
+                Id = currentClass.Id,
+                Name = currentClass.Name,
+                Color = currentClass.Color,
+                CalendarId = currentClass.CalendarId,
+                Role = hasClassAccess.Role,
+                Groups = currentClass.Groups.Select(group => new GroupDto
+                {
+                    Id = group.Id,
+                    Name = group.Name,
+                    Type = group.Type,
+                    SessionId = group.SessionId,
+                })
+            });
         }
 
         private string GenerateRandomColorHex()

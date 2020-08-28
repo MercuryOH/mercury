@@ -9,8 +9,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Mercury.Migrations
 {
     [DbContext(typeof(MercuryContext))]
-    [Migration("20200823043400_AddUserTable")]
-    partial class AddUserTable
+    [Migration("20200828002801_InitialMigration")]
+    partial class InitialMigration
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -30,6 +30,10 @@ namespace Mercury.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
+                    b.Property<string>("Color")
+                        .IsRequired()
+                        .HasColumnType("text");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("text");
@@ -39,6 +43,24 @@ namespace Mercury.Migrations
                     b.ToTable("Classes");
                 });
 
+            modelBuilder.Entity("Mercury.Entities.ClassUser", b =>
+                {
+                    b.Property<string>("ClassId")
+                        .HasColumnType("text");
+
+                    b.Property<string>("UserId")
+                        .HasColumnType("text");
+
+                    b.Property<string>("Role")
+                        .HasColumnType("text");
+
+                    b.HasKey("ClassId", "UserId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("ClassUsers");
+                });
+
             modelBuilder.Entity("Mercury.Entities.Group", b =>
                 {
                     b.Property<string>("Id")
@@ -46,6 +68,10 @@ namespace Mercury.Migrations
                         .HasColumnType("text");
 
                     b.Property<string>("ClassId")
+                        .HasColumnType("text");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<string>("SessionId")
@@ -62,6 +88,21 @@ namespace Mercury.Migrations
                     b.ToTable("Groups");
                 });
 
+            modelBuilder.Entity("Mercury.Entities.GroupUser", b =>
+                {
+                    b.Property<string>("GroupId")
+                        .HasColumnType("text");
+
+                    b.Property<string>("UserId")
+                        .HasColumnType("text");
+
+                    b.HasKey("GroupId", "UserId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("GroupUsers");
+                });
+
             modelBuilder.Entity("Mercury.Entities.User", b =>
                 {
                     b.Property<string>("Id")
@@ -70,7 +111,7 @@ namespace Mercury.Migrations
                     b.Property<string>("Email")
                         .HasColumnType("text");
 
-                    b.Property<string>("Username")
+                    b.Property<string>("Name")
                         .HasColumnType("text");
 
                     b.HasKey("Id");
@@ -78,11 +119,41 @@ namespace Mercury.Migrations
                     b.ToTable("Users");
                 });
 
+            modelBuilder.Entity("Mercury.Entities.ClassUser", b =>
+                {
+                    b.HasOne("Mercury.Entities.Class", "Class")
+                        .WithMany("ClassUsers")
+                        .HasForeignKey("ClassId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Mercury.Entities.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("Mercury.Entities.Group", b =>
                 {
                     b.HasOne("Mercury.Entities.Class", "Class")
                         .WithMany("Groups")
                         .HasForeignKey("ClassId");
+                });
+
+            modelBuilder.Entity("Mercury.Entities.GroupUser", b =>
+                {
+                    b.HasOne("Mercury.Entities.Group", "Group")
+                        .WithMany("GroupUsers")
+                        .HasForeignKey("GroupId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Mercury.Entities.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 #pragma warning restore 612, 618
         }

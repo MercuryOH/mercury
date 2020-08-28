@@ -39,6 +39,7 @@ namespace Mercury.Controllers
             var group = new Group
             {
                 Type = model.Type,
+                Name = model.Name,
                 SessionId = "session-goes-here",
                 ClassId = currentClass.Id
             };
@@ -48,7 +49,13 @@ namespace Mercury.Controllers
                 _context.Groups.Add(group);
                 _context.SaveChanges();
 
-                return Ok(group);
+                return Ok(new GroupDto
+                {
+                    Id = group.Id,
+                    Name = group.Name,
+                    SessionId = group.SessionId,
+                    Type = group.Type
+                });
             }
             catch (Exception e)
             {
