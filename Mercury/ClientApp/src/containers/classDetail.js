@@ -4,6 +4,7 @@ import { Button, Accordion, List } from 'semantic-ui-react'
 import * as api from '../services/api'
 import Layout from '../components/layout'
 import CreateGroupModal from '../components/createGroupModal'
+import CreateDiscussionModal from '../components/createDiscussionModal'
 
 function ClassDetail() {
   const { classId } = useParams()
@@ -37,7 +38,7 @@ function ClassDetail() {
   return (
     <Layout
       left={
-        <div style={{ height: '100%', marginLeft: '2.5%' }}>
+        <div style={{ width: '100%', height: '100%', marginLeft: '2.5%' }}>
           <Button.Group
             fluid
             size="huge"
@@ -82,14 +83,12 @@ function ClassDetail() {
                         {currentClass.groups
                           .filter((group) => group.type === 'Discussion')
                           .map((group) => (
-                            <>
-                              <List.Item key={`discussion_${group.id}`}>
-                                <List.Icon name="sound" />
-                                <List.Content>
-                                  <List.Header as="a">{group.name}</List.Header>
-                                </List.Content>
-                              </List.Item>
-                            </>
+                            <List.Item key={`discussion_${group.id}`}>
+                              <List.Icon name="sound" />
+                              <List.Content>
+                                <List.Header as="a">{group.name}</List.Header>
+                              </List.Content>
+                            </List.Item>
                           ))}
                       </List>
                     </div>
@@ -108,14 +107,12 @@ function ClassDetail() {
                         {currentClass.groups
                           .filter((group) => group.type === 'Group')
                           .map((group) => (
-                            <>
-                              <List.Item key={`discussion_${group.id}`}>
-                                <List.Icon name="sound" />
-                                <List.Content>
-                                  <List.Header as="a">{group.name}</List.Header>
-                                </List.Content>
-                              </List.Item>
-                            </>
+                            <List.Item key={`private_group_${group.id}`}>
+                              <List.Icon name="sound" />
+                              <List.Content>
+                                <List.Header as="a">{group.name}</List.Header>
+                              </List.Content>
+                            </List.Item>
                           ))}
                       </List>
                     </div>
@@ -124,7 +121,19 @@ function ClassDetail() {
               },
             ]}
           />
-          <CreateGroupModal onChange={handleCreateGroup} />
+          <div
+            style={{
+              position: 'absolute',
+              width: 'calc(100% - 38px)',
+              bottom: 14,
+            }}
+          >
+            {currentClass.role === 'Student' ? (
+              <CreateGroupModal onChange={handleCreateGroup} />
+            ) : (
+              <CreateDiscussionModal onChange={handleCreateGroup} />
+            )}
+          </div>
         </div>
       }
     >

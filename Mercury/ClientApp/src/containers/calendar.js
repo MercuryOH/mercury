@@ -31,7 +31,6 @@ function CalendarContainer() {
             Classes
           </Label>
           <Accordion
-            fluid
             exclusive={false}
             defaultActiveIndex={[0, 1]}
             style={{ fontSize: '1vw' }}
