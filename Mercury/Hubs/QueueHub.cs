@@ -27,22 +27,20 @@ namespace Mercury.Hubs
             if (user == null) return;
 
             var hasClassAccess = _context.ClassUsers.FirstOrDefault(x => x.ClassId == classId && x.UserId == userId);
+            if (hasClassAccess == null || hasClassAccess.Role != "Student") return;
             
-            if (hasClassAccess != null && hasClassAccess.Role == "Student")
+            _queue.Enqueue(classId, new UserDto
             {
-                _queue.Enqueue(classId, new UserDto
-                {
-                    Id = user.Id,
-                    Name = user.Name,
-                    Email = user.Email
-                });
+                Id = user.Id,
+                Name = user.Name,
+                Email = user.Email
+            });
 
-                Clients.All.SendAsync("QueueChange", new QueueChangeEventDto
-                {
-                    ClassId = classId,
-                    Queue = _queue.Get(classId)
-                });
-            }
+            Clients.All.SendAsync("QueueChange", new QueueChangeEventDto
+            {
+                ClassId = classId,
+                Queue = _queue.Get(classId)
+            });
         }
     }
 }
