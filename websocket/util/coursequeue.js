@@ -88,10 +88,16 @@ class Queue {
     this.map.set(course, currentQueue)
   }
 
+  isStudentAnonymous(id) {
+    return this.isAnonymous.has(id) && this.isAnonymous.get(id)
+  }
+
   getAllStudents(course) {
     if (this.map.has(course)) {
       return this.map.get(course).map((id) => {
-        const fullName = userRepository.getFullName(id)
+        const fullName = this.isStudentAnonymous(id)
+          ? 'Anonymous'
+          : userRepository.getFullName(id)
         return { id, fullName }
       })
     }
