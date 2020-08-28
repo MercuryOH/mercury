@@ -126,7 +126,7 @@ class ClassPage extends Component {
     this.setState({
       vonageCred: null,
       currentGroup: { id: '', name: '' },
-      withTa: false,
+      withTa: true,
     })
     EventEmitter.publish('currentGroupChange', { id: '', name: '' })
     localStorage.removeItem('lastCallEntered')
