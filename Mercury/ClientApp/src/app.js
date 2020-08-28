@@ -17,12 +17,12 @@ function App() {
       clientId="GVN3BPWdu5p0T12gZGpBx42F5sV0VBu7"
       redirectUri={window.location.origin}
     >
-      <BrowserRouter basename={baseUrl}>
-        <Protected>
+      <Protected>
+        <BrowserRouter basename={baseUrl}>
           <Route path="/classes/:classId" component={ClassDetail} />
           <Route path="/" component={Calendar} />
-        </Protected>
-      </BrowserRouter>
+        </BrowserRouter>
+      </Protected>
     </Auth0Provider>
   )
 }

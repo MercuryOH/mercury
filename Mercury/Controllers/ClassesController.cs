@@ -98,6 +98,7 @@ namespace Mercury.Controllers
             var hasClassAccess = _context.ClassUsers
                 .Include(x => x.Class)
                 .Include(x => x.Class.Groups)
+                .ThenInclude(x => x.GroupUsers)
                 .FirstOrDefault(x => x.ClassId == classId && x.UserId == userId);
 
             if (hasClassAccess == null)
@@ -106,6 +107,7 @@ namespace Mercury.Controllers
             }
 
             var currentClass = hasClassAccess.Class;
+            var userGroups = currentClass.Groups.Where(x => x.GroupUsers.Any(u => u.UserId == userId));
 
             return Ok(new ClassWithGroupsDto
             {
@@ -114,7 +116,7 @@ namespace Mercury.Controllers
                 Color = currentClass.Color,
                 CalendarId = currentClass.CalendarId,
                 Role = hasClassAccess.Role,
-                Groups = currentClass.Groups.Select(group => new GroupDto
+                Groups = userGroups.Select(group => new GroupDto
                 {
                     Id = group.Id,
                     Name = group.Name,

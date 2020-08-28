@@ -44,9 +44,16 @@ namespace Mercury.Controllers
                 ClassId = currentClass.Id
             };
 
+            var groupUser = new GroupUser
+            {
+                Group = group,
+                UserId = id
+            };
+
             try
             {
                 _context.Groups.Add(group);
+                _context.GroupUsers.Add(groupUser);
                 _context.SaveChanges();
 
                 return Ok(new GroupDto
