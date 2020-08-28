@@ -137,7 +137,7 @@ function ClassDetail() {
       right={<Queue classId={currentClass.id} />}
     >
       {JSON.stringify(currentClass, undefined, 2)}
-      <Button content="Join" onClick={() => rt.JoinQueue(currentClass.id)} />
+      <Button content="Join" onClick={() => rt.joinQueue(currentClass.id)} />
     </Layout>
   )
 }

@@ -26,6 +26,12 @@ namespace Mercury.Services
 
             return classQueue.Dequeue();
         }
+        public IEnumerable<UserDto> Get(string classId)
+        {
+            var classQueue = GetClassQueue(classId);
+
+            return classQueue.ToList();
+        }
 
         private Queue<UserDto> GetClassQueue(string classId)
         {
@@ -38,13 +44,6 @@ namespace Mercury.Services
             }
 
             return classQueue;
-        }
-
-        public IEnumerable<UserDto> Get(string classId)
-        {
-            var classQueue = GetClassQueue(classId);
-
-            return classQueue.ToList();
         }
     }
 }

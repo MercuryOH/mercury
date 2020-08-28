@@ -21,6 +21,6 @@ export function getConnection() {
   return connection
 }
 
-export function JoinQueue(classId) {
+export function joinQueue(classId) {
   connection.invoke('Join', classId).catch(console.error)
 }
