@@ -7,6 +7,7 @@ class Queue {
   constructor() {
     this.map = new Map()
     this.currStudent = ''
+    this.isAnonymous = new Map()
   }
 
   setCurrStudent(currStudentId) {
@@ -17,17 +18,14 @@ class Queue {
     return userRepository.getFullName(this.currStudent)
   }
 
-  getCurrStudentID() {
-    return this.currStudent
-  }
-
   /**
    * Add a student to the waiting queue for a course
    * @param course - the courseId to be updated
    * @param student - the student (id) to be added
+   * @param anonymous - whether or not the student wants to be anonymous
    */
 
-  addStudentToQueue(course, student) {
+  addStudentToQueue(course, student, anonymous) {
     if (!this.map.has(course)) {
       // if the course is not stored yet
       this.map.set(course, []) // set the course value to an empty queue
@@ -35,14 +33,13 @@ class Queue {
 
     const currentQueue = this.map.get(course)
     currentQueue.push(student)
-
-    this.map.set(course, currentQueue)
+    this.isAnonymous.set(student, anonymous)
   }
 
   /**
    * Get the next student of the course
    * @param course - the course to be queried
-   * @returns {student id of the next student}
+   * @returns int {student id of the next student}
    */
 
   getNextStudent(course) {

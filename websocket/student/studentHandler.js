@@ -29,7 +29,8 @@ const handleStudentMessage = async (ws, message) => {
       break
 
     case 'addToQueue':
-      courseQueue.addStudentToQueue(courseId, msg)
+      const { id: studentId, anonymous } = msg
+      courseQueue.addStudentToQueue(courseId, studentId, anonymous)
 
       webSocketConnectionManager.broadcast(
         courseId,
@@ -231,6 +232,7 @@ const handleStudentMessage = async (ws, message) => {
           msg: msg,
         })
       )
+      break
 
     case 'bidForLeaderPosition':
       // msg - new leader Id, old Leader Id, groupId

@@ -5,6 +5,7 @@ import * as api from '../../../util/mercuryService'
 import YourTurnModal from './yourTurnModal'
 import { Label, Button } from 'semantic-ui-react'
 import { EventEmitter } from '../../util/EventEmitter'
+import { confirmAlert } from 'react-confirm-alert' // Import
 
 const QueueDiv = styled.div`
   grid-gap: 2vh;
@@ -164,7 +165,24 @@ class StudentQueueView extends Component {
       return
     }
 
-    EventEmitter.publish('signalAddMeToQueue')
+    confirmAlert({
+      title: 'Anonymous Option',
+      message: 'Would you like to be anonymous on the queue?',
+      buttons: [
+        {
+          label: 'Yes',
+          onClick: () => {
+            EventEmitter.publish('signalAddMeToQueue', { anonymous: true })
+          },
+        },
+        {
+          label: 'No',
+          onClick: () => {
+            EventEmitter.publish('signalAddMeToQueue', { anonymous: false })
+          },
+        },
+      ],
+    })
   }
 
   removeMeFromQueue() {
@@ -228,7 +246,7 @@ class StudentQueueView extends Component {
   createCurrStudentLabel() {
     const { currStudentBeingHelped } = this.state
 
-    if (currStudentBeingHelped.length == 0) {
+    if (currStudentBeingHelped.length === 0) {
       return null
     }
 

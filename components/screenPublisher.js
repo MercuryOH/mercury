@@ -34,7 +34,13 @@ export default class ScreenPublisher extends Component {
   render() {
     return this.state.appear === false ? null : (
       <>
-        {this.state.error ? <div>{"We noticed you denied access to your screen. Please click the screen blocked icon in your browser's address bar, allow access, and then refresh the page and rejoin the call."}</div> : null}
+        {this.state.error ? (
+          <div>
+            {
+              "We noticed you denied access to your screen. Please click the screen blocked icon in your browser's address bar, allow access, and then refresh the page and rejoin the call."
+            }
+          </div>
+        ) : null}
         <OTPublisher
           properties={{
             width: '13.62vw',

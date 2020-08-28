@@ -46,8 +46,8 @@ export default class StudentWebSocketClient {
       this.signalCallOver()
     })
 
-    EventEmitter.subscribe('signalAddMeToQueue', () => {
-      this.addMeToQueue()
+    EventEmitter.subscribe('signalAddMeToQueue', (data) => {
+      this.addMeToQueue(data)
     })
 
     EventEmitter.subscribe('signalRemoveMeFromQueue', () => {
@@ -264,6 +264,7 @@ export default class StudentWebSocketClient {
 
       case 'fetchScreensharer':
         this.changeScreensharer(msg)
+        break
 
       case 'oldLeaderHasLeft':
         // msg - the old leader Id and the group id
@@ -283,11 +284,11 @@ export default class StudentWebSocketClient {
     }
   }
 
-  addMeToQueue() {
+  addMeToQueue(data) {
     this.connection.send(
       this.prepareMessage({
         msgType: 'addToQueue',
-        msg: this.id,
+        msg: { ...data, id: this.id },
       })
     )
 
