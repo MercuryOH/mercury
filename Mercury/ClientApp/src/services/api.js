@@ -29,3 +29,11 @@ export async function postGroup(classId, group) {
 
   return data
 }
+
+export async function getQueue(classId) {
+  const { data } = await axios.get(`/api/classes/${classId}/queue`, {
+    headers: { Authorization: token },
+  })
+
+  return data
+}

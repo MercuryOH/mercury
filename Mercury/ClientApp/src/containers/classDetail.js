@@ -2,7 +2,10 @@ import React, { useEffect, useState } from 'react'
 import { useParams, Link } from 'react-router-dom'
 import { Button, Accordion, List } from 'semantic-ui-react'
 import * as api from '../services/api'
+import * as rt from '../services/realtime'
+
 import Layout from '../components/layout'
+import Queue from '../components/Queue'
 import CreateGroupModal from '../components/createGroupModal'
 import CreateDiscussionModal from '../components/createDiscussionModal'
 
@@ -38,27 +41,22 @@ function ClassDetail() {
   return (
     <Layout
       left={
-        <div style={{ width: '100%', height: '100%', marginLeft: '2.5%' }}>
-          <Button.Group
-            fluid
-            size="huge"
-            style={{ marginBottom: 12, width: '100%' }}
-          >
-            <Link to="/calendar">
-              <Button
-                compact
-                icon="angle left"
-                content={currentClass.name}
-                style={{
-                  fontSize: '1.5vw',
-                  textAlign: 'left',
-                  width: '75%',
-                  marginBottom: '2%',
-                  minWidth: '41px',
-                }}
-              />
-            </Link>
-          </Button.Group>
+        <div style={{ width: '100%', height: '100%' }}>
+          <Link to="/calendar">
+            <Button
+              fluid
+              size="huge"
+              icon="angle left"
+              content={currentClass.name}
+              style={{
+                fontSize: '1.5vw',
+                textAlign: 'left',
+                width: '75%',
+                marginBottom: '2%',
+                minWidth: '41px',
+              }}
+            />
+          </Link>
           <Accordion
             fluid
             exclusive={false}
@@ -136,8 +134,10 @@ function ClassDetail() {
           </div>
         </div>
       }
+      right={<Queue classId={currentClass.id} />}
     >
       {JSON.stringify(currentClass, undefined, 2)}
+      <Button content="Join" onClick={() => rt.JoinQueue(currentClass.id)} />
     </Layout>
   )
 }

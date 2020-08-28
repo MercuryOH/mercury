@@ -21,7 +21,9 @@ function CreateDiscussionModal({ onChange }) {
       open={open}
       onOpen={openModal}
       onClose={closeModal}
-      trigger={<Button color="teal" icon="add" content="New Discussion" />}
+      trigger={
+        <Button fluid color="teal" icon="add" content="New Discussion" />
+      }
     >
       <Modal.Header>Create discussion</Modal.Header>
       <Modal.Content>

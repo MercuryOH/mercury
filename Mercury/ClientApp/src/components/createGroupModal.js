@@ -21,7 +21,7 @@ function CreateGroupModal({ onChange }) {
       open={open}
       onOpen={openModal}
       onClose={closeModal}
-      trigger={<Button color="teal" icon="add" content="New Group" />}
+      trigger={<Button fluid color="teal" icon="add" content="New Group" />}
     >
       <Modal.Header>Create group</Modal.Header>
       <Modal.Content>

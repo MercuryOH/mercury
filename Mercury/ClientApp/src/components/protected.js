@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { useAuth0, withAuthenticationRequired } from '@auth0/auth0-react'
 import * as api from '../services/api'
+import * as rt from '../services/realtime'
 
 function Protected({ children }) {
   const { getAccessTokenSilently } = useAuth0()
@@ -9,8 +10,15 @@ function Protected({ children }) {
   useEffect(() => {
     getAccessTokenSilently()
       .then((token) => {
-        api.setToken(`Bearer ${token}`)
-        setHasAccessToken(true)
+        let accessToken = `Bearer ${token}`
+
+        api.setToken(accessToken)
+
+        rt.init(token)
+          .then(() => {
+            setHasAccessToken(true)
+          })
+          .catch(console.error)
       })
       .catch(console.error)
   }, [])

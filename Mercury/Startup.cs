@@ -1,17 +1,18 @@
 using Mercury.Entities;
+using Mercury.Hubs;
+using Mercury.Services;
 using Mercury.Utils;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.SpaServices.ReactDevelopmentServer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.IdentityModel.Logging;
 using System.Security.Claims;
+using System.Threading.Tasks;
 
 namespace Mercury
 {
@@ -37,9 +38,27 @@ namespace Mercury
             {
                 opt.Authority = domain;
                 opt.Audience = Configuration["Auth0:ApiIdentifier"];
+
+                // SignalR can't set `Authorization` header. Parse the access token here instead.
+                opt.Events = new JwtBearerEvents
+                {
+                    OnMessageReceived = context =>
+                    {
+                        var accessToken = context.Request.Query["access_token"];
+                        var path = context.HttpContext.Request.Path;
+
+                        if (!string.IsNullOrEmpty(accessToken) && path.StartsWithSegments("/queueHub"))
+                        {
+                            context.Token = accessToken;
+                        }
+
+                        return Task.CompletedTask;
+                    }
+                };
             });
-            
+
             services.AddSingleton<IAuthorizationHandler, HasScopeHandler>();
+            services.AddSingleton<IQueueService, QueueService>();
 
             services.AddDbContext<MercuryContext>(opt =>
             {
@@ -48,6 +67,7 @@ namespace Mercury
 
             services.AddSwaggerGen();
 
+            services.AddSignalR();
             services.AddControllersWithViews();
 
             // In production, the React files will be served from this directory
@@ -55,6 +75,8 @@ namespace Mercury
             {
                 configuration.RootPath = "ClientApp/build";
             });
+
+            
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -89,6 +111,7 @@ namespace Mercury
 
             app.UseEndpoints(endpoints =>
             {
+                endpoints.MapHub<QueueHub>("/queueHub");
                 endpoints.MapControllerRoute(
                     name: "default",
                     pattern: "{controller}/{action=Index}/{id?}");

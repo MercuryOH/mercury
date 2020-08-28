@@ -1,13 +1,17 @@
 ﻿using Mercury.Entities;
 using Mercury.Models.Classes;
 using Mercury.Models.Groups;
+using Mercury.Models.Users;
+using Mercury.Services;
 using Mercury.Utils;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using Newtonsoft.Json.Linq;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace Mercury.Controllers
@@ -19,11 +23,13 @@ namespace Mercury.Controllers
     {
         private readonly ILogger _logger;
         private readonly MercuryContext _context;
+        private readonly IQueueService _queue;
 
-        public ClassesController(ILogger<ClassesController> logger, MercuryContext context)
+        public ClassesController(ILogger<ClassesController> logger, MercuryContext context, IQueueService queue)
         {
             _logger = logger;
             _context = context;
+            _queue = queue;
         }
 
         [ProducesResponseType(typeof(ClassDto), StatusCodes.Status200OK)]
@@ -124,6 +130,29 @@ namespace Mercury.Controllers
                     SessionId = group.SessionId,
                 })
             });
+        }
+
+        [ProducesResponseType(typeof(IEnumerable<UserDto>), StatusCodes.Status200OK)]
+        [HttpGet("{classId}/queue")]
+        [Authorize]
+        public IActionResult GetQueue(string classId)
+        {
+            var userId = Auth.GetUserId(User);
+            var user = _context.Users.FirstOrDefault(x => x.Id == userId);
+
+            if (user == null)
+            {
+                return BadRequest();
+            }
+
+            var hasClassAccess = _context.ClassUsers.FirstOrDefault(x => x.ClassId == classId && x.UserId == userId);
+
+            if (hasClassAccess == null)
+            {
+                return BadRequest();
+            }
+
+            return Ok(_queue.Get(classId));
         }
 
         private string GenerateRandomColorHex()

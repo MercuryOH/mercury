@@ -1,4 +1,5 @@
 ﻿using Mercury.Models.Groups;
+using Mercury.Models.Users;
 using System.Collections.Generic;
 
 namespace Mercury.Models.Classes
