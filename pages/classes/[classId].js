@@ -212,14 +212,14 @@ class ClassPage extends Component {
       .then((c) => {
         const userRole = c.users.find((u) => u.id === this.user.id)
         if (!userRole) this.props.router.push('/calendar')
-        const { role } = userRole
+        this.role = userRole.role
 
         let toRejoin = false
         /**
          * Start the appropriate web socket handler depending on the user role
          */
 
-        if (role === 'Student') {
+        if (this.role === 'Student') {
           /**
            * Start student web socket handler
            */
@@ -252,14 +252,6 @@ class ClassPage extends Component {
           },
           toRejoin,
         })
-
-        EventEmitter.publish(
-          'allOtherUsersInClass',
-          this.state.currentClass.users.filter(
-            (user) => user.id !== this.user.id && user.role === role
-          )
-        )
-        EventEmitter.publish('me', this.user)
       })
       .then(() => {
         this.fetchAllGroups()
@@ -269,6 +261,13 @@ class ClassPage extends Component {
       })
       .then(() => {
         this.setState({ isMounted: true })
+        EventEmitter.publish(
+          'allOtherUsersInClass',
+          this.state.currentClass.users.filter(
+            (user) => user.id !== this.user.id && user.role === this.role
+          )
+        )
+        EventEmitter.publish('me', this.user)
       })
       .catch(console.error)
   }
