@@ -59,6 +59,7 @@ namespace Mercury
 
             services.AddSingleton<IAuthorizationHandler, HasScopeHandler>();
             services.AddSingleton<IQueueService, QueueService>();
+            services.AddSingleton<IOpenTokService, OpenTokService>();
 
             services.AddDbContext<MercuryContext>(opt =>
             {

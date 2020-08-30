@@ -1,5 +1,6 @@
 ﻿using Mercury.Entities;
 using Mercury.Models.Groups;
+using Mercury.Services;
 using Mercury.Utils;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -17,11 +18,13 @@ namespace Mercury.Controllers
     {
         private readonly ILogger _logger;
         private readonly MercuryContext _context;
+        private readonly IOpenTokService _openTok;
 
-        public GroupsController(ILogger<GroupsController> logger,  MercuryContext context)
+        public GroupsController(ILogger<GroupsController> logger,  MercuryContext context, IOpenTokService openTok)
         {
             _logger = logger;
             _context = context;
+            _openTok = openTok;
         }
 
         [HttpPost]
@@ -40,7 +43,7 @@ namespace Mercury.Controllers
             {
                 Type = model.Type,
                 Name = model.Name,
-                SessionId = "session-goes-here",
+                SessionId = _openTok.CreateSession(),
                 ClassId = currentClass.Id
             };
 
