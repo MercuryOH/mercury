@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.AspNetCore.SpaServices.ReactDevelopmentServer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -58,6 +59,7 @@ namespace Mercury
             });
 
             services.AddSingleton<IAuthorizationHandler, HasScopeHandler>();
+            services.AddSingleton<IUserIdProvider, Auth0UserIdProvider>();
             services.AddSingleton<IQueueService, QueueService>();
             services.AddSingleton<IOpenTokService, OpenTokService>();
 
