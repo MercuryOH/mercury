@@ -8,6 +8,7 @@ using Microsoft.Extensions.Logging;
 using System;
 using System.Linq;
 using System.Security.Claims;
+using System.Security.Cryptography.X509Certificates;
 
 namespace Mercury.Controllers
 {
@@ -72,6 +73,20 @@ namespace Mercury.Controllers
                 _logger.LogError(e.Message);
                 return BadRequest();
             }
+        }
+        [HttpPost("/:groupId/token")]
+        [Authorize]
+        public IActionResult PostGroupToken(string classId, string groupId)
+        {
+            Group group = _context.Groups.FirstOrDefault(x => x.Id == groupId);
+
+            string token = _openTok.CreateSessionToken(group.SessionId);
+
+            return Ok(new GroupTokenDto
+            {
+                Token = token
+            });
+
         }
     }
 }

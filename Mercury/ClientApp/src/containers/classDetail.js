@@ -8,6 +8,7 @@ import Layout from '../components/layout'
 import Queue from '../components/Queue'
 import CreateGroupModal from '../components/createGroupModal'
 import CreateDiscussionModal from '../components/createDiscussionModal'
+import ScreenContainer from '../components/opentok/screenContainer'
 
 function ClassDetail() {
   const { classId } = useParams()
@@ -19,12 +20,66 @@ function ClassDetail() {
     role: '',
     groups: [],
   })
+  const [vonageCred, setVonageCred] = useState(null)
 
   const getCurrentClass = () => {
     api
       .getClass(classId)
       .then((currentClass) => setCurrentClass(currentClass))
       .catch(console.error)
+  }
+
+  const joinGroup = (group) => {
+    api
+      .postGroupToken(this.classId, group.id)
+      .then(({ token }) => {setVonageCred({ sessionId: group.sessionId, token})})
+      .catch(console.error)
+  }
+        /*if (this.state.currentGroup.id !== '') {
+          //the user is currently in a call, leave the call first
+
+          if (group.type === 'office') {
+            // this case only happens when the user is leaving a private group for the TA office
+            // do not trigger the callOver event in this case
+            this.leaveGroupForTAOffice()
+          } else {
+            this.leaveGroup()
+          }
+        }
+
+        this.setState(
+          {
+            vonageCred: { sessionId: group.sessionId, token },
+            currentGroup: group,
+          },
+          () => {
+            EventEmitter.publish('userJoinGroup', {
+              groupId: group.id,
+              userId: this.user.id,
+              groupType: group.type,
+            })
+            EventEmitter.publish('currentGroupChange', group)
+
+            // log the credentials of your most recent call
+            localStorage.setItem('lastCallEntered', JSON.stringify(group))
+          }
+        )
+      })
+      .then(() => {
+        api
+          .postJoinGroup(this.classId, group.id, this.user.email)
+          .then(() =>
+            EventEmitter.publish('classGroupSetChanged', this.classId)
+          )
+      })
+      .then(() => {
+        this.fetchAllGroups()
+      })
+      .catch(console.error)
+  }*/
+
+  const leaveGroup = () => {
+    setVonageCred(null)
   }
 
   useEffect(() => {
@@ -81,7 +136,7 @@ function ClassDetail() {
                         {currentClass.groups
                           .filter((group) => group.type === 'Discussion')
                           .map((group) => (
-                            <List.Item key={`discussion_${group.id}`}>
+                            <List.Item key={`discussion_${group.id}`} onClick = {joinGroup(group)}>
                               <List.Icon name="sound" />
                               <List.Content>
                                 <List.Header as="a">{group.name}</List.Header>
@@ -136,6 +191,14 @@ function ClassDetail() {
       }
       right={<Queue classId={currentClass.id} />}
     >
+    <ScreenContainer
+            style={{ width: '100%', maxHeight: '75vh' }}
+            sessionId={vonageCred.sessionId}
+            token={vonageCred.token}
+            onLeave={leaveGroup()}
+            //name={this.user.firstName + ' ' + this.user.lastName}
+            name = {'yeet'}
+          />
       {JSON.stringify(currentClass, undefined, 2)}
       <Button content="Join" onClick={() => rt.joinQueue(currentClass.id)} />
     </Layout>
