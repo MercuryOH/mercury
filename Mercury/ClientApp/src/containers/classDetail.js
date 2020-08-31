@@ -139,7 +139,7 @@ function ClassDetail() {
                         {currentClass.groups
                           .filter((group) => group.type === 'Discussion')
                           .map((group) => (
-                            <List.Item key={`discussion_${group.id}`} onClick = {joinGroup(group)}>
+                            <List.Item key={`discussion_${group.id}`} onClick = {joinGroup.bind(this, group)}>
                               <List.Icon name="sound" />
                               <List.Content>
                                 <List.Header as="a">{group.name}</List.Header>
@@ -163,7 +163,7 @@ function ClassDetail() {
                         {currentClass.groups
                           .filter((group) => group.type === 'Group')
                           .map((group) => (
-                            <List.Item key={`private_group_${group.id}`} onClick = {joinGroup(group)}>
+                            <List.Item key={`private_group_${group.id}`} onClick = {joinGroup.bind(this, group)}>
                               <List.Icon name="sound" />
                               <List.Content>
                                 <List.Header as="a">{group.name}</List.Header>
@@ -199,9 +199,7 @@ function ClassDetail() {
             style={{ width: '100%', maxHeight: '75vh' }}
             sessionId={vonageCred.sessionId}
             token={vonageCred.token}
-            onLeave={() => {
-              setVonageCred(null)
-            }}
+            onLeave={leaveGroup.bind(this)}
             //name={this.user.firstName + ' ' + this.user.lastName}
             name = {'yeet'}
           />

@@ -1,9 +1,8 @@
 import React, { Component } from 'react'
-import { OTPublisher } from 'opentok-react'
+import { OTPublisher, preloadScript } from 'opentok-react'
 import { EventEmitter } from '../util/EventEmitter'
-const OT = require('@opentok/client');
 
-export default class ScreenPublisher extends Component {
+class ScreenPublisher extends React.Component {
   constructor(props) {
     super(props)
 
@@ -69,3 +68,5 @@ export default class ScreenPublisher extends Component {
     )
   }
 }
+
+export default preloadScript(ScreenPublisher)
