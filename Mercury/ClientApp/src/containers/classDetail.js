@@ -5,7 +5,7 @@ import * as api from '../services/api'
 import * as rt from '../services/realtime'
 
 import Layout from '../components/layout'
-import Queue from '../components/Queue'
+import Queue from '../components/queue'
 import CreateGroupModal from '../components/createGroupModal'
 import CreateDiscussionModal from '../components/createDiscussionModal'
 
@@ -134,7 +134,7 @@ function ClassDetail() {
           </div>
         </div>
       }
-      right={<Queue classId={currentClass.id} />}
+      right={<Queue currentClass={currentClass} />}
     >
       {JSON.stringify(currentClass, undefined, 2)}
       <Button content="Join" onClick={() => rt.joinQueue(currentClass.id)} />
