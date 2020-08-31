@@ -5,12 +5,19 @@ function StudentQueueView({ queue }) {
   return (
     <>
       <Button
-        fluid
+        compact
         size="huge"
         content="Queue"
-        style={{ marginBottom: '12px' }}
+        style={{
+          marginBottom: '12px',
+          width: '95%',
+          fontSize: '1.5vw',
+          textAlign: 'center',
+          marginBottom: '2%',
+          minWidth: '41px',
+        }}
       />
-      <List>
+      <List style={{ overflow: 'auto' }}>
         {queue.map((student) => (
           <List.Item key={`queue_student_${student.id}`}>
             <Button fluid content={student.name} />
