@@ -31,9 +31,11 @@ function ClassDetail() {
 
   const joinGroup = (group) => {
     api
-      .postGroupToken(this.classId, group.id)
+      .postGroupToken(currentClass.id, group.id)
       .then(({ token }) => {setVonageCred({ sessionId: group.sessionId, token})})
       .catch(console.error)
+
+    console.log('yeet')
   }
         /*if (this.state.currentGroup.id !== '') {
           //the user is currently in a call, leave the call first
@@ -160,7 +162,7 @@ function ClassDetail() {
                         {currentClass.groups
                           .filter((group) => group.type === 'Group')
                           .map((group) => (
-                            <List.Item key={`private_group_${group.id}`}>
+                            <List.Item key={`private_group_${group.id}`} onClick = {joinGroup(group)}>
                               <List.Icon name="sound" />
                               <List.Content>
                                 <List.Header as="a">{group.name}</List.Header>
@@ -191,6 +193,7 @@ function ClassDetail() {
       }
       right={<Queue classId={currentClass.id} />}
     >
+    {vonageCred && (
     <ScreenContainer
             style={{ width: '100%', maxHeight: '75vh' }}
             sessionId={vonageCred.sessionId}
@@ -199,6 +202,7 @@ function ClassDetail() {
             //name={this.user.firstName + ' ' + this.user.lastName}
             name = {'yeet'}
           />
+        )}
       {JSON.stringify(currentClass, undefined, 2)}
       <Button content="Join" onClick={() => rt.joinQueue(currentClass.id)} />
     </Layout>
