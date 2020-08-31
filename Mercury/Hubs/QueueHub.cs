@@ -61,7 +61,7 @@ namespace Mercury.Hubs
 
             var office = GetOrCreateOffice(classId);
 
-            await Clients.User(userId).SendAsync("NextStudent", new NextStudentDto
+            await Clients.User(nextStudent.Id).SendAsync("NextStudent", new NextStudentDto
             {
                 SessionId = office.SessionId
             });
