@@ -35,7 +35,8 @@ function ClassDetail() {
       .then(({ token }) => {setVonageCred({ sessionId: group.sessionId, token})})
       .catch(console.error)
 
-    console.log('yeet')
+    console.log(`${currentClass.id}`)
+    console.log(`${currentClass.groups}`)
   }
         /*if (this.state.currentGroup.id !== '') {
           //the user is currently in a call, leave the call first
@@ -198,7 +199,9 @@ function ClassDetail() {
             style={{ width: '100%', maxHeight: '75vh' }}
             sessionId={vonageCred.sessionId}
             token={vonageCred.token}
-            onLeave={leaveGroup()}
+            onLeave={() => {
+              setVonageCred(null)
+            }}
             //name={this.user.firstName + ' ' + this.user.lastName}
             name = {'yeet'}
           />

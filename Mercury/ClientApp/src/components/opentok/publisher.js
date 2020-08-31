@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import ScreenPublisher from './screenPublisher'
 import { OTPublisher } from 'opentok-react'
 import { EventEmitter } from '../util/EventEmitter'
+const OT = require('@opentok/client');
 
 export default class Publisher extends Component {
   constructor(props) {

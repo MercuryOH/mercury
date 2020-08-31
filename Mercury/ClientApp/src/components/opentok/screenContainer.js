@@ -5,6 +5,7 @@ import _ from 'lodash'
 import { EventEmitter } from '../util/EventEmitter'
 import { OTSubscriber, createSession } from 'opentok-react'
 import { Button } from 'semantic-ui-react'
+const OT = require('@opentok/client');
 
 class ScreenContainer extends React.Component {
   constructor(props) {

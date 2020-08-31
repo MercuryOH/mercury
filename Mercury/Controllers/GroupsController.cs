@@ -74,10 +74,19 @@ namespace Mercury.Controllers
                 return BadRequest();
             }
         }
-        [HttpPost("/:groupId/token")]
+        [HttpPost]
+        [Route("{groupId}/token")]
         [Authorize]
         public IActionResult PostGroupToken(string classId, string groupId)
         {
+            var id = Auth.GetUserId(User);
+            var currentClass = _context.Classes.FirstOrDefault(x => x.Id == classId);
+
+            if (currentClass == null)
+            {
+                return BadRequest();
+            }
+
             Group group = _context.Groups.FirstOrDefault(x => x.Id == groupId);
 
             string token = _openTok.CreateSessionToken(group.SessionId);

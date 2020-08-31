@@ -5,9 +5,11 @@
   "dependencies": {
     "@aspnet/signalr": "^1.1.4",
     "@auth0/auth0-react": "^1.0.0",
+    "@opentok/client": "^2.18.0",
     "axios": "^0.20.0",
     "merge": "^1.2.1",
     "oidc-client": "^1.9.0",
+    "opentok": "^2.10.0",
     "opentok-react": "^0.11.0",
     "react": "^16.0.0",
     "react-dom": "^16.0.0",
