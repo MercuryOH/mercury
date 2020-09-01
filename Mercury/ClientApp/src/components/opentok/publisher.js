@@ -42,10 +42,11 @@ class Publisher extends React.Component {
             maxHeight: '8vh',
             publishVideo: this.state.video,
             marginBottom: '5px',
-            name: this.props.name,
+            name: this.props.user.name,
             style: {
               buttonDisplayMode: 'on',
-              nameDisplayMode: 'on'
+              nameDisplayMode: 'on',
+              backgroundImageURI: this.props.user.picture
             }
           }}
           session={this.props.session}
@@ -60,7 +61,7 @@ class Publisher extends React.Component {
             marginBottom: '5px',
           }}
           session={this.props.session}
-          name = {this.props.name + "'s Screen"}
+          name = {this.props.user.name + "'s Screen"}
         />
       </div>
     )

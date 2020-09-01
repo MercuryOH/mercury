@@ -164,7 +164,7 @@ class ScreenContainer extends React.Component {
   componentWillMount() {
     const { sessionId, token } = this.props
     this.sessionHelper = createSession({
-      apiKey: `${process.env.NEXT_PUBLIC_VV_API_KEY}`,
+      apiKey: `46858704`,
       sessionId: `${sessionId}`,
       token: `${token}`,
       onStreamsUpdated: (streams) => {
@@ -202,7 +202,7 @@ class ScreenContainer extends React.Component {
                 marginBottom: '5px',
               }}
               session={this.sessionHelper.session}
-              name={this.props.name}
+              user={this.props.user}
             />
             {this.state.streams.map((stream) => (
               <>
@@ -258,6 +258,7 @@ ScreenContainer.propTypes = {
   sessionId: PropTypes.string.isRequired,
   token: PropTypes.string.isRequired,
   onLeave: PropTypes.func.isRequired,
+  user: PropTypes.object.isRequired
 }
 
 export default preloadScript(ScreenContainer)

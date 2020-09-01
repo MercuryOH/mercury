@@ -5,9 +5,10 @@ import { Button, Accordion, List, Label } from 'semantic-ui-react'
 import * as api from '../services/api'
 import * as rt from '../services/realtime'
 import { EventEmitter } from '../components/util/EventEmitter'
+import { withAuth0 } from '@auth0/auth0-react';
 
 import Layout from '../components/layout'
-import Queue from '../components/queue'
+import Queue from '../components/Queue/index'
 import CreateGroupModal from '../components/createGroupModal'
 import CreateDiscussionModal from '../components/createDiscussionModal'
 import ScreenContainer from '../components/opentok/screenContainer'
@@ -403,6 +404,7 @@ class ClassDetail extends Component {
   }
 
   render() {
+    const { user } = this.props.auth0;
     return (
       <Layout
         left={this.leftDisplay()}
@@ -415,7 +417,7 @@ class ClassDetail extends Component {
             token={this.state.vonageCred.token}
             onLeave={this.leaveGroup}
             //name={this.user.firstName + ' ' + this.user.lastName}
-            name={'yeet'}
+            user={user}
           />
         )}
         {JSON.stringify(this.state.currentClass, undefined, 2)}
@@ -429,4 +431,4 @@ class ClassDetail extends Component {
   }
 }
 
-export default withRouter(ClassDetail)
+export default withRouter(withAuth0(ClassDetail))
