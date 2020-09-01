@@ -406,7 +406,7 @@ class ClassDetail extends Component {
     return (
       <Layout
         left={this.leftDisplay()}
-        right={<Queue classId={this.state.currentClass.id} />}
+        right={<Queue currentClass={this.state.currentClass} />}
       >
         {this.state.vonageCred && (
           <ScreenContainer
