@@ -188,9 +188,9 @@ class ClassDetail extends Component {
                   if (this.state.currentClass.role === 'Student') {
                     EventEmitter.publish('openOfficeAccessModal', true)
                   }
-                  // else if (this.state.currentGroup.id !== group.id) {
-                  //   this.handleSelectGroup(group)
-                  // }
+                  else if (this.state.currentGroup.id !== group.id) {
+                    this.joinGroup(group)
+                  }
                 }}
                 style={this.getListItemStyle(group)}
               >
