@@ -3,9 +3,8 @@ import PropTypes from 'prop-types'
 import Publisher from './publisher'
 import _ from 'lodash'
 import { EventEmitter } from '../util/EventEmitter'
-import { OTSubscriber, createSession } from 'opentok-react'
+import { OTSubscriber, createSession, preloadScript } from 'opentok-react'
 import { Button } from 'semantic-ui-react'
-const OT = require('@opentok/client');
 
 class ScreenContainer extends React.Component {
   constructor(props) {
@@ -261,4 +260,4 @@ ScreenContainer.propTypes = {
   onLeave: PropTypes.func.isRequired,
 }
 
-export default ScreenContainer
+export default preloadScript(ScreenContainer)
