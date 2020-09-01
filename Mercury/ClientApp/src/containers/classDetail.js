@@ -3,6 +3,7 @@ import { useParams, Link } from 'react-router-dom'
 import { Button, Accordion, List } from 'semantic-ui-react'
 import * as api from '../services/api'
 import * as rt from '../services/realtime'
+import { useAuth0 } from '@auth0/auth0-react'
 
 import Layout from '../components/layout'
 import Queue from '../components/Queue'
@@ -20,6 +21,7 @@ function ClassDetail() {
     role: '',
     groups: [],
   })
+  const { user } = useAuth0()
   const [vonageCred, setVonageCred] = useState(null)
 
   const getCurrentClass = () => {
@@ -201,7 +203,8 @@ function ClassDetail() {
             token={vonageCred.token}
             onLeave={leaveGroup.bind(this)}
             //name={this.user.firstName + ' ' + this.user.lastName}
-            name = {'yeet'}
+            name = {user.name}
+            user = {user}
           />
         )}
       {JSON.stringify(currentClass, undefined, 2)}

@@ -45,7 +45,8 @@ class Publisher extends React.Component {
             name: this.props.name,
             style: {
               buttonDisplayMode: 'on',
-              nameDisplayMode: 'on'
+              nameDisplayMode: 'on',
+              backgroundImageURI: this.props.user.picture
             }
           }}
           session={this.props.session}
