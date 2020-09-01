@@ -16,10 +16,6 @@ const joinSchema = joi.object({
   email: joi.string().email().required(),
 })
 
-const leaveSchema = joi.object({
-  userId: joi.number().required(),
-})
-
 router.post('/', middleware.authRequired, async (req, res) => {
   const { value, error } = createGroupSchema.validate(req.body)
   const { userId: UserId } = req.body

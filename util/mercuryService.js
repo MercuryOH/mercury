@@ -226,3 +226,37 @@ export async function deleteGroupUser(classId, groupId, userId) {
     return null
   }
 }
+
+export async function postAddClass(classId, userId, role) {
+  try {
+    const { data } = await axios.post(
+      `/api/classes/addClass`,
+      { classId, userId, role },
+      {
+        headers: {
+          authorization: token,
+        },
+      }
+    )
+
+    return data
+  } catch (e) {
+    return null
+  }
+}
+
+export async function deleteClassUser(classId, userId) {
+  try {
+    await axios.delete(
+      `/api/classes/deleteClass/${classId}/${userId}`,
+      {
+        headers: {
+          authorization: token,
+        },
+      }
+    )
+    return null
+  } catch (e) {
+    return null
+  }
+}

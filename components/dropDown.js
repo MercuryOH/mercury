@@ -8,6 +8,22 @@ import _ from 'lodash'
 import Link from 'next/Link'
 import ModifyClassesModal from './modifyClassesModal'
 
+const colors = [
+  'red',
+  'orange',
+  'yellow',
+  'olive',
+  'green',
+  'teal',
+  'blue',
+  'violet',
+  'purple',
+  'pink',
+  'brown',
+  'gray',
+  'black',
+]
+
 class DropDown extends Component {
   constructor(props) {
     super(props)
@@ -15,38 +31,22 @@ class DropDown extends Component {
     this.state = {
       userId: '',
       classes: [],
-      colors: [
-        'red',
-        'orange',
-        'yellow',
-        'olive',
-        'green',
-        'teal',
-        'blue',
-        'violet',
-        'purple',
-        'pink',
-        'brown',
-        'gray',
-        'black',
-      ],
     }
   }
 
   componentDidMount() {
     api
       .getClasses()
-      .then((classes) => this.setState({classes}))
+      .then((classes) => this.setState({ classes }))
 
-      .then(()=>api.getMe())
+      .then(() => api.getMe())
       .then((me) => {
         this.setState({ userId: me.id })
       })
 
-    EventEmitter.subscribe('currentlyEnrolled', (classes) =>{this.setState({ classes })
-    }
-      
-    )
+    EventEmitter.subscribe('currentlyEnrolled', (classes) => {
+      this.setState({ classes })
+    })
     console.log(this.state.classes)
   }
 
@@ -66,7 +66,7 @@ class DropDown extends Component {
                 content: (
                   <div>
                     <List relaxed>
-                      <>
+                      {/* <>
                         {_.zip(
                           _.dropRight(
                             this.state.colors,
@@ -92,6 +92,27 @@ class DropDown extends Component {
                               </List.Content>
                             </List.Item>
                           ))}
+                      </> */}
+                      <>
+                        {this.state.classes
+                          .filter((c) => c.role === 'Student')
+                          .map((c) => (
+                            <List.Item key={`class_${c.id}`}>
+                              <List.Content>
+                                <Link href={`/classes/${c.id}`}>
+                                  <Button
+                                    style={{
+                                      fontSize: '1vw',
+                                      width: '100%',
+                                      minWidth: '41px',
+                                    }}
+                                    color={colors[(c.id - 2) % colors.length]}
+                                    content={c.name}
+                                  />
+                                </Link>
+                              </List.Content>
+                            </List.Item>
+                          ))}
                       </>
                     </List>
                   </div>
@@ -105,7 +126,7 @@ class DropDown extends Component {
                 content: (
                   <div>
                     <List relaxed>
-                      {_.zip(
+                      {/* {_.zip(
                         _.dropRight(
                           this.state.colors,
                           this.state.colors.length - this.state.classes.length
@@ -132,6 +153,33 @@ class DropDown extends Component {
                                   this.props.router.push(
                                     `/classes/${zipped[1].id}`
                                   )
+                                }}
+                              />
+                            </List.Content>
+                          </List.Item>
+                        ))} */}
+                      {this.state.classes
+
+                        .filter(
+                          (c) => c.role === 'Professor' || c.role === 'TA'
+                        )
+                        .map((c) => (
+                          <List.Item key={`class_${c.id}`}>
+                            <List.Content>
+                              <Button
+                                style={{
+                                  fontSize: '1vw',
+                                  width: '100%',
+                                  minWidth: '41px',
+                                }}
+                                color={colors[(c.id - 2) % colors.length]}
+                                content={c.name}
+                                onClick={() => {
+                                  EventEmitter.publish('createTAOffice', {
+                                    classId: c.id,
+                                    userId: this.state.userId,
+                                  })
+                                  this.props.router.push(`/classes/${c.id}`)
                                 }}
                               />
                             </List.Content>

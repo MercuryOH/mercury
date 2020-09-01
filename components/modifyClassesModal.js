@@ -50,17 +50,24 @@ class ModifyClassesModal extends Component {
   handleSubmit = () => {
     this.setState({ modalState: false })
     EventEmitter.publish('currentlyEnrolled', this.state.classRoles)
+    this.state.classRoles.forEach((c) => {
+      if (c.role === '') {
+        api.deleteClassUser(c.id, this.user.id)
+      } else if (c.role === 'Student') {
+        api.postAddClass(c.id, this.user.id, c.role)
+      }
+    })
   }
 
-  getTACell(classRole) {
-    return classRole === 'Student' || classRole === '' ? (
-      <Input placeholder={'Enter permission code...'} />
-    ) : (
-      <Header as="h4">
-        <Header.Content>{'verified ' + classRole}</Header.Content>
-      </Header>
-    )
-  }
+  // getTACell(classRole) {
+  //   return classRole === 'Student' || classRole === '' ? (
+  //     <Input placeholder={'Enter permission code...'} />
+  //   ) : (
+  // <Header as="h4">
+  //   <Header.Content>{'verified ' + classRole}</Header.Content>
+  // </Header>
+  //   )
+  // }
 
   render() {
     return (
@@ -104,11 +111,11 @@ class ModifyClassesModal extends Component {
                       Classes
                     </Table.HeaderCell>
                     <Table.HeaderCell style={{ textAlign: 'center' }}>
-                      Student
+                      Enrolled
                     </Table.HeaderCell>
-                    <Table.HeaderCell style={{ textAlign: 'center' }}>
+                    {/* <Table.HeaderCell style={{ textAlign: 'center' }}>
                       TA/Professor
-                    </Table.HeaderCell>
+                    </Table.HeaderCell> */}
                   </Table.Row>
                 </Table.Header>
 
@@ -121,7 +128,7 @@ class ModifyClassesModal extends Component {
                         </Header>
                       </Table.Cell>
                       <Table.Cell style={{ textAlign: 'center' }}>
-                        <Checkbox
+                        {/* <Checkbox
                           disabled={c.role === 'Professor' || c.role === 'TA'}
                           checked={c.role === 'Student'}
                           onChange={() =>
@@ -140,11 +147,38 @@ class ModifyClassesModal extends Component {
                               }),
                             })
                           }
-                        />
+                        /> */}
+                        {c.role === 'Professor' || c.role === 'TA' ? (
+                          <Header as="h4">
+                            <Header.Content>
+                              {'verified ' + c.role}
+                            </Header.Content>
+                          </Header>
+                        ) : (
+                          <Checkbox
+                            checked={c.role !== ''}
+                            onChange={() =>
+                              this.setState({
+                                classRoles: this.state.classRoles.map((cc) => {
+                                  if (
+                                    cc.id === c.id &&
+                                    (cc.role === '' || cc.role === 'Student')
+                                  ) {
+                                    return {
+                                      ...cc,
+                                      role: cc.role === '' ? 'Student' : '',
+                                    }
+                                  }
+                                  return cc
+                                }),
+                              })
+                            }
+                          />
+                        )}
                       </Table.Cell>
-                      <Table.Cell style={{ textAlign: 'center' }}>
+                      {/* <Table.Cell style={{ textAlign: 'center' }}>
                         {this.getTACell(c.role)}
-                      </Table.Cell>
+                      </Table.Cell> */}
                     </Table.Row>
                   ))}
                 </Table.Body>
