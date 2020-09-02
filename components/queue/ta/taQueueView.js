@@ -21,7 +21,7 @@ export default class TAQueueView extends Component {
       studentsInQueue: [],
       me: this.props.me,
       nextStudentName: '',
-      currStudentBeingHelped: {},
+      currStudentBeingHelped: { id: -1, name: '' },
       isReadyToRender: false,
       inCallWithStudent: false,
     }
@@ -46,7 +46,10 @@ export default class TAQueueView extends Component {
     EventEmitter.subscribe('removeTAWaitingModalOnTimeout', () => {
       const { nextStudentName } = this.state
       this.createTimeoutNotification(nextStudentName)
-      this.setState({ currStudentBeingHelped: {}, nextStudentName: '' })
+      this.setState({
+        currStudentBeingHelped: { id: -1, name: '' },
+        nextStudentName: '',
+      })
 
       EventEmitter.publish('newTAWaitingModalProps', {
         inviteNextStudent: false,
@@ -66,7 +69,10 @@ export default class TAQueueView extends Component {
     EventEmitter.subscribe('removeTAWaitingModalOnDecline', () => {
       const { nextStudentName } = this.state
       this.createDeclineNotification(nextStudentName)
-      this.setState({ currStudentBeingHelped: {}, nextStudentName: '' })
+      this.setState({
+        currStudentBeingHelped: { id: -1, name: '' },
+        nextStudentName: '',
+      })
 
       EventEmitter.publish('newTAWaitingModalProps', {
         inviteNextStudent: false,
@@ -79,7 +85,10 @@ export default class TAQueueView extends Component {
       if (inCallWithStudent) {
         EventEmitter.publish('signalCallOver')
         EventEmitter.publish('activateFeedbackModal', classId)
-        this.setState({ inCallWithStudent: false, currStudentBeingHelped: {} })
+        this.setState({
+          inCallWithStudent: false,
+          currStudentBeingHelped: { id: -1, name: '' },
+        })
       }
     })
 
