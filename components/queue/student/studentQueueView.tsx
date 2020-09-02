@@ -1,5 +1,4 @@
 import React, { Component } from 'react'
-import PropTypes from 'prop-types'
 import styled from 'styled-components'
 import * as api from '../../../util/mercuryService'
 import YourTurnModal from './yourTurnModal'
@@ -15,12 +14,72 @@ const QueueLabel = styled(Label)`
   text-align: center;
 `
 
+interface StudentQueueViewProps {
+  me: Me
+  office: Group
+  onJoin: (para: Group) => Promise<void>
+  classId: number
+}
+
+interface StudentQueueViewState {
+  me: Me
+  office: Group
+  onJoin: (para: Group) => Promise<void>
+  displayStudentsStyle: DisplayStyle
+  iconToDisplay: string
+  studentsInQueue: Array<StudentInQueue>
+  inQueue: boolean
+  isYourTurn: boolean
+  currStudentBeingHelped: CurrStudent
+  isReadyToRender: boolean
+  inCallWithTA: boolean
+  currentGroup: CurrentGroup
+  groups: any
+}
+
+interface Me {
+  id: number
+  firstName: string
+  lastName: string
+  email: string
+}
+
+interface Group {
+  id: number
+  name: string
+  type: string
+  sessionId: string
+  userId: number
+}
+
+interface DisplayStyle {
+  display: string
+}
+
+interface StudentInQueue {
+  id: number
+  fullName: string
+}
+
+interface CurrStudent {
+  id: number
+  name: string
+}
+
+interface CurrentGroup {
+  id: number
+  name: string
+}
+
 /**
  * This is how the student views the Queue
  */
 
-class StudentQueueView extends Component {
-  constructor(props) {
+class StudentQueueView extends Component<
+  StudentQueueViewProps,
+  StudentQueueViewState
+> {
+  constructor(props: StudentQueueViewProps) {
     super(props)
     this.state = {
       displayStudentsStyle: { display: 'grid' },
@@ -29,11 +88,11 @@ class StudentQueueView extends Component {
       me: this.props.me,
       inQueue: false,
       isYourTurn: false,
-      currStudentBeingHelped: {},
+      currStudentBeingHelped: { id: -1, name: '' },
       isReadyToRender: false,
       office: this.props.office,
       inCallWithTA: false,
-      currentGroup: { id: '', name: '' },
+      currentGroup: { id: -1, name: '' },
       onJoin: this.props.onJoin,
       groups: [],
     }
@@ -46,16 +105,19 @@ class StudentQueueView extends Component {
    */
 
   defineEventEmitterCallbacks() {
-    EventEmitter.subscribe('activateYourTurnModal', (TAName) => {
+    EventEmitter.subscribe('activateYourTurnModal', (TAName: string) => {
       this.setState({ inQueue: false })
       EventEmitter.publish('startYourTurnModalTimer', TAName)
     })
 
-    EventEmitter.subscribe('updateStudentsInQueue', (msg) => {
-      this.setState({
-        studentsInQueue: msg,
-      })
-    })
+    EventEmitter.subscribe(
+      'updateStudentsInQueue',
+      (msg: Array<StudentInQueue>) => {
+        this.setState({
+          studentsInQueue: msg,
+        })
+      }
+    )
 
     EventEmitter.subscribe('addMeToQueue', () => {
       this.setState({ inQueue: true })
@@ -65,12 +127,12 @@ class StudentQueueView extends Component {
       this.setState({ inQueue: false })
     })
 
-    EventEmitter.subscribe('studentTimeout', (TAName) => {
+    EventEmitter.subscribe('studentTimeout', (TAName: string) => {
       EventEmitter.publish('signalStudentTimeout', TAName)
       this.createTimeoutNotification()
     })
 
-    EventEmitter.subscribe('studentJoinTA', (TAName) => {
+    EventEmitter.subscribe('studentJoinTA', (TAName: string) => {
       const { office, onJoin, me } = this.state
       EventEmitter.publish('signalJoinTA', {
         group: this.state.groups.filter(
@@ -89,34 +151,43 @@ class StudentQueueView extends Component {
       this.setState({ inQueue: false, inCallWithTA: true })
     })
 
-    EventEmitter.subscribe('studentInviteTA', (TAName) => {
+    EventEmitter.subscribe('studentInviteTA', (TAName: string) => {
       const { currentGroup, me } = this.state
       EventEmitter.publish('signalJoinTA', { group: currentGroup, TAName, me })
       this.setState({ inQueue: false, inCallWithTA: true })
     })
 
-    EventEmitter.subscribe('studentDeclineTA', (TAName) => {
+    EventEmitter.subscribe('studentDeclineTA', (TAName: string) => {
       EventEmitter.publish('signalDeclineTA', TAName)
       this.setState({ inQueue: false })
     })
 
-    EventEmitter.subscribe('currentGroupChange', (currentGroup) => {
-      this.setState({ currentGroup })
-    })
+    EventEmitter.subscribe(
+      'currentGroupChange',
+      (currentGroup: CurrentGroup) => {
+        this.setState({ currentGroup })
+      }
+    )
 
-    EventEmitter.subscribe('callOver', (classId) => {
+    EventEmitter.subscribe('callOver', (classId: number) => {
       const { inCallWithTA } = this.state
 
       if (inCallWithTA) {
         EventEmitter.publish('signalCallOver')
         EventEmitter.publish('activateFeedbackModal', classId)
-        this.setState({ inCallWithTA: false, currStudentBeingHelped: {} })
+        this.setState({
+          inCallWithTA: false,
+          currStudentBeingHelped: { id: -1, name: '' },
+        })
       }
     })
 
-    EventEmitter.subscribe('updateCurrStudent', (currStudentBeingHelped) => {
-      this.setState({ currStudentBeingHelped })
-    })
+    EventEmitter.subscribe(
+      'updateCurrStudent',
+      (currStudentBeingHelped: CurrStudent) => {
+        this.setState({ currStudentBeingHelped })
+      }
+    )
 
     EventEmitter.subscribe(
       'initializeQueueOnGreeting',
@@ -273,7 +344,7 @@ class StudentQueueView extends Component {
     )
   }
 
-  createQueueLabel(student) {
+  createQueueLabel(student: StudentInQueue) {
     const { fullName, id } = student
 
     const nameToShow =
@@ -347,10 +418,6 @@ class StudentQueueView extends Component {
       </QueueDiv>
     )
   }
-}
-
-StudentQueueView.propTypes = {
-  onJoin: PropTypes.func.isRequired,
 }
 
 export default StudentQueueView
