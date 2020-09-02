@@ -30,16 +30,16 @@ export default class StudentWebSocketClient {
       )
     })
 
-    EventEmitter.subscribe('signalStudentTimeout', (TAName) =>
-      this.signalStudentTimeout(TAName)
+    EventEmitter.subscribe('signalStudentTimeout', (TAId) =>
+      this.signalStudentTimeout(TAId)
     )
 
-    EventEmitter.subscribe('signalJoinTA', ({ group, TAName, me }) => {
-      this.signalJoinTA(group, TAName, me)
+    EventEmitter.subscribe('signalJoinTA', ({ group, TAId, me }) => {
+      this.signalJoinTA(group, TAId, me)
     })
 
-    EventEmitter.subscribe('signalDeclineTA', (TAName) => {
-      this.signalDeclineTA(TAName)
+    EventEmitter.subscribe('signalDeclineTA', (TAId) => {
+      this.signalDeclineTA(TAId)
     })
 
     EventEmitter.subscribe('signalCallOver', () => {
@@ -158,8 +158,8 @@ export default class StudentWebSocketClient {
     console.log(`WebSocket error: ${error}`)
   }
 
-  activateYourTurnModal(TAName) {
-    EventEmitter.publish('activateYourTurnModal', TAName)
+  activateYourTurnModal(TAId) {
+    EventEmitter.publish('activateYourTurnModal', TAId)
   }
 
   updateStudentsInQueue(msg) {
@@ -305,31 +305,31 @@ export default class StudentWebSocketClient {
     EventEmitter.publish('removeMeFromQueue')
   }
 
-  signalStudentTimeout(TAName) {
+  signalStudentTimeout(TAId) {
     this.connection.send(
       this.prepareMessage({
         msgType: 'studentTimeout',
-        msg: TAName,
+        msg: TAId,
       })
     )
   }
 
-  signalJoinTA(group, TAName, me) {
+  signalJoinTA(group, TAId, me) {
     this.connection.send(
       this.prepareMessage({
         msgType: 'joinTA',
-        msg: JSON.stringify({ group, TAName, me }),
+        msg: JSON.stringify({ group, TAId, me }),
       })
     )
 
     EventEmitter.publish('clearLeftSide')
   }
 
-  signalDeclineTA(TAName) {
+  signalDeclineTA(TAId) {
     this.connection.send(
       this.prepareMessage({
         msgType: 'declineTA',
-        msg: TAName,
+        msg: TAId,
       })
     )
   }

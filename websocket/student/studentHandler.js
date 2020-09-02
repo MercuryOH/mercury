@@ -65,9 +65,9 @@ const handleStudentMessage = async (ws, message) => {
       break
 
     case 'joinTA':
-      const { group, TAName, me } = JSON.parse(msg)
+      const { group, TAId, me } = JSON.parse(msg)
       const { id } = me
-      const TAToSend = webSocketConnectionManager.getSocketOfUserID(TAName)
+      const TAToSend = webSocketConnectionManager.getSocketOfUserID(TAId)
 
       TAToSend.send(
         prepareMessage({

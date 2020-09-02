@@ -29,7 +29,7 @@ const handleInstructorMessage = async (ws, message) => {
       break
 
     case 'next': // the TA has requested for the next student to be notified
-      // msg - the TA's name
+      // msg - the TA's id
       let socketToSend = null
       let nextStudent = null
 

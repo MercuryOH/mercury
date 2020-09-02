@@ -15,12 +15,12 @@ class YourTurnModal extends Component {
     this.state = {
       modalState: false,
       currentGroup: { id: '', name: '' },
-      TAName: '',
+      TAId: -1,
       timeRemaining: currTime,
     }
 
-    EventEmitter.subscribe('startYourTurnModalTimer', (TAName) => {
-      this.setState({ TAName, modalState: true }, this.startTimer)
+    EventEmitter.subscribe('startYourTurnModalTimer', (TAId) => {
+      this.setState({ TAId, modalState: true }, this.startTimer)
     })
 
     EventEmitter.subscribe('currentGroupChange', (currentGroup) => {
@@ -46,35 +46,35 @@ class YourTurnModal extends Component {
   }
 
   handleTimerEnd() {
-    const { TAName } = this.state
-    EventEmitter.publish('studentTimeout', TAName)
-    this.setState({ modalState: false, TAName: '' })
+    const { TAId } = this.state
+    EventEmitter.publish('studentTimeout', TAId)
+    this.setState({ modalState: false, TAId: -1 })
   }
 
   handleJoin = () => {
-    const { TAName } = this.state
+    const { TAId } = this.state
     if (timeOut) {
       clearTimeout(timeOut)
     }
-    EventEmitter.publish('studentJoinTA', TAName)
+    EventEmitter.publish('studentJoinTA', TAId)
     this.setState({ modalState: false })
   }
 
   handleInvite = () => {
-    const { TAName } = this.state
+    const { TAId } = this.state
     if (timeOut) {
       clearTimeout(timeOut)
     }
-    EventEmitter.publish('studentInviteTA', TAName)
+    EventEmitter.publish('studentInviteTA', TAId)
     this.setState({ modalState: false })
   }
 
   handleDecline = () => {
-    const { TAName } = this.state
+    const { TAId } = this.state
     if (timeOut) {
       clearTimeout(timeOut)
     }
-    EventEmitter.publish('studentDeclineTA', TAName)
+    EventEmitter.publish('studentDeclineTA', TAId)
     this.setState({ modalState: false })
   }
 

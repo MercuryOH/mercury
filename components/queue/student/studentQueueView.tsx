@@ -105,9 +105,9 @@ class StudentQueueView extends Component<
    */
 
   defineEventEmitterCallbacks() {
-    EventEmitter.subscribe('activateYourTurnModal', (TAName: string) => {
+    EventEmitter.subscribe('activateYourTurnModal', (TAId: number) => {
       this.setState({ inQueue: false })
-      EventEmitter.publish('startYourTurnModalTimer', TAName)
+      EventEmitter.publish('startYourTurnModalTimer', TAId)
     })
 
     EventEmitter.subscribe(
@@ -127,38 +127,38 @@ class StudentQueueView extends Component<
       this.setState({ inQueue: false })
     })
 
-    EventEmitter.subscribe('studentTimeout', (TAName: string) => {
-      EventEmitter.publish('signalStudentTimeout', TAName)
+    EventEmitter.subscribe('studentTimeout', (TAId: number) => {
+      EventEmitter.publish('signalStudentTimeout', TAId)
       this.createTimeoutNotification()
     })
 
-    EventEmitter.subscribe('studentJoinTA', (TAName: string) => {
+    EventEmitter.subscribe('studentJoinTA', (TAId: number) => {
       const { office, onJoin, me } = this.state
       EventEmitter.publish('signalJoinTA', {
         group: this.state.groups.filter(
           (check) =>
-            check.type === 'office' && Number(check.UserId) === Number(TAName)
+            check.type === 'office' && Number(check.UserId) === Number(TAId)
         )[0],
-        TAName,
+        TAId,
         me,
       })
       onJoin(
         this.state.groups.filter(
           (check) =>
-            check.type === 'office' && Number(check.UserId) === Number(TAName)
+            check.type === 'office' && Number(check.UserId) === Number(TAId)
         )[0]
       )
       this.setState({ inQueue: false, inCallWithTA: true })
     })
 
-    EventEmitter.subscribe('studentInviteTA', (TAName: string) => {
+    EventEmitter.subscribe('studentInviteTA', (TAId: number) => {
       const { currentGroup, me } = this.state
-      EventEmitter.publish('signalJoinTA', { group: currentGroup, TAName, me })
+      EventEmitter.publish('signalJoinTA', { group: currentGroup, TAId, me })
       this.setState({ inQueue: false, inCallWithTA: true })
     })
 
-    EventEmitter.subscribe('studentDeclineTA', (TAName: string) => {
-      EventEmitter.publish('signalDeclineTA', TAName)
+    EventEmitter.subscribe('studentDeclineTA', (TAId: number) => {
+      EventEmitter.publish('signalDeclineTA', TAId)
       this.setState({ inQueue: false })
     })
 
