@@ -12,7 +12,46 @@ const QueueLabel = styled(Label)`
   text-align: center;
 `
 
-export default class TAQueueView extends Component {
+interface TAQueueViewProps {
+  me: Me
+}
+
+interface TAQueueViewState {
+  displayStudentsStyle: DisplayStyle
+  me: Me
+  iconToDisplay: string
+  studentsInQueue: Array<StudentInQueue>
+  nextStudentName: string
+  currStudentBeingHelped: CurrStudent
+  isReadyToRender: boolean
+  inCallWithStudent: boolean
+}
+
+interface Me {
+  id: number
+  firstName: string
+  lastName: string
+  email: string
+}
+
+interface DisplayStyle {
+  display: string
+}
+
+interface StudentInQueue {
+  id: number
+  fullName: string
+}
+
+interface CurrStudent {
+  id: number
+  name: string
+}
+
+export default class TAQueueView extends Component<
+  TAQueueViewProps,
+  TAQueueViewState
+> {
   constructor(props) {
     super(props)
     this.state = {
@@ -30,14 +69,17 @@ export default class TAQueueView extends Component {
   }
 
   defineEventEmitterCallbacks() {
-    EventEmitter.subscribe('activateTAWaitingModal', (nextStudentName) => {
-      this.setState({ nextStudentName })
+    EventEmitter.subscribe(
+      'activateTAWaitingModal',
+      (nextStudentName: string) => {
+        this.setState({ nextStudentName })
 
-      EventEmitter.publish('newTAWaitingModalProps', {
-        inviteNextStudent: true,
-        nextStudentName,
-      })
-    })
+        EventEmitter.publish('newTAWaitingModalProps', {
+          inviteNextStudent: true,
+          nextStudentName,
+        })
+      }
+    )
 
     EventEmitter.subscribe('TARejoinCall', () => {
       this.setState({ inCallWithStudent: true })
@@ -80,7 +122,7 @@ export default class TAQueueView extends Component {
       })
     })
 
-    EventEmitter.subscribe('callOver', (classId) => {
+    EventEmitter.subscribe('callOver', (classId: number) => {
       const { inCallWithStudent } = this.state
       if (inCallWithStudent) {
         EventEmitter.publish('signalCallOver')
@@ -92,37 +134,39 @@ export default class TAQueueView extends Component {
       }
     })
 
-    EventEmitter.subscribe('updateStudentsInQueue', (msg) => {
-      this.setState({ studentsInQueue: msg.map(({ fullName }) => fullName) })
-    })
+    EventEmitter.subscribe(
+      'updateStudentsInQueue',
+      (msg: Array<StudentInQueue>) => {
+        this.setState({ studentsInQueue: msg })
+      }
+    )
 
-    EventEmitter.subscribe('updateCurrStudent', (currStudentBeingHelped) => {
-      this.setState({ currStudentBeingHelped })
-    })
+    EventEmitter.subscribe(
+      'updateCurrStudent',
+      (currStudentBeingHelped: CurrStudent) => {
+        this.setState({ currStudentBeingHelped })
+      }
+    )
 
     EventEmitter.subscribe(
       'initializeQueueOnGreeting',
       ({ currStudent, studentsInQueue }) => {
-        const myId = this.state.me.id
-        const inQueue =
-          studentsInQueue.filter(({ id }) => id === myId).length > 0
         this.setState({
           currStudentBeingHelped: currStudent,
-          studentsInQueue: studentsInQueue.map(({ fullName }) => fullName),
-          inQueue,
+          studentsInQueue,
         })
       }
     )
   }
 
-  createTimeoutNotification(studentName) {
+  createTimeoutNotification(studentName: string) {
     EventEmitter.publish(
       'createNotification',
       `${studentName}'s Invitation Has Expired`
     )
   }
 
-  createDeclineNotification(studentName) {
+  createDeclineNotification(studentName: string) {
     EventEmitter.publish(
       'createNotification',
       `${studentName} Has Declined The Call`
@@ -206,7 +250,7 @@ export default class TAQueueView extends Component {
     )
   }
 
-  createQueueLabel(student) {
+  createQueueLabel(student: StudentInQueue) {
     return (
       <QueueLabel
         style={{
@@ -218,9 +262,9 @@ export default class TAQueueView extends Component {
           marginLeft: '.8%',
           marginRight: '1%',
         }}
-        key={student}
+        key={student.id}
       >
-        {student}
+        {student.fullName}
       </QueueLabel>
     )
   }
@@ -236,7 +280,7 @@ export default class TAQueueView extends Component {
       this.state.displayStudentsStyle.display == 'none' ? (
         <></>
       ) : (
-        this.state.studentsInQueue.map(this.createQueueLabel)
+        this.state.studentsInQueue.map(this.createQueueLabel.bind(this))
       )
 
     return (
