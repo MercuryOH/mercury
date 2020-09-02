@@ -3,6 +3,7 @@ const { webSocketConnectionManager } = require('../util/connectionmanager')
 const { prepareMessage } = require('../util/util')
 const { userRepository } = require('../../repository/userRepository')
 const { groupManager } = require('../util/groupmanager')
+const { countReset } = require('console')
 
 /**
  * Handles web socket messages sent by a student user
@@ -20,7 +21,7 @@ const handleInstructorMessage = async (ws, message) => {
         prepareMessage({
           msgType: 'greetingAck',
           msg: {
-            currStudent: courseQueue.getCurrStudent(),
+            currStudent: courseQueue.getCurrStudent(courseId),
             studentsInQueue: courseQueue.getAllStudents(courseId),
           },
         })
@@ -65,12 +66,12 @@ const handleInstructorMessage = async (ws, message) => {
       break
 
     case 'callOver':
-      courseQueue.setCurrStudent(-1)
+      courseQueue.setCurrStudent(courseId, -1)
       webSocketConnectionManager.broadcast(
         courseId,
         prepareMessage({
           msgType: 'currStudentUpdate',
-          msg: courseQueue.getCurrStudent(),
+          msg: courseQueue.getCurrStudent(courseId),
         })
       )
       break

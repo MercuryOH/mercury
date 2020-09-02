@@ -21,7 +21,7 @@ const handleStudentMessage = async (ws, message) => {
         prepareMessage({
           msgType: 'greetingAck',
           msg: {
-            currStudent: courseQueue.getCurrStudent(),
+            currStudent: courseQueue.getCurrStudent(courseId),
             studentsInQueue: courseQueue.getAllStudents(courseId),
           },
         })
@@ -76,13 +76,13 @@ const handleStudentMessage = async (ws, message) => {
         })
       )
 
-      courseQueue.setCurrStudent(id)
+      courseQueue.setCurrStudent(courseId, id)
 
       webSocketConnectionManager.broadcast(
         courseId,
         prepareMessage({
           msgType: 'currStudentUpdate',
-          msg: courseQueue.getCurrStudent(),
+          msg: courseQueue.getCurrStudent(courseId),
         })
       )
 
@@ -103,13 +103,13 @@ const handleStudentMessage = async (ws, message) => {
       break
 
     case 'callOver':
-      courseQueue.setCurrStudent(-1)
+      courseQueue.setCurrStudent(courseId, -1)
 
       webSocketConnectionManager.broadcast(
         courseId,
         prepareMessage({
           msgType: 'currStudentUpdate',
-          msg: courseQueue.getCurrStudent(),
+          msg: courseQueue.getCurrStudent(courseId),
         })
       )
       break

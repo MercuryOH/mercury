@@ -1,7 +1,19 @@
 import React, { Component } from 'react'
 
-export default class FormHTMLEditor extends Component {
-  constructor(props) {
+interface FormHTMLEditorProps {
+  defaultValue: string
+  onChange: (para: string) => void
+}
+
+interface FormHTMLEditorState {}
+
+export default class FormHTMLEditor extends Component<
+  FormHTMLEditorProps,
+  FormHTMLEditorState
+> {
+  ReactQuill: any
+
+  constructor(props: FormHTMLEditorProps) {
     super(props)
     if (typeof window !== 'undefined') {
       this.ReactQuill = require('react-quill')
@@ -39,10 +51,6 @@ export default class FormHTMLEditor extends Component {
     'link',
     'image',
   ]
-
-  onChange(event) {
-    console.log(event)
-  }
 
   render() {
     const ReactQuill = this.ReactQuill

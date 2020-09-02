@@ -6,25 +6,32 @@ const { userRepository } = require('../../repository/userRepository')
 class Queue {
   constructor() {
     this.map = new Map()
-    this.currStudent = -1
     this.isAnonymous = new Map()
+    this.currStudents = new Map()
   }
 
-  setCurrStudent(currStudentId) {
-    this.currStudent = currStudentId
+  setCurrStudent(courseId, currStudentId) {
+    this.currStudents.set(courseId, currStudentId)
   }
 
-  getCurrStudent() {
+  getCurrStudent(courseId) {
+    if (!this.currStudents.has(courseId)) {
+      return {
+        id: -1,
+        name: '',
+      }
+    }
+
     return {
-      id: this.currStudent,
-      name: this.isStudentAnonymous(this.currStudent)
+      id: this.currStudents.get(courseId),
+      name: this.isStudentAnonymous(this.currStudents.get(courseId))
         ? 'Anonymous'
-        : userRepository.getFullName(this.currStudent),
+        : userRepository.getFullName(this.currStudents.get(courseId)),
     }
   }
 
-  getCurrStudentID() {
-    return this.currStudent
+  getCurrStudentID(courseId) {
+    return this.currStudents.get(courseId)
   }
 
   /**
