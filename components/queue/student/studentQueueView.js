@@ -53,7 +53,7 @@ class StudentQueueView extends Component {
 
     EventEmitter.subscribe('updateStudentsInQueue', (msg) => {
       this.setState({
-        studentsInQueue: msg.map(({ fullName }) => fullName),
+        studentsInQueue: msg,
       })
     })
 
@@ -126,7 +126,7 @@ class StudentQueueView extends Component {
           studentsInQueue.filter(({ id }) => id === myId).length > 0
         this.setState({
           currStudentBeingHelped: currStudent,
-          studentsInQueue: studentsInQueue.map(({ fullName }) => fullName),
+          studentsInQueue,
           inQueue,
         })
       }
@@ -245,10 +245,14 @@ class StudentQueueView extends Component {
 
   createCurrStudentLabel() {
     const { currStudentBeingHelped } = this.state
+    const { id, name } = currStudentBeingHelped
 
-    if (currStudentBeingHelped.id === -1) {
+    if (id === -1) {
       return null
     }
+
+    const nameToShow =
+      name === 'Anonymous' && id == this.state.me.id ? `Anonymous (You)` : name
 
     return (
       <QueueLabel
@@ -262,14 +266,21 @@ class StudentQueueView extends Component {
           backgroundColor: 'red',
           marginRight: '1%',
         }}
-        key={currStudentBeingHelped.id}
+        key={id}
       >
-        {currStudentBeingHelped.name}
+        {nameToShow}
       </QueueLabel>
     )
   }
 
   createQueueLabel(student) {
+    const { fullName, id } = student
+
+    const nameToShow =
+      fullName === 'Anonymous' && id == this.state.me.id
+        ? `Anonymous (You)`
+        : fullName
+
     return (
       <QueueLabel
         style={{
@@ -281,9 +292,9 @@ class StudentQueueView extends Component {
           marginLeft: '.8%',
           marginRight: '1%',
         }}
-        key={student}
+        key={student.id}
       >
-        {student}
+        {nameToShow}
       </QueueLabel>
     )
   }
@@ -296,7 +307,7 @@ class StudentQueueView extends Component {
     }
 
     const queueLabels = this.isStudentDisplayed()
-      ? this.state.studentsInQueue.map(this.createQueueLabel)
+      ? this.state.studentsInQueue.map(this.createQueueLabel.bind(this))
       : []
 
     return (
