@@ -40,8 +40,6 @@ export default class WaitingForNewLeaderModal extends Component {
           style={{ borderless: 'true', width: '40%', height: '40%' }}
           open={this.state.modalState}
           onClose={() => this.setState({ modalState: false })}
-          closeOnDimmerClick={false}
-          closeOnEscape={false}
         >
           <Loader
             style={{ textAlign: 'center' }}
