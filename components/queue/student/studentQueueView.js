@@ -29,7 +29,7 @@ class StudentQueueView extends Component {
       me: this.props.me,
       inQueue: false,
       isYourTurn: false,
-      currStudentBeingHelped: '',
+      currStudentBeingHelped: {},
       isReadyToRender: false,
       office: this.props.office,
       inCallWithTA: false,
@@ -110,7 +110,7 @@ class StudentQueueView extends Component {
       if (inCallWithTA) {
         EventEmitter.publish('signalCallOver')
         EventEmitter.publish('activateFeedbackModal', classId)
-        this.setState({ inCallWithTA: false, currStudentBeingHelped: '' })
+        this.setState({ inCallWithTA: false, currStudentBeingHelped: {} })
       }
     })
 
@@ -155,8 +155,11 @@ class StudentQueueView extends Component {
   }
 
   addMeToQueue() {
-    const { inQueue } = this.state.me
-    if (inQueue) {
+    const { inQueue, currStudentBeingHelped, me } = this.state
+    const { id: helpedId } = currStudentBeingHelped
+    const { id: myId } = me
+
+    if (inQueue || helpedId === myId) {
       return
     }
 
@@ -181,7 +184,7 @@ class StudentQueueView extends Component {
   }
 
   removeMeFromQueue() {
-    const { inQueue } = this.state.me
+    const { inQueue } = this.state
 
     if (!inQueue) {
       return
@@ -191,7 +194,10 @@ class StudentQueueView extends Component {
   }
 
   getButtonToDisplay() {
-    if (this.state.inCallWithTA) {
+    if (
+      this.state.inCallWithTA ||
+      this.state.currStudentBeingHelped.id === this.state.me.id
+    ) {
       return null
     }
 
@@ -240,7 +246,7 @@ class StudentQueueView extends Component {
   createCurrStudentLabel() {
     const { currStudentBeingHelped } = this.state
 
-    if (currStudentBeingHelped.length === 0) {
+    if (currStudentBeingHelped.id === -1) {
       return null
     }
 
@@ -256,9 +262,9 @@ class StudentQueueView extends Component {
           backgroundColor: 'red',
           marginRight: '1%',
         }}
-        key={currStudentBeingHelped}
+        key={currStudentBeingHelped.id}
       >
-        {currStudentBeingHelped}
+        {currStudentBeingHelped.name}
       </QueueLabel>
     )
   }

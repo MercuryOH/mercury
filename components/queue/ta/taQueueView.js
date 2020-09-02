@@ -21,7 +21,7 @@ export default class TAQueueView extends Component {
       studentsInQueue: [],
       me: this.props.me,
       nextStudentName: '',
-      currStudentBeingHelped: '',
+      currStudentBeingHelped: {},
       isReadyToRender: false,
       inCallWithStudent: false,
     }
@@ -46,7 +46,7 @@ export default class TAQueueView extends Component {
     EventEmitter.subscribe('removeTAWaitingModalOnTimeout', () => {
       const { nextStudentName } = this.state
       this.createTimeoutNotification(nextStudentName)
-      this.setState({ currStudentBeingHelped: '', nextStudentName: '' })
+      this.setState({ currStudentBeingHelped: {}, nextStudentName: '' })
 
       EventEmitter.publish('newTAWaitingModalProps', {
         inviteNextStudent: false,
@@ -66,7 +66,7 @@ export default class TAQueueView extends Component {
     EventEmitter.subscribe('removeTAWaitingModalOnDecline', () => {
       const { nextStudentName } = this.state
       this.createDeclineNotification(nextStudentName)
-      this.setState({ currStudentBeingHelped: '', nextStudentName: '' })
+      this.setState({ currStudentBeingHelped: {}, nextStudentName: '' })
 
       EventEmitter.publish('newTAWaitingModalProps', {
         inviteNextStudent: false,
@@ -79,7 +79,7 @@ export default class TAQueueView extends Component {
       if (inCallWithStudent) {
         EventEmitter.publish('signalCallOver')
         EventEmitter.publish('activateFeedbackModal', classId)
-        this.setState({ inCallWithStudent: false, currStudentBeingHelped: '' })
+        this.setState({ inCallWithStudent: false, currStudentBeingHelped: {} })
       }
     })
 
@@ -174,7 +174,7 @@ export default class TAQueueView extends Component {
   createCurrStudentLabel() {
     const { currStudentBeingHelped } = this.state
 
-    if (currStudentBeingHelped.length == 0) {
+    if (currStudentBeingHelped.id === -1) {
       return null
     }
 
@@ -190,9 +190,9 @@ export default class TAQueueView extends Component {
           backgroundColor: 'red',
           marginRight: '1%',
         }}
-        key={currStudentBeingHelped}
+        key={currStudentBeingHelped.id}
       >
-        {currStudentBeingHelped}
+        {currStudentBeingHelped.name}
       </QueueLabel>
     )
   }

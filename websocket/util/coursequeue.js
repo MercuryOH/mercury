@@ -15,7 +15,12 @@ class Queue {
   }
 
   getCurrStudent() {
-    return userRepository.getFullName(this.currStudent)
+    return {
+      id: this.currStudent,
+      name: this.isStudentAnonymous(this.currStudent)
+        ? 'Anonymous'
+        : userRepository.getFullName(this.currStudent),
+    }
   }
 
   getCurrStudentID() {
