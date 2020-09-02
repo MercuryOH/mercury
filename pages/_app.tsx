@@ -9,15 +9,16 @@ import 'react-notifications/lib/notifications.css'
 import 'react-quill/dist/quill.snow.css' // ES6
 import 'react-loader-spinner/dist/loader/css/react-spinner-loader.css'
 import 'react-confirm-alert/src/react-confirm-alert.css' // Import css
+import type { AppProps } from 'next/app'
 
 //Binding events.
 Router.events.on('routeChangeStart', () => NProgress.start())
 Router.events.on('routeChangeComplete', () => NProgress.done())
 Router.events.on('routeChangeError', () => NProgress.done())
 
-export default class App extends Component {
+export default class App extends Component<AppProps, {}> {
   render() {
-    const { Component, pageProps } = this.props
+    const { Component, pageProps }: AppProps = this.props
     return (
       <AuthProvider>
         <Component {...pageProps} />
