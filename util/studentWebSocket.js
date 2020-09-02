@@ -203,7 +203,6 @@ export default class StudentWebSocketClient {
   }
 
   activateWaitingForNewLeaderModal(data) {
-    console.log(JSON.stringify(data))
     EventEmitter.publish('activateWaitingForNewLeaderModal', data)
   }
 

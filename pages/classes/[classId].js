@@ -698,7 +698,7 @@ class ClassPage extends Component {
         <GroupJoinRequestModal />
         <WaitingForRequestApprovalModal />
         <NotificationContainer />
-        <WaitingForNewLeaderModal user={this.user.id} />
+        <WaitingForNewLeaderModal userId={this.user.id} />
       </Layout>
     )
   }

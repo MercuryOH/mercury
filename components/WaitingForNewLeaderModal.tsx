@@ -3,41 +3,63 @@ import { Modal, Header } from 'semantic-ui-react'
 import { EventEmitter } from './util/EventEmitter'
 import Loader from 'react-loader-spinner'
 
-function sleep(ms) {
+function sleep(ms: number) {
   return new Promise((resolve) => setTimeout(resolve, ms))
 }
 
-export default class WaitingForNewLeaderModal extends Component {
-  constructor(props) {
+interface WaitingForNewLeaderModalProps {
+  userId: number
+}
+
+interface WaitingForNewLeaderModalState {
+  userId: number
+  modalState: boolean
+}
+
+interface ActivateData {
+  groupId: number
+  userId: number
+}
+
+export default class WaitingForNewLeaderModal extends Component<
+  WaitingForNewLeaderModalProps,
+  WaitingForNewLeaderModalState
+> {
+  constructor(props: WaitingForNewLeaderModalProps) {
     super(props)
     this.state = {
-      userId: this.props.user,
+      userId: this.props.userId,
       modalState: false,
     }
 
-    EventEmitter.subscribe('activateWaitingForNewLeaderModal', (data) => {
-      this.setState({ modalState: true }, () => {
-        sleep(3000).then(() => {
-          EventEmitter.publish('bidForLeaderPosition', data)
+    EventEmitter.subscribe(
+      'activateWaitingForNewLeaderModal',
+      (data: ActivateData) => {
+        this.setState({ modalState: true }, () => {
+          sleep(3000).then(() => {
+            EventEmitter.publish('bidForLeaderPosition', data)
+          })
         })
-      })
-    })
-
-    EventEmitter.subscribe('removeWaitingForNewLeaderModal', (winnerId) => {
-      this.setState({ modalState: false })
-      if (this.state.userId === winnerId) {
-        console.log('publishing new leader')
-        // you are the new leader
-        EventEmitter.publish('createNotification', 'You Are The New Leader')
       }
-    })
+    )
+
+    EventEmitter.subscribe(
+      'removeWaitingForNewLeaderModal',
+      (winnerId: number) => {
+        this.setState({ modalState: false })
+        if (this.state.userId === winnerId) {
+          // you are the new leader
+          EventEmitter.publish('createNotification', 'You Are The New Leader')
+        }
+      }
+    )
   }
 
   render() {
     return (
       <div>
         <Modal
-          style={{ borderless: 'true', width: '40%', height: '40%' }}
+          style={{ border: 'none', width: '40%', height: '40%' }}
           open={this.state.modalState}
           onClose={() => this.setState({ modalState: false })}
         >
@@ -50,7 +72,7 @@ export default class WaitingForNewLeaderModal extends Component {
             timeout={0}
           />
 
-          <Modal.Content style={{ borderless: 'true' }}>
+          <Modal.Content style={{ border: 'none' }}>
             <Header
               style={{
                 fontSize: '2vw',
