@@ -44,7 +44,7 @@ class Calendar extends Component<CalendarProps, CalendarState> {
     }
   }
 
-  componentDidMount() {
+  componentDidMount(): void {
     api.getClasses().then((classes: Array<Class>) => this.setState({ classes }))
 
     EventEmitter.subscribe('currentlyEnrolled', (classes: Array<Class>) => {
@@ -52,7 +52,7 @@ class Calendar extends Component<CalendarProps, CalendarState> {
     })
   }
 
-  mergeCal(classList: Array<Class>) {
+  mergeCal(classList: Array<Class>): string {
     let src = 'https://calendar.google.com/calendar/embed?mode=WEEK&showTitle=0'
     classList
       .filter((cc) => cc.role !== '')
