@@ -27,6 +27,7 @@
     "@hapi/joi": "^17.1.1",
     "@opentok/client": "^2.17.7",
     "@types/next": "^9.0.0",
+    "@types/node": "^14.6.2",
     "@types/styled-components": "^5.1.2",
     "@zoomus/websdk": "^1.7.10",
     "axios": "^0.19.2",
