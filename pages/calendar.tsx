@@ -16,28 +16,43 @@ const colors = [
   '009688', //teal
 ]
 
+/**
+ * For TypeScript, you need to specify the type of the props, and the type of the state, and pass it to the class Defintion
+ */
 interface CalendarProps {}
 
 interface CalendarState {
-  classes: Array<any>
+  classes: Array<Class>
+}
+
+/**
+ * Define the class type that is returned from the api
+ */
+
+interface Class {
+  id: number
+  name: string
+  calendarId: number
+  role: string
 }
 
 class Calendar extends Component<CalendarProps, CalendarState> {
-  constructor(props) {
+  constructor(props: CalendarProps) {
     super(props)
     this.state = {
       classes: [],
     }
   }
-  componentDidMount() {
-    api.getClasses().then((classes) => this.setState({ classes }))
 
-    EventEmitter.subscribe('currentlyEnrolled', (classes) => {
+  componentDidMount() {
+    api.getClasses().then((classes: Array<Class>) => this.setState({ classes }))
+
+    EventEmitter.subscribe('currentlyEnrolled', (classes: Array<Class>) => {
       this.setState({ classes })
     })
   }
 
-  mergeCal(classList) {
+  mergeCal(classList: Array<Class>) {
     let src = 'https://calendar.google.com/calendar/embed?mode=WEEK&showTitle=0'
     classList
       .filter((cc) => cc.role !== '')
