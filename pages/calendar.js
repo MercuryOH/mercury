@@ -7,7 +7,14 @@ import { EventEmitter } from '../components/util/EventEmitter'
 import { AuthRequired } from '../components/authProvider'
 import * as api from '../util/mercuryService'
 
-const colors = ['D50000', 'F4511E', 'F6BF26', 'C0CA33', '0B8043', '009688']
+const colors = [
+  'D50000', //red
+  'F4511E', //orange
+  'F6BF26', //yellow
+  'C0CA33', //olive
+  '0B8043', //green
+  '009688', //teal
+]
 
 class Calendar extends Component {
   constructor(props) {
