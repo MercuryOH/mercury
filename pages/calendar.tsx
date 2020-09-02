@@ -16,7 +16,13 @@ const colors = [
   '009688', //teal
 ]
 
-class Calendar extends Component {
+interface CalendarProps {}
+
+interface CalendarState {
+  classes: Array<any>
+}
+
+class Calendar extends Component<CalendarProps, CalendarState> {
   constructor(props) {
     super(props)
     this.state = {

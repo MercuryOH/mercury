@@ -247,14 +247,11 @@ export async function postAddClass(classId, userId, role) {
 
 export async function deleteClassUser(classId, userId) {
   try {
-    await axios.delete(
-      `/api/classes/deleteClass/${classId}/${userId}`,
-      {
-        headers: {
-          authorization: token,
-        },
-      }
-    )
+    await axios.delete(`/api/classes/deleteClass/${classId}/${userId}`, {
+      headers: {
+        authorization: token,
+      },
+    })
     return null
   } catch (e) {
     return null
