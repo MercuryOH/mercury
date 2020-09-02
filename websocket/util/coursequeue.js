@@ -6,7 +6,7 @@ const { userRepository } = require('../../repository/userRepository')
 class Queue {
   constructor() {
     this.map = new Map()
-    this.currStudent = ''
+    this.currStudent = -1
     this.isAnonymous = new Map()
   }
 
@@ -16,6 +16,10 @@ class Queue {
 
   getCurrStudent() {
     return userRepository.getFullName(this.currStudent)
+  }
+
+  getCurrStudentID() {
+    return this.currStudent
   }
 
   /**

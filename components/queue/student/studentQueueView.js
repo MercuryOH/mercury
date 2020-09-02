@@ -155,13 +155,8 @@ class StudentQueueView extends Component {
   }
 
   addMeToQueue() {
-    const { firstName, lastName } = this.state.me
-    const fullName = `${firstName} ${lastName}`
-
-    if (
-      this.state.studentsInQueue.indexOf(fullName) >= 0 ||
-      this.state.currStudentBeingHelped === fullName
-    ) {
+    const { inQueue } = this.state.me
+    if (inQueue) {
       return
     }
 
@@ -186,10 +181,9 @@ class StudentQueueView extends Component {
   }
 
   removeMeFromQueue() {
-    const { firstName, lastName } = this.state.me
-    const fullName = `${firstName} ${lastName}`
+    const { inQueue } = this.state.me
 
-    if (this.state.studentsInQueue.indexOf(fullName) < 0) {
+    if (!inQueue) {
       return
     }
 
