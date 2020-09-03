@@ -31,6 +31,7 @@
     "@types/jsonwebtoken": "^8.5.0",
     "@types/opentok": "^2.9.0",
     "@types/react-dom": "^16.9.8",
+    "@types/validator": "^13.1.0",
     "@types/webpack": "^4.41.22",
     "@types/ws": "^7.2.6",
     "@zoomus/websdk": "^1.7.10",
@@ -73,6 +74,7 @@
     "@types/react": "^16.9.49",
     "eslint": "^7.4.0",
     "prettier": "^2.0.5",
-    "sequelize-cli": "^6.2.0"
+    "sequelize-cli": "^6.2.0",
+    "typescript": "^4.0.2"
   }
 }

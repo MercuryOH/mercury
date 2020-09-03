@@ -151,7 +151,7 @@ class UserInviteModal extends Component {
             >
               <Search
                 fluid
-                placeholder="Invite..."
+                placeholder="Invite by email or name..."
                 input={{ fluid: true }}
                 loading={this.state.isLoading}
                 onResultSelect={this.handleResultSelect}

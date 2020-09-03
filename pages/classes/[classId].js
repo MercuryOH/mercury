@@ -19,6 +19,7 @@ import WaitingForRequestApprovalModal from '../../components/invite/WaitingForRe
 import WaitingForNewLeaderModal from '../../components/WaitingForNewLeaderModal'
 import AccessDeniedModal from '../../components/accessDeniedModal'
 import OfficeAccessModal from '../../components/officeAccessModal'
+import BroadcastModal from '../../components/broadcastModal'
 import { confirmAlert } from 'react-confirm-alert' // Import
 
 const ScreenContainer = dynamic(
@@ -343,15 +344,18 @@ class ClassPage extends Component {
     return this.state.currentClass.role === 'Student' ? (
       <CreateGroupModal onCreate={this.handleCreateGroup} />
     ) : this.state.clicked === 'none' ? (
-      <Button
-        color="teal"
-        content="Modify Discussions"
-        fluid
-        style={{ fontSize: '1vw' }}
-        onClick={() => {
-          this.setState({ clicked: 'inline' })
-        }}
-      />
+      <>
+        <BroadcastModal />
+        <Button
+          color="teal"
+          content="Modify Discussions"
+          fluid
+          style={{ fontSize: '1vw', marginTop: '2%'}}
+          onClick={() => {
+            this.setState({ clicked: 'inline' })
+          }}
+        />
+      </>
     ) : (
       <>
         <CreateDiscussionModal
