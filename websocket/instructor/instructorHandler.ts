@@ -1,15 +1,14 @@
-const { courseQueue } = require('../util/coursequeue')
-const { webSocketConnectionManager } = require('../util/connectionmanager')
-const { prepareMessage } = require('../util/util')
-const { userRepository } = require('../../repository/userRepository')
-const { groupManager } = require('../util/groupmanager')
-const { countReset } = require('console')
+import { courseQueue } from '../util/coursequeue'
+import { webSocketConnectionManager } from '../util/connectionmanager'
+import { prepareMessage } from '../util/util'
+import { userRepository } from '../../repository/userRepository'
+import { groupManager } from '../util/groupmanager'
 
 /**
  * Handles web socket messages sent by a student user
  */
 
-const handleInstructorMessage = async (ws, message) => {
+const handleInstructorMessage = async (ws: any, message: string) => {
   const { courseId, msgType, msg } = JSON.parse(message)
 
   switch (msgType) {
@@ -149,6 +148,4 @@ const handleInstructorMessage = async (ws, message) => {
   }
 }
 
-module.exports = {
-  handleInstructorMessage,
-}
+export { handleInstructorMessage }

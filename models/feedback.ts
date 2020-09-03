@@ -1,8 +1,8 @@
-const { Model } = require('sequelize')
+import { Model } from 'sequelize'
 
-module.exports = (sequelize, DataTypes) => {
+export default (sequelize: any, DataTypes: any) => {
   class Feedback extends Model {
-    static associate(models) {
+    static associate(models: any) {
       Feedback.belongsTo(models.User)
       Feedback.belongsTo(models.Class)
     }

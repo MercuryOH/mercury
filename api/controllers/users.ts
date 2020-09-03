@@ -1,8 +1,9 @@
-const router = require('express').Router()
-const joi = require('@hapi/joi')
-const models = require('../../models')
-const crypto = require('../../util/crypto')
-const middleware = require('../../util/middleware')
+import { Router } from 'express'
+const router = Router()
+import joi from 'joi'
+import models from '../../models/index'
+import crypto from '../../util/crypto'
+import { authRequired } from '../../util/middleware'
 
 const createUserSchema = joi.object({
   firstName: joi.string().required(),
@@ -74,7 +75,7 @@ router.post('/login', async (req, res) => {
   }
 })
 
-router.get('/me', middleware.authRequired, async (req, res) => {
+router.get('/me', authRequired, async (req: any, res: any) => {
   return res.json({
     id: req.user.id,
     firstName: req.user.firstName,
@@ -112,4 +113,4 @@ router.post('/addClass', async (req, res) => {
   }
 })
 
-module.exports = router
+export default router

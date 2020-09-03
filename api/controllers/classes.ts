@@ -1,7 +1,8 @@
-const router = require('express').Router()
-const middleware = require('../../util/middleware')
-const models = require('../../models')
-const joi = require('@hapi/joi')
+import { Router } from 'express'
+const router = Router()
+import { authRequired } from '../../util/middleware'
+import models from '../../models/index'
+import joi from 'joi'
 
 const enrollSchema = joi.object({
   role: joi.string().valid('Student', 'Professor', 'TA').required(),
@@ -9,8 +10,8 @@ const enrollSchema = joi.object({
   classId: joi.number().required(),
 })
 
-router.get('/', middleware.authRequired, async (req, res) => {
-  const classes = req.user.Classes.map((c) => ({
+router.get('/', authRequired, async (req: any, res: any) => {
+  const classes = req.user.Classes.map((c: any) => ({
     id: c.id,
     name: c.name,
     calendarId: c.calendarId,
@@ -20,7 +21,7 @@ router.get('/', middleware.authRequired, async (req, res) => {
   return res.json(classes)
 })
 
-router.get('/class/:classId', middleware.authRequired, async (req, res) => {
+router.get('/class/:classId', authRequired, async (req, res) => {
   const { classId: ClassId } = req.params
 
   const currentClass = await models.Class.findByPk(ClassId, {
@@ -31,7 +32,7 @@ router.get('/class/:classId', middleware.authRequired, async (req, res) => {
     id: currentClass.id,
     name: currentClass.name,
     calendarId: currentClass.calendarId,
-    groups: currentClass.Groups.map((g) => ({
+    groups: currentClass.Groups.map((g: any) => ({
       id: g.id,
       name: g.name,
       type: g.type,
@@ -39,7 +40,7 @@ router.get('/class/:classId', middleware.authRequired, async (req, res) => {
       userId: g.UserId,
       // users: g.users,
     })),
-    users: currentClass.Users.map((u) => ({
+    users: currentClass.Users.map((u: any) => ({
       id: u.id,
       firstName: u.firstName,
       lastName: u.lastName,
@@ -49,9 +50,9 @@ router.get('/class/:classId', middleware.authRequired, async (req, res) => {
   })
 })
 
-router.get('/allClasses', middleware.authRequired, async (req, res) => {
+router.get('/allClasses', authRequired, async (req, res) => {
   const allClasses = await models.Class.findAll()
-  const all = allClasses.map((c) => ({
+  const all = allClasses.map((c: any) => ({
     id: c.id,
     name: c.name,
     calendarId: c.calendarId,
@@ -60,7 +61,7 @@ router.get('/allClasses', middleware.authRequired, async (req, res) => {
   return res.json(all)
 })
 
-router.post('/addClass', middleware.authRequired, async (req, res) => {
+router.post('/addClass', authRequired, async (req, res) => {
   const { value, error } = enrollSchema.validate(req.body)
 
   if (error) {
@@ -88,7 +89,7 @@ router.post('/addClass', middleware.authRequired, async (req, res) => {
 
 router.delete(
   '/deleteClass/:classId/:userId',
-  middleware.authRequired,
+  authRequired,
   async (req, res) => {
     const { classId, userId } = req.params
     const user = await models.ClassUser.findOne({
@@ -106,4 +107,4 @@ router.delete(
   }
 )
 
-module.exports = router
+export default router

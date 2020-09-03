@@ -1,4 +1,4 @@
-const jwt = require('jsonwebtoken')
+import jwt from 'jsonwebtoken'
 
 /**
  * Creates a webtoken with a payload.
@@ -8,7 +8,7 @@ const jwt = require('jsonwebtoken')
  *
  * @returns {string} json web token
  */
-exports.createJWT = (payload) => {
+const createJWT = (payload: any): string => {
   return jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '24h' })
 }
 
@@ -23,6 +23,8 @@ exports.createJWT = (payload) => {
  *
  * @returns {object} token's payload
  */
-exports.verifyJWT = (token) => {
+const verifyJWT = (token: string): any => {
   return jwt.verify(token, process.env.JWT_SECRET)
 }
+
+export default { createJWT, verifyJWT }

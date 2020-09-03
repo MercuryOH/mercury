@@ -1,13 +1,13 @@
-const express = require('express')
-const next = require('next')
-const models = require('./models')
-const apiRoutes = require('./api/routes')
-const { webSocketServer } = require('./websocket/wss')
+import express from 'express'
+import next from 'next'
+import models from './models/index'
+import apiRoutes from './api/routes'
+import { webSocketServer } from './websocket/wss'
 const dev = process.env.NODE_ENV !== 'production'
 const app = next({ dev })
 const server = express()
 const handle = app.getRequestHandler()
-const { userRepository } = require('./repository/userRepository')
+import { userRepository } from './repository/userRepository'
 
 server.use(express.json())
 
@@ -20,10 +20,8 @@ async function main() {
   server.use('/api', apiRoutes)
   server.all('*', (req, res) => handle(req, res))
 
-  const listener = server.listen(process.env.PORT || 3000, (err) => {
-    if (err) throw err
-
-    console.log(`Mercury running in port ${listener.address().port}`)
+  server.listen(Number(process.env.PORT) || 3000, () => {
+    console.log(`Mercury running in port ${Number(process.env.PORT) || 3000}`)
   })
 }
 

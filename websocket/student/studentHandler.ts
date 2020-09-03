@@ -1,15 +1,15 @@
-const { courseQueue } = require('../util/coursequeue')
-const { webSocketConnectionManager } = require('../util/connectionmanager')
-const { prepareMessage } = require('../util/util')
-const models = require('../../models')
-const { userRepository } = require('../../repository/userRepository')
-const { groupManager } = require('../util/groupmanager')
+import { courseQueue } from '../util/coursequeue'
+import { webSocketConnectionManager } from '../util/connectionmanager'
+import { prepareMessage } from '../util/util'
+import models from '../../models/index'
+import { userRepository } from '../../repository/userRepository'
+import { groupManager } from '../util/groupmanager'
 
 /**
  * Handles web socket messages sent by a student user
  */
 
-const handleStudentMessage = async (ws, message) => {
+const handleStudentMessage = async (ws: any, message: string) => {
   const { courseId, msgType, msg } = JSON.parse(message)
 
   switch (msgType) {
@@ -258,7 +258,4 @@ const handleStudentMessage = async (ws, message) => {
       throw new Error(`Message Type ${msgType} is not recognized for student`)
   }
 }
-
-module.exports = {
-  handleStudentMessage,
-}
+export { handleStudentMessage }

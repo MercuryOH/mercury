@@ -1,8 +1,9 @@
-const router = require('express').Router()
-const middleware = require('../../util/middleware')
-const models = require('../../models')
+import { Router } from 'express'
+const router = Router()
+import { authRequired } from '../../util/middleware'
+import models from '../../models'
 
-router.post('/', middleware.authRequired, async (req, res) => {
+router.post('/', authRequired, async (req: any, res: any) => {
   const { id: UserId } = req.user
   const { ClassId, stars, comments } = req.body
 
@@ -16,4 +17,4 @@ router.post('/', middleware.authRequired, async (req, res) => {
   return res.status(200).json({ UserId }) // dummy return for now
 })
 
-module.exports = router
+export default router

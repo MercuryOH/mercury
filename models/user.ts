@@ -1,14 +1,16 @@
-const { Model } = require('sequelize')
-const bcrypt = require('bcrypt')
+import { Model } from 'sequelize'
+import bcrypt from 'bcrypt'
 
-module.exports = (sequelize, DataTypes) => {
+export default (sequelize: any, DataTypes: any) => {
   class User extends Model {
-    static associate(models) {
+    password: string
+
+    static associate(models: any) {
       User.belongsToMany(models.Class, { through: 'ClassUser' })
       User.hasMany(models.Group)
     }
 
-    isPasswordMatch(password) {
+    isPasswordMatch(password: any) {
       return bcrypt.compareSync(password, this.password)
     }
   }
