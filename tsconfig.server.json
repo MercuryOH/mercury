@@ -6,11 +6,11 @@
     "noImplicitAny": true,
     "moduleResolution": "node",
     "sourceMap": true,
-    "outDir": "../dist",
+    "outDir": "dist",
     "baseUrl": ".",
     "paths": {
       "*": ["node_modules/*"]
     }
   },
-  "include": ["../server.ts", "../api", "../models", "../websocket"]
+  "include": ["server.ts", "api", "models", "websocket"]
 }

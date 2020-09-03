@@ -4,7 +4,7 @@
   "description": "ORIGIN Bootcamp",
   "main": "index.js",
   "scripts": {
-    "dev": "tsc --project serverTS/tsconfig.json && nodemon --inspect dist/server.js",
+    "dev": "tsc --project tsconfig.server.json && nodemon --inspect dist/server.js",
     "build": "next build",
     "start": "NODE_ENV=production nodemon server.js",
     "test": "jest"
