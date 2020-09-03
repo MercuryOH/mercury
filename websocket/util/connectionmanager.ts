@@ -3,6 +3,11 @@
  */
 
 class WebSocketConnectionManager {
+  courseToSockets: Map<any, any>
+  idToSocket: Map<any, any>
+  socketToCourse: Map<any, any>
+  socketToId: Map<any, any>
+
   constructor() {
     this.courseToSockets = new Map()
     this.idToSocket = new Map()
@@ -17,7 +22,7 @@ class WebSocketConnectionManager {
    * @param {*} socket
    */
 
-  addSocketForCourse(courseId, socket) {
+  addSocketForCourse(courseId: any, socket: any) {
     /**
      * Update the data structures to account for the new socket
      */
@@ -37,16 +42,16 @@ class WebSocketConnectionManager {
    * @param {*} message
    */
 
-  broadcast(courseId, message) {
+  broadcast(courseId: any, message: any) {
     if (!this.courseToSockets.has(courseId)) {
       throw new Error(`courseId ${courseId} not found for broadcast`)
     }
 
     const connections = this.courseToSockets.get(courseId)
-    connections.forEach((connection) => connection.send(message))
+    connections.forEach((connection: any) => connection.send(message))
   }
 
-  removeSocket(socket) {
+  removeSocket(socket: any) {
     /**
      * First, delete socket from socket-course mappings
      */
@@ -84,12 +89,12 @@ class WebSocketConnectionManager {
     }
   }
 
-  associateUserWithSocket(id, socket) {
+  associateUserWithSocket(id: any, socket: any) {
     this.idToSocket.set(id, socket)
     this.socketToId.set(socket, id)
   }
 
-  getSocketOfUserID(id) {
+  getSocketOfUserID(id: any) {
     if (id == null) {
       throw new Error('null socket id')
     }
@@ -101,7 +106,7 @@ class WebSocketConnectionManager {
     return null
   }
 
-  getSocketCourseID(ws) {
+  getSocketCourseID(ws: any) {
     if (this.socketToCourse.has(ws)) {
       return this.socketToCourse.get(ws)
     }
@@ -109,7 +114,7 @@ class WebSocketConnectionManager {
     return null
   }
 
-  getSocketUserId(ws) {
+  getSocketUserId(ws: any) {
     if (this.socketToId.has(ws)) {
       return this.socketToId.get(ws)
     }
@@ -118,6 +123,6 @@ class WebSocketConnectionManager {
   }
 }
 
-module.exports = {
-  webSocketConnectionManager: new WebSocketConnectionManager(),
-}
+const webSocketConnectionManager = new WebSocketConnectionManager()
+
+export { webSocketConnectionManager }

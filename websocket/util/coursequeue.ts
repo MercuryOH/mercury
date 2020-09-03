@@ -1,30 +1,41 @@
 /**
  * Basic queue data structure for maintaining the order of incoming students
  */
-const { userRepository } = require('../../repository/userRepository')
+import { userRepository } from '../../repository/userRepository'
 
 class Queue {
+  map: Map<any, any>
+  isAnonymous: Map<any, any>
+  currStudents: Map<any, any>
+
   constructor() {
     this.map = new Map()
-    this.currStudent = -1
     this.isAnonymous = new Map()
+    this.currStudents = new Map()
   }
 
-  setCurrStudent(currStudentId) {
-    this.currStudent = currStudentId
+  setCurrStudent(courseId: any, currStudentId: any) {
+    this.currStudents.set(courseId, currStudentId)
   }
 
-  getCurrStudent() {
+  getCurrStudent(courseId: any) {
+    if (!this.currStudents.has(courseId)) {
+      return {
+        id: -1,
+        name: '',
+      }
+    }
+
     return {
-      id: this.currStudent,
-      name: this.isStudentAnonymous(this.currStudent)
+      id: this.currStudents.get(courseId),
+      name: this.isStudentAnonymous(this.currStudents.get(courseId))
         ? 'Anonymous'
-        : userRepository.getFullName(this.currStudent),
+        : userRepository.getFullName(this.currStudents.get(courseId)),
     }
   }
 
-  getCurrStudentID() {
-    return this.currStudent
+  getCurrStudentID(courseId: any) {
+    return this.currStudents.get(courseId)
   }
 
   /**
@@ -34,7 +45,7 @@ class Queue {
    * @param anonymous - whether or not the student wants to be anonymous
    */
 
-  addStudentToQueue(course, student, anonymous) {
+  addStudentToQueue(course: any, student: any, anonymous: any) {
     if (!this.map.has(course)) {
       // if the course is not stored yet
       this.map.set(course, []) // set the course value to an empty queue
@@ -51,7 +62,7 @@ class Queue {
    * @returns int {student id of the next student}
    */
 
-  getNextStudent(course) {
+  getNextStudent(course: any) {
     if (this.map.has(course)) {
       const currentQueue = this.map.get(course)
 
@@ -65,7 +76,7 @@ class Queue {
     throw new Error('Invalid: Course not found')
   }
 
-  size(course) {
+  size(course: any) {
     if (this.map.has(course)) {
       return this.map.get(course).length
     }
@@ -78,7 +89,7 @@ class Queue {
    * @param {*} course
    * @param {*} student - the student id
    */
-  removeStudentFromQueue(course, student) {
+  removeStudentFromQueue(course: any, student: any) {
     if (!this.map.has(course)) {
       return
     }
@@ -97,13 +108,13 @@ class Queue {
     this.map.set(course, currentQueue)
   }
 
-  isStudentAnonymous(id) {
+  isStudentAnonymous(id: any) {
     return this.isAnonymous.has(id) && this.isAnonymous.get(id)
   }
 
-  getAllStudents(course) {
+  getAllStudents(course: any) {
     if (this.map.has(course)) {
-      return this.map.get(course).map((id) => {
+      return this.map.get(course).map((id: any) => {
         const fullName = this.isStudentAnonymous(id)
           ? 'Anonymous'
           : userRepository.getFullName(id)
@@ -115,6 +126,5 @@ class Queue {
   }
 }
 
-module.exports = {
-  courseQueue: new Queue(),
-}
+const courseQueue = new Queue()
+export { courseQueue }

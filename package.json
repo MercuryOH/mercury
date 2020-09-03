@@ -34,6 +34,7 @@
     "@types/opentok": "^2.9.0",
     "@types/react-dom": "^16.9.8",
     "@types/webpack": "^4.41.22",
+    "@types/ws": "^7.2.6",
     "@zoomus/websdk": "^1.7.10",
     "axios": "^0.19.2",
     "bcrypt": "^5.0.0",

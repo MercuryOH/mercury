@@ -4,16 +4,18 @@
  * Manages leader designation
  */
 
-const models = require('../../models')
-const { prepareMessage } = require('./util')
+import models from '../../models/index'
+import { prepareMessage } from './util'
 
 class GroupManager {
+  groupToSockets: Map<any, any>
+  socketToGroup: Map<any, any>
   constructor() {
     this.groupToSockets = new Map()
     this.socketToGroup = new Map()
   }
 
-  addSocketToGroup({ groupId, userId, groupType }, ws) {
+  addSocketToGroup({ groupId, userId, groupType }: any, ws: any) {
     if (!this.groupToSockets.has(groupId)) {
       this.groupToSockets.set(groupId, new Set())
     }
@@ -22,7 +24,7 @@ class GroupManager {
     this.socketToGroup.set(ws, { groupId, groupType })
   }
 
-  async removeSocket(ws) {
+  async removeSocket(ws: any) {
     if (this.socketToGroup.has(ws)) {
       const { groupId, groupType } = this.socketToGroup.get(ws)
       await this.removeSocketFromGroup({ id: groupId, type: groupType }, ws)
@@ -30,7 +32,10 @@ class GroupManager {
     }
   }
 
-  async removeSocketFromGroup({ id: groupId, type }, sender) {
+  async removeSocketFromGroup(
+    { id: groupId, type }: { id: any; type: any },
+    sender: any
+  ) {
     if (this.groupToSockets.has(groupId)) {
       const sockets = this.groupToSockets.get(groupId)
 
@@ -77,7 +82,7 @@ class GroupManager {
     }
   }
 
-  getGroupSize(groupId) {
+  getGroupSize(groupId: any) {
     if (this.groupToSockets.has(groupId)) {
       return this.groupToSockets.get(groupId).size
     }
@@ -85,7 +90,7 @@ class GroupManager {
     return 0
   }
 
-  async appointNewLeader({ newLeader, oldLeader, groupId }) {
+  async appointNewLeader({ newLeader, oldLeader, groupId }: any) {
     const group = await models.Group.findOne({ where: { id: groupId } })
     if (group.UserId === oldLeader) {
       // the first guy to get here gets appointed as leader
@@ -114,16 +119,16 @@ class GroupManager {
    * @param {*} msg
    */
 
-  broadcast(groupId, msg) {
+  broadcast(groupId: any, msg: string) {
     if (this.groupToSockets.has(groupId)) {
       const sockets = this.groupToSockets.get(groupId)
-      sockets.forEach(({ ws }) => {
+      sockets.forEach(({ ws }: { ws: any }) => {
         ws.send(msg)
       })
     }
   }
 
-  getSocketGroupId(ws) {
+  getSocketGroupId(ws: any) {
     if (this.socketToGroup.has(ws)) {
       return this.socketToGroup.get(ws).groupId
     }
@@ -132,6 +137,5 @@ class GroupManager {
   }
 }
 
-module.exports = {
-  groupManager: new GroupManager(),
-}
+const groupManager = new GroupManager()
+export { groupManager }

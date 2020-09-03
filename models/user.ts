@@ -5,12 +5,12 @@ export default (sequelize: any, DataTypes: any) => {
   class User extends Model {
     password: string
 
-    static associate(models) {
+    static associate(models: any) {
       User.belongsToMany(models.Class, { through: 'ClassUser' })
       User.hasMany(models.Group)
     }
 
-    isPasswordMatch(password) {
+    isPasswordMatch(password: any) {
       return bcrypt.compareSync(password, this.password)
     }
   }

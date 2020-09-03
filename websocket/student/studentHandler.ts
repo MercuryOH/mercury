@@ -1,15 +1,15 @@
-const { courseQueue } = require('../util/coursequeue')
-const { webSocketConnectionManager } = require('../util/connectionmanager')
-const { prepareMessage } = require('../util/util')
-const models = require('../../models')
-const { userRepository } = require('../../repository/userRepository')
-const { groupManager } = require('../util/groupmanager')
+import { courseQueue } from '../util/coursequeue'
+import { webSocketConnectionManager } from '../util/connectionmanager'
+import { prepareMessage } from '../util/util'
+import { userRepository } from '../../repository/userRepository'
+import { groupManager } from '../util/groupmanager'
+import models from '../../models/index'
 
 /**
  * Handles web socket messages sent by a student user
  */
 
-const handleStudentMessage = async (ws, message) => {
+const handleStudentMessage = async (ws: any, message: string) => {
   const { courseId, msgType, msg } = JSON.parse(message)
 
   switch (msgType) {
@@ -21,7 +21,7 @@ const handleStudentMessage = async (ws, message) => {
         prepareMessage({
           msgType: 'greetingAck',
           msg: {
-            currStudent: courseQueue.getCurrStudent(),
+            currStudent: courseQueue.getCurrStudent(courseId),
             studentsInQueue: courseQueue.getAllStudents(courseId),
           },
         })
@@ -65,9 +65,9 @@ const handleStudentMessage = async (ws, message) => {
       break
 
     case 'joinTA':
-      const { group, TAName, me } = JSON.parse(msg)
+      const { group, TAId, me } = JSON.parse(msg)
       const { id } = me
-      const TAToSend = webSocketConnectionManager.getSocketOfUserID(TAName)
+      const TAToSend = webSocketConnectionManager.getSocketOfUserID(TAId)
 
       TAToSend.send(
         prepareMessage({
@@ -76,13 +76,13 @@ const handleStudentMessage = async (ws, message) => {
         })
       )
 
-      courseQueue.setCurrStudent(id)
+      courseQueue.setCurrStudent(courseId, id)
 
       webSocketConnectionManager.broadcast(
         courseId,
         prepareMessage({
           msgType: 'currStudentUpdate',
-          msg: courseQueue.getCurrStudent(),
+          msg: courseQueue.getCurrStudent(courseId),
         })
       )
 
@@ -103,13 +103,13 @@ const handleStudentMessage = async (ws, message) => {
       break
 
     case 'callOver':
-      courseQueue.setCurrStudent(-1)
+      courseQueue.setCurrStudent(courseId, -1)
 
       webSocketConnectionManager.broadcast(
         courseId,
         prepareMessage({
           msgType: 'currStudentUpdate',
-          msg: courseQueue.getCurrStudent(),
+          msg: courseQueue.getCurrStudent(courseId),
         })
       )
       break
@@ -259,6 +259,4 @@ const handleStudentMessage = async (ws, message) => {
   }
 }
 
-module.exports = {
-  handleStudentMessage,
-}
+export { handleStudentMessage }

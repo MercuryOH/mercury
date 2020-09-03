@@ -1,14 +1,14 @@
-const WebSocket = require('ws')
-const { webSocketConnectionManager } = require('./util/connectionmanager')
-const { groupManager } = require('./util/groupmanager')
+import wss from 'ws'
+import { webSocketConnectionManager } from './util/connectionmanager'
+import { groupManager } from './util/groupmanager'
 const { handleInstructorMessage } = require('./instructor/instructorHandler')
 const { handleStudentMessage } = require('./student/studentHandler')
-const models = require('../models')
+import models from '../models/index'
 
 class WebSocketServer {
   start() {
-    const webSocketServer = new WebSocket.Server({
-      port: 8080 || process.env.PORT,
+    const webSocketServer = new wss.Server({
+      port: 8080 || Number(process.env.PORT),
     })
 
     webSocketServer.on('connection', (ws) => {
@@ -16,7 +16,7 @@ class WebSocketServer {
        * Handle messages that are sent by the client
        */
 
-      ws.on('message', async (message) => {
+      ws.on('message', async (message: any) => {
         const { role } = JSON.parse(message)
 
         switch (role) {
@@ -65,6 +65,5 @@ class WebSocketServer {
   }
 }
 
-module.exports = {
-  webSocketServer: new WebSocketServer(),
-}
+const webSocketServer = new WebSocketServer()
+export { webSocketServer }
