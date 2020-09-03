@@ -16,3 +16,5 @@ yarn-error.log*
 # IDE settings
 .vs
 .idea
+
+dist

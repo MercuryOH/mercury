@@ -1,8 +1,8 @@
-const { Model } = require('sequelize')
+import { Model } from 'sequelize'
 
-module.exports = (sequelize, DataTypes) => {
+module.exports = (sequelize: any, DataTypes: any) => {
   class GroupUser extends Model {
-    static associate(models) {}
+    static associate(models: any) {}
   }
 
   GroupUser.init(

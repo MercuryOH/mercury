@@ -1,8 +1,8 @@
-const { Model } = require('sequelize')
+import { Model } from 'sequelize'
 
-module.exports = (sequelize, DataTypes) => {
+module.exports = (sequelize: any, DataTypes: any) => {
   class Group extends Model {
-    static associate(models) {
+    static associate(models: any) {
       Group.belongsTo(models.Class)
       Group.belongsTo(models.User) // the userID who created the group
       Group.belongsToMany(models.User, { through: 'GroupUser' })
