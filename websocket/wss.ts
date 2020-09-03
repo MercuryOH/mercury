@@ -11,7 +11,7 @@ class WebSocketServer {
       port: 8080 || Number(process.env.PORT),
     })
 
-    webSocketServer.on('connection', (ws) => {
+    webSocketServer.on('connection', (ws: wss) => {
       /**
        * Handle messages that are sent by the client
        */
