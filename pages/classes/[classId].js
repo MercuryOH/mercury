@@ -80,6 +80,10 @@ class ClassPage extends Component {
     return this.takeOne(mySelf).role == 'Professor'
   }
 
+  needToBootStudent() {
+    return this.isProfessor() && this.state.currentGroup.type == 'office'
+  }
+
   joinGroup(group) {
     api
       .postGroupToken(this.classId, group.id)
@@ -160,7 +164,11 @@ class ClassPage extends Component {
     this.fetchAllGroups() // re-fetch current groups
     EventEmitter.publish('classGroupSetChanged', this.classId) // tell everyone to re-fetch their groups in the class
     EventEmitter.publish('userLeaveGroup', this.state.currentGroup) // notify backend that you have left the call
-    console.log(this.isProfessor())
+
+    /**
+     * If the TA left the office, boot the current student
+     */
+
     this.setState({
       // leave the call
       vonageCred: null,
@@ -169,7 +177,10 @@ class ClassPage extends Component {
     })
 
     EventEmitter.publish('currentGroupChange', { id: '', name: '' }) // change current group
-    EventEmitter.publish('callOver', this.classId) // signal call over, which triggers feedback modal and curr student update on the queue
+    EventEmitter.publish('callOver', {
+      classId: this.classId,
+      needToBootStudent: this.needToBootStudent(),
+    }) // signal call over, which triggers feedback modal and curr student update on the queue
     localStorage.removeItem('lastCallEntered')
   }
 

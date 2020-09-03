@@ -169,7 +169,7 @@ class StudentQueueView extends Component<
       }
     )
 
-    EventEmitter.subscribe('callOver', (classId: number) => {
+    EventEmitter.subscribe('callOver', ({ classId }: { classId: number }) => {
       const { inCallWithTA } = this.state
 
       if (inCallWithTA) {

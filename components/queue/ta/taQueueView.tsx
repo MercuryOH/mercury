@@ -122,7 +122,7 @@ export default class TAQueueView extends Component<
       })
     })
 
-    EventEmitter.subscribe('callOver', (classId: number) => {
+    EventEmitter.subscribe('callOver', ({ classId }: { classId: number }) => {
       const { inCallWithStudent } = this.state
       if (inCallWithStudent) {
         EventEmitter.publish('signalCallOver')
