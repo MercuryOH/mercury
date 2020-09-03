@@ -1,4 +1,4 @@
-import wss from 'ws'
+import WebSocket from 'ws'
 import { webSocketConnectionManager } from './util/connectionmanager'
 import { groupManager } from './util/groupmanager'
 import { handleInstructorMessage } from './instructor/instructorHandler'
@@ -7,11 +7,11 @@ import models from '../models/index'
 
 class WebSocketServer {
   start() {
-    const webSocketServer = new wss.Server({
+    const webSocketServer = new WebSocket.Server({
       port: 8080 || Number(process.env.PORT),
     })
 
-    webSocketServer.on('connection', (ws: wss) => {
+    webSocketServer.on('connection', (ws: WebSocket) => {
       /**
        * Handle messages that are sent by the client
        */
