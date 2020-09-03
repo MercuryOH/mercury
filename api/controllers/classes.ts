@@ -1,4 +1,4 @@
-import { Router } from 'express'
+import { Router, Request, Response } from 'express'
 const router = Router()
 import { authRequired } from '../../util/middleware'
 import models from '../../models/index'
@@ -10,8 +10,27 @@ const enrollSchema = joi.object({
   classId: joi.number().required(),
 })
 
-router.get('/', authRequired, async (req: any, res: any) => {
-  const classes = req.user.Classes.map((c: any) => ({
+interface EnrichedRequest extends Request {
+  user: User
+}
+
+interface User {
+  Classes: Array<Class>
+}
+
+interface Class {
+  id: number
+  name: string
+  calendarId: number
+  ClassUser: ClassUser
+}
+
+interface ClassUser {
+  role: string
+}
+
+router.get('/', authRequired, async (req: EnrichedRequest, res: Response) => {
+  const classes = req.user.Classes.map((c: Class) => ({
     id: c.id,
     name: c.name,
     calendarId: c.calendarId,
@@ -21,34 +40,38 @@ router.get('/', authRequired, async (req: any, res: any) => {
   return res.json(classes)
 })
 
-router.get('/class/:classId', authRequired, async (req, res) => {
-  const { classId: ClassId } = req.params
+router.get(
+  '/class/:classId',
+  authRequired,
+  async (req: EnrichedRequest, res) => {
+    const { classId: ClassId } = req.params
 
-  const currentClass = await models.Class.findByPk(ClassId, {
-    include: [{ model: models.Group }, { model: models.User }],
-  })
+    const currentClass = await models.Class.findByPk(ClassId, {
+      include: [{ model: models.Group }, { model: models.User }],
+    })
 
-  return res.json({
-    id: currentClass.id,
-    name: currentClass.name,
-    calendarId: currentClass.calendarId,
-    groups: currentClass.Groups.map((g: any) => ({
-      id: g.id,
-      name: g.name,
-      type: g.type,
-      sessionId: g.sessionId,
-      userId: g.UserId,
-      // users: g.users,
-    })),
-    users: currentClass.Users.map((u: any) => ({
-      id: u.id,
-      firstName: u.firstName,
-      lastName: u.lastName,
-      email: u.email,
-      role: u.ClassUser.role,
-    })),
-  })
-})
+    return res.json({
+      id: currentClass.id,
+      name: currentClass.name,
+      calendarId: currentClass.calendarId,
+      groups: currentClass.Groups.map((g: any) => ({
+        id: g.id,
+        name: g.name,
+        type: g.type,
+        sessionId: g.sessionId,
+        userId: g.UserId,
+        // users: g.users,
+      })),
+      users: currentClass.Users.map((u: any) => ({
+        id: u.id,
+        firstName: u.firstName,
+        lastName: u.lastName,
+        email: u.email,
+        role: u.ClassUser.role,
+      })),
+    })
+  }
+)
 
 router.get('/allClasses', authRequired, async (req, res) => {
   const allClasses = await models.Class.findAll()
