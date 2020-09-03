@@ -9,7 +9,7 @@ import 'react-notifications/lib/notifications.css'
 import 'react-quill/dist/quill.snow.css' // ES6
 import 'react-loader-spinner/dist/loader/css/react-spinner-loader.css'
 import 'react-confirm-alert/src/react-confirm-alert.css' // Import css
-import type { AppProps } from 'next/app'
+import { AppProps } from 'next/app'
 
 //Binding events.
 Router.events.on('routeChangeStart', () => NProgress.start())
