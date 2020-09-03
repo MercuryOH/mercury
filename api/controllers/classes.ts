@@ -29,21 +29,56 @@ interface ClassUser {
   role: string
 }
 
-router.get('/', authRequired, async (req: EnrichedRequest, res: Response) => {
-  const classes = req.user.Classes.map((c: Class) => ({
-    id: c.id,
-    name: c.name,
-    calendarId: c.calendarId,
-    role: c.ClassUser.role,
-  }))
+interface RootResponse {
+  id: number
+  name: string
+  calendarId: number
+  role: string
+}
 
-  return res.json(classes)
-})
+router.get(
+  '/',
+  authRequired,
+  async (req: EnrichedRequest, res: Response<Array<RootResponse>>) => {
+    const classes = req.user.Classes.map((c: Class) => ({
+      id: c.id,
+      name: c.name,
+      calendarId: c.calendarId,
+      role: c.ClassUser.role,
+    }))
+
+    return res.json(classes)
+  }
+)
+
+interface ClassClassIDResponse {
+  id: number
+  name: string
+  calendarId: number
+  groups: Group
+  users: ClassUser
+}
+
+interface Group {
+  id: number
+  name: string
+  type: string
+  sessionId: string
+  userId: number
+}
+
+interface ClassUser {
+  id: number
+  firstName: string
+  lastName: string
+  email: string
+  role: string
+}
 
 router.get(
   '/class/:classId',
   authRequired,
-  async (req: EnrichedRequest, res) => {
+  async (req: EnrichedRequest, res: Response<ClassClassIDResponse>) => {
     const { classId: ClassId } = req.params
 
     const currentClass = await models.Class.findByPk(ClassId, {
