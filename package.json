@@ -4,12 +4,10 @@
   "description": "ORIGIN Bootcamp",
   "main": "index.js",
   "scripts": {
-    "dev": "node dist/server.js",
+    "dev": "tsc --project serverTS/tsconfig.json && nodemon --inspect dist/server.js",
     "build": "next build",
-    "buildS": "tsc --project serverTS/tsconfig.json",
     "start": "NODE_ENV=production nodemon server.js",
-    "test": "jest",
-    "debug": "nodemon --inspect server.js"
+    "test": "jest"
   },
   "repository": {
     "type": "git",
