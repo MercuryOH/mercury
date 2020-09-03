@@ -73,16 +73,26 @@ router.get(
   }
 )
 
-router.get('/allClasses', authRequired, async (req, res) => {
-  const allClasses = await models.Class.findAll()
-  const all = allClasses.map((c: any) => ({
-    id: c.id,
-    name: c.name,
-    calendarId: c.calendarId,
-  }))
+interface AllClassesResponse {
+  id: number
+  name: string
+  calendarId: number
+}
 
-  return res.json(all)
-})
+router.get(
+  '/allClasses',
+  authRequired,
+  async (_req: EnrichedRequest, res: Response<Array<AllClassesResponse>>) => {
+    const allClasses = await models.Class.findAll()
+    const all = allClasses.map((c: Class) => ({
+      id: c.id,
+      name: c.name,
+      calendarId: c.calendarId,
+    }))
+
+    return res.json(all)
+  }
+)
 
 router.post('/addClass', authRequired, async (req, res) => {
   const { value, error } = enrollSchema.validate(req.body)
