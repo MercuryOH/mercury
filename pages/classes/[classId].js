@@ -64,6 +64,22 @@ class ClassPage extends Component {
       .then((groups) => this.setState({ allGroups: groups }))
   }
 
+  takeOne(arr) {
+    if (arr.length == 0) {
+      throw new Error('Should not be empty')
+    }
+
+    return arr[0]
+  }
+
+  isProfessor() {
+    const { currentClass } = this.state
+    const { users } = currentClass
+
+    const mySelf = users.filter(({ id }) => id === this.user.id)
+    return this.takeOne(mySelf).role == 'Professor'
+  }
+
   joinGroup(group) {
     api
       .postGroupToken(this.classId, group.id)
@@ -144,7 +160,7 @@ class ClassPage extends Component {
     this.fetchAllGroups() // re-fetch current groups
     EventEmitter.publish('classGroupSetChanged', this.classId) // tell everyone to re-fetch their groups in the class
     EventEmitter.publish('userLeaveGroup', this.state.currentGroup) // notify backend that you have left the call
-
+    console.log(this.isProfessor())
     this.setState({
       // leave the call
       vonageCred: null,
