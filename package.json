@@ -9,6 +9,9 @@
     "start": "npm run dev",
     "test": "jest"
   },
+  "engines": {
+    "node": "12.x"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/Claude-lu/mercury.git"
