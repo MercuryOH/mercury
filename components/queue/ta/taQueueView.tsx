@@ -240,8 +240,9 @@ export default class TAQueueView extends Component<
           marginBottom: '2%',
           minWidth: '41px',
           marginLeft: '.8%',
-          backgroundColor: 'red',
+          backgroundColor: '#03b5ad',
           marginRight: '1%',
+          color: 'white'
         }}
         key={currStudentBeingHelped.id}
       >
