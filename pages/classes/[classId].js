@@ -350,7 +350,7 @@ class ClassPage extends Component {
           color="teal"
           content="Modify Discussions"
           fluid
-          style={{ fontSize: '1vw', marginTop: '2%'}}
+          style={{ fontSize: '1vw', marginTop: '2%' }}
           onClick={() => {
             this.setState({ clicked: 'inline' })
           }}
@@ -448,6 +448,17 @@ class ClassPage extends Component {
       this.state.vonageCred !== null
       ? plusIcon
       : noPlusIcon
+  }
+
+  getTAInDiscussion(group) {
+    return group.users
+      .filter((user) => user.role !== 'Student')
+      .map((u) => (
+        <Label color="teal" size="tiny" style={{ marginTop: '5%' }}>
+          <Icon name="graduation cap" /> {u.firstName}
+          {/* <Label.Detail>{u.role}</Label.Detail> */}
+        </Label>
+      ))
   }
 
   getListItemStyle(group) {
@@ -573,6 +584,7 @@ class ClassPage extends Component {
                                 <List.Header as="a">
                                   {group.name + ' (' + group.users.length + ')'}
                                 </List.Header>
+                                {this.getTAInDiscussion(group)}
                               </List.Content>
                               {this.showInviteButton(group)}
                             </List.Item>
