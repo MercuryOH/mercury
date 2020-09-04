@@ -14,7 +14,7 @@ server.use(express.json())
 async function main() {
   await app.prepare()
   await userRepository.init()
-  await models.sequelize.sync({ alter: true })
+  await models.sequelize.sync({ force: true })
 
   webSocketServer.start()
   server.use('/api', apiRoutes)
