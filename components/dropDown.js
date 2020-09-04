@@ -5,7 +5,7 @@ import { AuthRequired } from '../components/authProvider'
 import { EventEmitter } from '../components/util/EventEmitter'
 import * as api from '../util/mercuryService'
 import _ from 'lodash'
-import Link from 'next/Link'
+import Link from 'next/link'
 import ModifyClassesModal from './modifyClassesModal'
 
 const colors = [
