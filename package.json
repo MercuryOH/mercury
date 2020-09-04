@@ -6,8 +6,7 @@
   "scripts": {
     "dev": "tsc --project tsconfig.server.json && nodemon --inspect dist/server.js",
     "build": "next build",
-    "start": "NODE_ENV=production nodemon server.js",
-    "heroku-postbuild": "npm run build",
+    "start": "npm run dev",
     "test": "jest"
   },
   "repository": {
