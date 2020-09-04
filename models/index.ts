@@ -9,7 +9,7 @@ import User from './user'
 
 const db: any = {}
 
-let sequelize = new Sequelize(process.env.POSTGRES_CONNECTION_STRING, {
+let sequelize = new Sequelize(process.env.DATABASE_URL, {
   logging: false,
 })
 
