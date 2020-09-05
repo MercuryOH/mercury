@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "tsc --project tsconfig.server.json && nodemon --inspect dist/server.js",
     "build": "next build",
-    "start": "npm run build && npm run dev",
+    "start": "tsc --project tsconfig.server.json && node dist/server.js",
     "test": "jest"
   },
   "engines": {
