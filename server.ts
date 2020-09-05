@@ -21,7 +21,7 @@ async function main() {
   server.all('*', (req, res) => handle(req, res))
 
   server.listen(process.env.PORT || 3000, () => {
-    console.log(`Mercury running in port ${Number(process.env.PORT) || 3000}`)
+    console.log(`Mercury running in port ${process.env.PORT || 3000}`)
   })
 }
 
