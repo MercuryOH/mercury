@@ -106,7 +106,7 @@ class DropDown extends Component {
                                       width: '100%',
                                       minWidth: '41px',
                                     }}
-                                    color={colors[(c.id - 2) % colors.length]}
+                                    color={colors[c.id % colors.length]}
                                     content={c.name}
                                   />
                                 </Link>
@@ -172,7 +172,7 @@ class DropDown extends Component {
                                   width: '100%',
                                   minWidth: '41px',
                                 }}
-                                color={colors[(c.id - 2) % colors.length]}
+                                color={colors[c.id % colors.length]}
                                 content={c.name}
                                 onClick={() => {
                                   EventEmitter.publish('createTAOffice', {

@@ -14,6 +14,13 @@ const colors = [
   'C0CA33', //olive
   '0B8043', //green
   '009688', //teal
+  '4285F4', //blue
+  '8E24AA', //violet
+  '9E69AF', //purple
+  'E67C73', //pink
+  '795548', //brown
+  'A79B8E', //gray
+  '616161', //black
 ]
 
 /**
@@ -62,7 +69,7 @@ class Calendar extends Component<CalendarProps, CalendarState> {
           '&src=' +
           c.calendarId +
           '&color=%23' +
-          colors[(c.id - 2) % colors.length]
+          colors[c.id % colors.length]
       })
 
     return src

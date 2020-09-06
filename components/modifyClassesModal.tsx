@@ -1,5 +1,4 @@
 import React, { Component } from 'react'
-import PropTypes from 'prop-types'
 import {
   Modal,
   Button,
@@ -12,13 +11,50 @@ import _ from 'lodash'
 import * as api from '../util/mercuryService'
 import { EventEmitter } from './util/EventEmitter'
 
-class ModifyClassesModal extends Component {
-  constructor(props) {
+interface ModifyClassesModalProps {}
+
+interface ModifyClassesModalState {
+  modalState: boolean
+  classRoles: Array<ClassRole>
+  user: User
+  codeToClass: Map<number, string>
+}
+
+/** Type User returned from api.getMe */
+interface User {
+  id: number
+  firstName: string
+  lastName: string
+  email: string
+}
+
+/** Type ClassRole returned from api.getClass */
+interface ClassRole {
+  id: number
+  name: string
+  calendarId: number
+  role: string
+}
+
+/** Type ClassGeneral returned from api.getAllClasses */
+interface ClassGeneral {
+  id: number
+  name: string
+  calendarId: number
+}
+
+export default class ModifyClassesModal extends Component<
+  ModifyClassesModalProps,
+  ModifyClassesModalState
+> {
+  constructor(props: ModifyClassesModalProps) {
     super(props)
 
     this.state = {
       modalState: false,
       classRoles: [],
+      user: { id: -1, firstName: '', lastName: '', email: '' },
+      codeToClass: new Map(),
     }
   }
 
@@ -26,15 +62,16 @@ class ModifyClassesModal extends Component {
     const classRoles = []
     api
       .getMe()
-      .then((meData) => {
-        this.user = meData
+      .then((user) => {
+        this.setState({ user })
       })
       .then(() => api.getAllClasses())
       .then((classes) => {
-        console.log(classes)
-        classes.map((cc) => {
+        classes.map((cc: ClassGeneral) => {
           api.getClass(cc.id).then((c) => {
-            const userRole = c.users.find((u) => u.id === this.user.id)
+            const userRole = c.users.find(
+              (u: User) => u.id === this.state.user.id
+            )
             classRoles.push({
               ...cc,
               role: userRole ? userRole.role : '',
@@ -49,32 +86,62 @@ class ModifyClassesModal extends Component {
 
   handleSubmit = () => {
     this.setState({ modalState: false })
-    EventEmitter.publish('currentlyEnrolled', this.state.classRoles)
+    this.verifyCode()
     this.state.classRoles.forEach((c) => {
       if (c.role === '') {
-        api.deleteClassUser(c.id, this.user.id)
+        api.deleteClassUser(c.id, this.state.user.id)
       } else if (c.role === 'Student') {
-        api.postAddClass(c.id, this.user.id, c.role)
+        api.postAddClass(c.id, this.state.user.id, c.role)
       }
+    })
+    EventEmitter.publish('currentlyEnrolled', this.state.classRoles)
+  }
+
+  verifyCode() {
+    this.state.codeToClass.forEach((code, classId) => {
+      //verify code
+      //api.postAddClass
+      //map over this.state.classRoles to update with the new role
+      //alert when the verificaion fails
     })
   }
 
-  // getTACell(classRole) {
-  //   return classRole === 'Student' || classRole === '' ? (
-  //     <Input placeholder={'Enter permission code...'} />
-  //   ) : (
-  // <Header as="h4">
-  //   <Header.Content>{'verified ' + classRole}</Header.Content>
-  // </Header>
-  //   )
-  // }
+  getTACell(classRole: ClassRole) {
+    return classRole.role === 'Student' || classRole.role === '' ? (
+      <Input
+        placeholder={'Enter permission code...'}
+        value={
+          this.state.codeToClass.has(classRole.id)
+            ? this.state.codeToClass.get(classRole.id)
+            : ''
+        }
+        onChange={_.debounce(
+          (e, { value }) => {
+            this.setState({
+              codeToClass: new Map(
+                this.state.codeToClass.set(classRole.id, value)
+              ),
+            })
+          },
+          500,
+          {
+            leading: true,
+          }
+        )}
+      ></Input>
+    ) : (
+      <Header as="h4">
+        <Header.Content>{'verified ' + classRole}</Header.Content>
+      </Header>
+    )
+  }
 
   render() {
     return (
       <div>
         <Modal
           style={{
-            borderless: 'true',
+            border: 'none',
             width: '40%',
             height: '40%',
           }}
@@ -84,9 +151,7 @@ class ModifyClassesModal extends Component {
               content="Modify Class"
               fluid
               style={{ fontSize: '1vw' }}
-              onClick={() =>
-                this.setState({ groupName: '', value: '', modalState: true })
-              }
+              onClick={() => this.setState({ modalState: true, codeToClass: new Map() })}
             />
           }
           open={this.state.modalState}
@@ -111,11 +176,11 @@ class ModifyClassesModal extends Component {
                       Classes
                     </Table.HeaderCell>
                     <Table.HeaderCell style={{ textAlign: 'center' }}>
-                      Enrolled
+                      Student
                     </Table.HeaderCell>
-                    {/* <Table.HeaderCell style={{ textAlign: 'center' }}>
+                    <Table.HeaderCell style={{ textAlign: 'center' }}>
                       TA/Professor
-                    </Table.HeaderCell> */}
+                    </Table.HeaderCell>
                   </Table.Row>
                 </Table.Header>
 
@@ -128,7 +193,7 @@ class ModifyClassesModal extends Component {
                         </Header>
                       </Table.Cell>
                       <Table.Cell style={{ textAlign: 'center' }}>
-                        {/* <Checkbox
+                        <Checkbox
                           disabled={c.role === 'Professor' || c.role === 'TA'}
                           checked={c.role === 'Student'}
                           onChange={() =>
@@ -147,8 +212,8 @@ class ModifyClassesModal extends Component {
                               }),
                             })
                           }
-                        /> */}
-                        {c.role === 'Professor' || c.role === 'TA' ? (
+                        />
+                        {/* {c.role === 'Professor' || c.role === 'TA' ? (
                           <Header as="h4">
                             <Header.Content>
                               {'verified ' + c.role}
@@ -174,11 +239,11 @@ class ModifyClassesModal extends Component {
                               })
                             }
                           />
-                        )}
+                        )} */}
                       </Table.Cell>
-                      {/* <Table.Cell style={{ textAlign: 'center' }}>
-                        {this.getTACell(c.role)}
-                      </Table.Cell> */}
+                      <Table.Cell style={{ textAlign: 'center' }}>
+                        {this.getTACell(c)}
+                      </Table.Cell>
                     </Table.Row>
                   ))}
                 </Table.Body>
@@ -207,5 +272,3 @@ class ModifyClassesModal extends Component {
     )
   }
 }
-
-export default ModifyClassesModal

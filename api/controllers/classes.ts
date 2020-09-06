@@ -10,6 +10,11 @@ const enrollSchema = joi.object({
   classId: joi.number().required(),
 })
 
+const createClassSchema = joi.object({
+  name: joi.string().required(),
+  calendarId: joi.string().required(),
+})
+
 interface EnrichedRequest extends Request {
   user: User
 }
@@ -138,11 +143,11 @@ router.post('/addClass', authRequired, async (req, res) => {
   }
 
   const user = await models.ClassUser.findOne({
-    where: { ClassId: value.classId, UserId: value.userId },
+    where: { ClassId: value.classId, UserId: value.userId, role: value.role },
   })
 
   if (!user) {
-    //the user hasn't enrolled in the class yet
+    //the user hasn't enrolled in the class yet or has a different role
     await models.ClassUser.create({
       ClassId: value.classId,
       UserId: value.userId,
@@ -174,5 +179,33 @@ router.delete(
     res.status(204).send()
   }
 )
+
+router.post('/createClass', async (req, res) => {
+  const { value, error } = createClassSchema.validate(req.body)
+
+  if (error) {
+    return res.status(400).json({ error })
+  }
+
+  try {
+    const existingClass = await models.Class.findOne({
+      where: { name: value.name },
+    })
+
+    if (existingClass) {
+      throw new Error('Class with same name already exists')
+    }
+
+    const newClass = await models.Class.create(value)
+
+    return res.json({
+      id: newClass.id,
+      name: newClass.name,
+      calendarId: newClass.calendarId,
+    })
+  } catch (err) {
+    return res.status(400).json({ error: err.message || err })
+  }
+})
 
 export default router
