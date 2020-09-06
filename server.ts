@@ -14,14 +14,14 @@ server.use(express.json())
 async function main() {
   await app.prepare()
   await userRepository.init()
-  await models.sequelize.sync({ force: true })
+  await models.sequelize.sync({ alter: true })
 
   webSocketServer.start()
   server.use('/api', apiRoutes)
   server.all('*', (req, res) => handle(req, res))
 
-  server.listen(Number(process.env.PORT) || 3000, () => {
-    console.log(`Mercury running in port ${Number(process.env.PORT) || 3000}`)
+  server.listen(process.env.PORT || 3000, () => {
+    console.log(`Mercury running in port ${process.env.PORT || 3000}`)
   })
 }
 
