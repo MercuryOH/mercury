@@ -214,6 +214,10 @@ export default class StudentWebSocketClient {
     EventEmitter.publish('removeGroupJoinRequestModal')
   }
 
+  activateReceiveBroadcastModal(data) {
+    EventEmitter.publish('receiveBroadcast', data)
+  }
+
   processConnectionMessage(e) {
     const { msgType, msg } = JSON.parse(e.data)
 
@@ -276,6 +280,10 @@ export default class StudentWebSocketClient {
 
       case 'inviteStoppedWaitingForApproval':
         this.removeGroupJoinRequestModal()
+        break
+
+      case 'receiveBroadcast':
+        this.activateReceiveBroadcastModal(msg)
         break
 
       default:

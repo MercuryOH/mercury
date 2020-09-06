@@ -47,7 +47,6 @@ class DropDown extends Component {
     EventEmitter.subscribe('currentlyEnrolled', (classes) => {
       this.setState({ classes })
     })
-    console.log(this.state.classes)
   }
 
   render() {

@@ -141,6 +141,17 @@ const handleInstructorMessage = async (ws: any, message: string) => {
       await groupManager.appointNewLeader(msg)
       break
 
+    case 'broadcastToClass':
+      // msg - content and sender TA info
+      webSocketConnectionManager.broadcast(
+        courseId,
+        prepareMessage({
+          msgType: 'receiveBroadcast',
+          msg: msg,
+        })
+      )
+      break
+
     default:
       throw new Error(
         `Message Type ${msgType} is not recognized for instructor`

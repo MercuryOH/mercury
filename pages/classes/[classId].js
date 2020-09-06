@@ -20,6 +20,7 @@ import WaitingForNewLeaderModal from '../../components/WaitingForNewLeaderModal'
 import AccessDeniedModal from '../../components/accessDeniedModal'
 import OfficeAccessModal from '../../components/officeAccessModal'
 import BroadcastModal from '../../components/broadcastModal'
+import ReceiveBroadcastModal from '../../components/receiveBroadcastModal'
 import { confirmAlert } from 'react-confirm-alert' // Import
 
 const ScreenContainer = dynamic(
@@ -742,6 +743,7 @@ class ClassPage extends Component {
         <WaitingForRequestApprovalModal />
         <NotificationContainer />
         <WaitingForNewLeaderModal userId={this.user.id} />
+        <ReceiveBroadcastModal userId={this.user.id}/>
       </Layout>
     )
   }
