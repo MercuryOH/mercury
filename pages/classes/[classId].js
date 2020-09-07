@@ -87,6 +87,8 @@ class ClassPage extends Component {
   }
 
   joinGroup(group) {
+    this.fetchAllGroups()
+    if (this.state.allGroups.filter(g => g.id == group.id).length > 0 || group.UserId == this.user.id) {
     api
       .postGroupToken(this.classId, group.id)
       .then(({ token }) => {
@@ -131,6 +133,7 @@ class ClassPage extends Component {
         this.fetchAllGroups()
       })
       .catch(console.error)
+    }
   }
 
   leaveGroupForTAOffice = () => {
