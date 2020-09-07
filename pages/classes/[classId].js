@@ -20,6 +20,7 @@ import WaitingForNewLeaderModal from '../../components/WaitingForNewLeaderModal'
 import AccessDeniedModal from '../../components/accessDeniedModal'
 import OfficeAccessModal from '../../components/officeAccessModal'
 import BroadcastModal from '../../components/broadcastModal'
+import ReceiveBroadcastModal from '../../components/receiveBroadcastModal'
 import { confirmAlert } from 'react-confirm-alert' // Import
 
 const ScreenContainer = dynamic(
@@ -86,6 +87,8 @@ class ClassPage extends Component {
   }
 
   joinGroup(group) {
+    this.fetchAllGroups()
+    if (this.state.allGroups.filter(g => g.id == group.id).length > 0 || group.UserId == this.user.id) {
     api
       .postGroupToken(this.classId, group.id)
       .then(({ token }) => {
@@ -130,6 +133,7 @@ class ClassPage extends Component {
         this.fetchAllGroups()
       })
       .catch(console.error)
+    }
   }
 
   leaveGroupForTAOffice = () => {
@@ -742,6 +746,7 @@ class ClassPage extends Component {
         <WaitingForRequestApprovalModal />
         <NotificationContainer />
         <WaitingForNewLeaderModal userId={this.user.id} />
+        <ReceiveBroadcastModal userId={this.user.id}/>
       </Layout>
     )
   }

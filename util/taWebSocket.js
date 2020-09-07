@@ -92,6 +92,15 @@ export default class TAWebSocketClient {
         })
       )
     })
+
+    EventEmitter.subscribe('broadcastToClass', (data) => {
+      this.connection.send(
+        this.prepareMessage({
+          msgType: 'broadcastToClass',
+          msg: data,
+        })
+      )
+    })
   }
 
   processConnectionOpen() {
@@ -159,6 +168,10 @@ export default class TAWebSocketClient {
     EventEmitter.publish('removeWaitingForNewLeaderModal', newLeaderId)
   }
 
+  activateReceiveBroadcastModal(data){
+    EventEmitter.publish('receiveBroadcast', data)
+  }
+
   processConnectionMessage(e) {
     const { msgType, msg } = JSON.parse(e.data)
 
@@ -218,6 +231,11 @@ export default class TAWebSocketClient {
 
       case 'wonLeaderBid':
         this.removeWaitingForNewLeaderModal(msg)
+        break
+
+      case 'receiveBroadcast':
+        this.activateReceiveBroadcastModal(msg)
+        break
 
       default:
         throw new Error(`Message ${msg} is incorrectly formatted`)

@@ -1,12 +1,22 @@
 import React, { Component } from 'react'
-import { Modal, Header, Button, Form } from 'semantic-ui-react'
+import { Modal, Header, Button, Form, TextArea } from 'semantic-ui-react'
 import { EventEmitter } from './util/EventEmitter'
+import * as api from '../util/mercuryService'
+
+/** Type User returned from api.getMe */
+interface User {
+  id: number
+  firstName: string
+  lastName: string
+  email: string
+}
 
 interface BroadcastModalProps {}
 
 interface BroadcastModalState {
   content: string
   modalState: boolean
+  user: User
 }
 
 export default class BroadcastModal extends Component<
@@ -18,7 +28,14 @@ export default class BroadcastModal extends Component<
     this.state = {
       content: '',
       modalState: false,
+      user: { id: -1, firstName: '', lastName: '', email: '' },
     }
+  }
+
+  componentDidMount() {
+    api.getMe().then((user) => {
+      this.setState({ user })
+    })
   }
 
   render() {
@@ -63,17 +80,24 @@ export default class BroadcastModal extends Component<
                 padding: '5%',
               }}
             >
-              <Form.TextArea
-                placeholder="Message to broadcast..."
-                content={this.state.content}
-                style={{
-                  width: '90%',
-                  height: '100%',
-                  resize: 'none',
-                  padding: '2%',
-                  fontSize: '1vw',
-                }}
-              />
+              <Form>
+                <TextArea
+                  placeholder="Message to broadcast..."
+                  style={{
+                    width: '90%',
+                    height: '100%',
+                    resize: 'none',
+                    padding: '2%',
+                    fontSize: '1vw',
+                  }}
+                  onInput={(
+                    event: React.FormEvent<HTMLTextAreaElement>,
+                    data
+                  ) => {
+                    this.setState({ content: data.value as string })
+                  }}
+                />
+              </Form>
             </div>
 
             <div
@@ -89,7 +113,11 @@ export default class BroadcastModal extends Component<
                 color="yellow"
                 style={{ width: '50%', fontSize: '1vw' }}
                 onClick={() => {
-                  //broadcast
+                  //broadcast message
+                  EventEmitter.publish('broadcastToClass', {
+                    content: this.state.content,
+                    sender: this.state.user,
+                  })
                   this.setState({ modalState: false })
                 }}
                 content={'Send'}
