@@ -79,7 +79,10 @@ class ClassPage extends Component {
     const { users } = currentClass
 
     const mySelf = users.filter(({ id }) => id === this.user.id)
-    return this.takeOne(mySelf).role == 'Professor'
+    return (
+      this.takeOne(mySelf).role === 'Professor' ||
+      this.takeOne(mySelf).role === 'TA'
+    )
   }
 
   needToBootStudent() {
@@ -88,51 +91,54 @@ class ClassPage extends Component {
 
   joinGroup(group) {
     this.fetchAllGroups()
-    if (this.state.allGroups.filter(g => g.id == group.id).length > 0 || group.UserId == this.user.id) {
-    api
-      .postGroupToken(this.classId, group.id)
-      .then(({ token }) => {
-        if (this.state.currentGroup.id !== '') {
-          //the user is currently in a call, leave the call first
+    if (
+      this.state.allGroups.filter((g) => g.id == group.id).length > 0 ||
+      group.UserId == this.user.id
+    ) {
+      api
+        .postGroupToken(this.classId, group.id)
+        .then(({ token }) => {
+          if (this.state.currentGroup.id !== '') {
+            //the user is currently in a call, leave the call first
 
-          if (group.type === 'office') {
-            // this case only happens when the user is leaving a private group for the TA office
-            // do not trigger the callOver event in this case
-            this.leaveGroupForTAOffice()
-          } else {
-            this.leaveGroup()
+            if (group.type === 'office') {
+              // this case only happens when the user is leaving a private group for the TA office
+              // do not trigger the callOver event in this case
+              this.leaveGroupForTAOffice()
+            } else {
+              this.leaveGroup()
+            }
           }
-        }
 
-        this.setState(
-          {
-            vonageCred: { sessionId: group.sessionId, token },
-            currentGroup: group,
-          },
-          () => {
-            EventEmitter.publish('userJoinGroup', {
-              groupId: group.id,
-              userId: this.user.id,
-              groupType: group.type,
-            })
-            EventEmitter.publish('currentGroupChange', group)
+          this.setState(
+            {
+              vonageCred: { sessionId: group.sessionId, token },
+              currentGroup: group,
+            },
+            () => {
+              EventEmitter.publish('userJoinGroup', {
+                groupId: group.id,
+                userId: this.user.id,
+                groupType: group.type,
+              })
+              EventEmitter.publish('currentGroupChange', group)
 
-            // log the credentials of your most recent call
-            localStorage.setItem('lastCallEntered', JSON.stringify(group))
-          }
-        )
-      })
-      .then(() => {
-        api
-          .postJoinGroup(this.classId, group.id, this.user.email)
-          .then(() =>
-            EventEmitter.publish('classGroupSetChanged', this.classId)
+              // log the credentials of your most recent call
+              localStorage.setItem('lastCallEntered', JSON.stringify(group))
+            }
           )
-      })
-      .then(() => {
-        this.fetchAllGroups()
-      })
-      .catch(console.error)
+        })
+        .then(() => {
+          api
+            .postJoinGroup(this.classId, group.id, this.user.email)
+            .then(() =>
+              EventEmitter.publish('classGroupSetChanged', this.classId)
+            )
+        })
+        .then(() => {
+          this.fetchAllGroups()
+        })
+        .catch(console.error)
     }
   }
 
@@ -158,6 +164,9 @@ class ClassPage extends Component {
   }
 
   leaveGroup = () => {
+    const needToBootStudent = this.needToBootStudent()
+    console.log(this.isProfessor())
+    const currentGroupId = this.state.currentGroup.id
     api
       .deleteGroupUser(
         this.state.currentClass.id,
@@ -184,7 +193,9 @@ class ClassPage extends Component {
     EventEmitter.publish('currentGroupChange', { id: '', name: '' }) // change current group
     EventEmitter.publish('callOver', {
       classId: this.classId,
-      needToBootStudent: this.needToBootStudent(),
+      needToBootStudent,
+      currentGroupId,
+      myId: this.user.id,
     }) // signal call over, which triggers feedback modal and curr student update on the queue
     localStorage.removeItem('lastCallEntered')
   }
@@ -226,6 +237,13 @@ class ClassPage extends Component {
 
     EventEmitter.subscribe('leaveCallOnError', () => {
       this.leaveGroup()
+    })
+
+    EventEmitter.subscribe('bootFromCall', (groupToBoot) => {
+      if (this.state.currentGroup.id === groupToBoot) {
+        this.leaveGroup()
+        NotificationManager.info(`The TA Has Finished Helping You`)
+      }
     })
   }
 
@@ -746,7 +764,7 @@ class ClassPage extends Component {
         <WaitingForRequestApprovalModal />
         <NotificationContainer />
         <WaitingForNewLeaderModal userId={this.user.id} />
-        <ReceiveBroadcastModal userId={this.user.id}/>
+        <ReceiveBroadcastModal userId={this.user.id} />
       </Layout>
     )
   }

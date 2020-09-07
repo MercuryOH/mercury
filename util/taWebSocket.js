@@ -101,6 +101,15 @@ export default class TAWebSocketClient {
         })
       )
     })
+
+    EventEmitter.subscribe('bootStudent', (payload) => {
+      this.connection.send(
+        this.prepareMessage({
+          msgType: 'bootStudent',
+          msg: payload,
+        })
+      ) // send the groupid corresponding to the TA office
+    })
   }
 
   processConnectionOpen() {
@@ -168,7 +177,7 @@ export default class TAWebSocketClient {
     EventEmitter.publish('removeWaitingForNewLeaderModal', newLeaderId)
   }
 
-  activateReceiveBroadcastModal(data){
+  activateReceiveBroadcastModal(data) {
     EventEmitter.publish('receiveBroadcast', data)
   }
 

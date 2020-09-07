@@ -8,7 +8,7 @@ import models from '../../models/index'
 import { prepareMessage } from './util'
 
 class GroupManager {
-  groupToSockets: Map<any, any>
+  groupToSockets: Map<number, any>
   socketToGroup: Map<any, any>
   constructor() {
     this.groupToSockets = new Map()
@@ -119,11 +119,22 @@ class GroupManager {
    * @param {*} msg
    */
 
-  broadcast(groupId: any, msg: string) {
+  broadcast(groupId: number, msg: string) {
     if (this.groupToSockets.has(groupId)) {
       const sockets = this.groupToSockets.get(groupId)
       sockets.forEach(({ ws }: any) => {
         ws.send(msg)
+      })
+    }
+  }
+
+  broadcastToAllExcept(groupId: number, idToAvoid: number, msg: string) {
+    if (this.groupToSockets.has(groupId)) {
+      const sockets = this.groupToSockets.get(groupId)
+      sockets.forEach(({ ws, userId }: any) => {
+        if (userId !== idToAvoid) {
+          ws.send(msg)
+        }
       })
     }
   }
