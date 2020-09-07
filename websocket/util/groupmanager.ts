@@ -1,3 +1,4 @@
+import WebSocket from 'ws'
 /**
  * Map group ID to the set of websockets involved in the group
  * Controls deletion of groups when they become non-empty
@@ -7,15 +8,34 @@
 import models from '../../models/index'
 import { prepareMessage } from './util'
 
+interface SocketDescriptor {
+  ws: WebSocket
+  userId: number
+  groupType: string
+}
+
+interface GroupDescriptor {
+  groupId: number
+  groupType: string
+}
+
 class GroupManager {
-  groupToSockets: Map<number, any>
-  socketToGroup: Map<any, any>
+  groupToSockets: Map<number, Set<SocketDescriptor>>
+  socketToGroup: Map<WebSocket, GroupDescriptor>
+
   constructor() {
     this.groupToSockets = new Map()
     this.socketToGroup = new Map()
   }
 
-  addSocketToGroup({ groupId, userId, groupType }: any, ws: any) {
+  addSocketToGroup(
+    {
+      groupId,
+      userId,
+      groupType,
+    }: { groupId: number; userId: number; groupType: string },
+    ws: WebSocket
+  ) {
     if (!this.groupToSockets.has(groupId)) {
       this.groupToSockets.set(groupId, new Set())
     }
@@ -24,7 +44,7 @@ class GroupManager {
     this.socketToGroup.set(ws, { groupId, groupType })
   }
 
-  async removeSocket(ws: any) {
+  async removeSocket(ws: WebSocket) {
     if (this.socketToGroup.has(ws)) {
       const { groupId, groupType } = this.socketToGroup.get(ws)
       await this.removeSocketFromGroup({ id: groupId, type: groupType }, ws)
@@ -33,8 +53,8 @@ class GroupManager {
   }
 
   async removeSocketFromGroup(
-    { id: groupId, type }: { id: any; type: any },
-    sender: any
+    { id: groupId, type }: { id: number; type: string },
+    sender: WebSocket
   ) {
     if (this.groupToSockets.has(groupId)) {
       const sockets = this.groupToSockets.get(groupId)
@@ -82,7 +102,7 @@ class GroupManager {
     }
   }
 
-  getGroupSize(groupId: any) {
+  getGroupSize(groupId: number) {
     if (this.groupToSockets.has(groupId)) {
       return this.groupToSockets.get(groupId).size
     }
@@ -90,7 +110,15 @@ class GroupManager {
     return 0
   }
 
-  async appointNewLeader({ newLeader, oldLeader, groupId }: any) {
+  async appointNewLeader({
+    newLeader,
+    oldLeader,
+    groupId,
+  }: {
+    newLeader: number
+    oldLeader: number
+    groupId: number
+  }) {
     const group = await models.Group.findOne({ where: { id: groupId } })
     if (group.UserId === oldLeader) {
       // the first guy to get here gets appointed as leader
@@ -139,7 +167,7 @@ class GroupManager {
     }
   }
 
-  getSocketGroupId(ws: any) {
+  getSocketGroupId(ws: WebSocket) {
     if (this.socketToGroup.has(ws)) {
       return this.socketToGroup.get(ws).groupId
     }
