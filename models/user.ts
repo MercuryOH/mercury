@@ -3,16 +3,16 @@ import bcrypt from 'bcrypt'
 
 export default (sequelize: any, DataTypes: any) => {
   class User extends Model {
-    password: string
+    //password: string
 
     static associate(models: any) {
       User.belongsToMany(models.Class, { through: 'ClassUser' })
       User.hasMany(models.Group)
     }
 
-    isPasswordMatch(password: any) {
-      return bcrypt.compareSync(password, this.password)
-    }
+    // isPasswordMatch(password: any) {
+    //   return bcrypt.compareSync(password, this.password)
+    // }
   }
 
   User.init(
@@ -20,7 +20,8 @@ export default (sequelize: any, DataTypes: any) => {
       firstName: DataTypes.STRING,
       lastName: DataTypes.STRING,
       email: DataTypes.STRING,
-      password: DataTypes.STRING,
+      //password: DataTypes.STRING,
+      profile: DataTypes.STRING,
     },
     {
       sequelize,
@@ -28,9 +29,9 @@ export default (sequelize: any, DataTypes: any) => {
     }
   )
 
-  User.beforeCreate((user) => {
-    user.password = bcrypt.hashSync(user.password, 10)
-  })
+  // User.beforeCreate((user) => {
+  //   user.password = bcrypt.hashSync(user.password, 10)
+  // })
 
   return User
 }

@@ -6,9 +6,24 @@ export function setToken(t) {
   token = t
 }
 
-export async function postLogin(email, password) {
+// export async function postLogin(email, password) {
+//   try {
+//     const { data } = await axios.post('/api/users/login', { email, password })
+
+//     return data
+//   } catch (e) {
+//     return null
+//   }
+// }
+
+export async function postLogin(email, firstName, lastName, profile) {
   try {
-    const { data } = await axios.post('/api/users/login', { email, password })
+    const { data } = await axios.post('/api/users/login', {
+      email,
+      firstName,
+      lastName,
+      profile,
+    })
 
     return data
   } catch (e) {
