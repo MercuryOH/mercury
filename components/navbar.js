@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from 'react'
+import React from 'react'
 import styled from 'styled-components'
 import { useRouter } from 'next/router'
-import { Menu, Image, Label, Dropdown } from 'semantic-ui-react'
+import { Menu, Image, Label, Dropdown} from 'semantic-ui-react'
 import { useAuth } from './authProvider'
 
 const ProfileContainer = styled.div`
@@ -22,7 +22,7 @@ function Navbar() {
           <Dropdown
             icon={
               <Image
-                src="https://images.unsplash.com/photo-1495211895963-08d8812dcbf0?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1650&q=80"
+                src={user.profile}
                 style={{ marginLeft: 10, marginRight: 10 }}
                 avatar
               />
