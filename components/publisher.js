@@ -45,7 +45,8 @@ export default class Publisher extends Component {
             name: this.props.name,
             style: {
               buttonDisplayMode: 'on',
-              nameDisplayMode: 'on'
+              nameDisplayMode: 'on',
+              backgroundImageURI: this.props.profile
             }
           }}
           session={this.props.session}

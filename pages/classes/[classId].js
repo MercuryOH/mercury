@@ -732,6 +732,7 @@ class ClassPage extends Component {
             token={this.state.vonageCred.token}
             onLeave={this.leaveGroup}
             name={this.user.firstName + ' ' + this.user.lastName}
+            profile={this.user.profile}
           />
         )}
         <OfficeAccessModal />
