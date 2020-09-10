@@ -123,7 +123,7 @@ export default class ModifyClassesModal extends Component<
     this.state.classRoles.forEach((c) => {
       if (c.role === '') {
         api.deleteClassUser(c.id, this.state.user.id)
-      } else {
+      } else if (c.role === 'Student') {
         api.postAddClass(c.id, this.state.user.id, c.role)
       }
     })
