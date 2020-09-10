@@ -34,6 +34,7 @@ interface ClassRole {
   name: string
   calendarId: number
   role: string
+  classCode: number
 }
 
 /** Type ClassGeneral returned from api.getAllClasses */
@@ -99,6 +100,11 @@ export default class ModifyClassesModal extends Component<
 
   verifyCode() {
     this.state.codeToClass.forEach((code, classId) => {
+      if (code === api.getClass(classId).classCode) {
+        api.postAddClass( classId, this.state.user.id, 'TA').then(() => {
+          _.find(this.state.classRoles, ['id', classId].role = 'TA')
+        })
+      }
       //verify code
       //api.postAddClass
       //map over this.state.classRoles to update with the new role
