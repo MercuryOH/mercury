@@ -23,7 +23,7 @@ module.exports = {
         type: Sequelize.STRING
       },
       classCode:{
-        type: Sequelize.INTEGER
+        type: Sequelize.STRING
       }
     });
   },

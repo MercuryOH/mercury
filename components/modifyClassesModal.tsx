@@ -10,6 +10,7 @@ import {
 import _ from 'lodash'
 import * as api from '../util/mercuryService'
 import { EventEmitter } from './util/EventEmitter'
+import { NotificationContainer, NotificationManager } from 'react-notifications'
 
 interface ModifyClassesModalProps {}
 
@@ -34,7 +35,7 @@ interface ClassRole {
   name: string
   calendarId: number
   role: string
-  classCode: number
+  classCode: string
 }
 
 /** Type ClassGeneral returned from api.getAllClasses */
@@ -42,6 +43,7 @@ interface ClassGeneral {
   id: number
   name: string
   calendarId: number
+  classCode: string
 }
 
 export default class ModifyClassesModal extends Component<
@@ -87,29 +89,46 @@ export default class ModifyClassesModal extends Component<
 
   handleSubmit = () => {
     this.setState({ modalState: false })
-    this.verifyCode()
+    //enroll as TA
+    this.state.codeToClass.forEach((code, classId, map) => {
+      const cr = _.find(this.state.classRoles, { id: classId })
+
+      if (code === cr.classCode) {
+        this.setState(
+          (state) => ({
+            classRoles: state.classRoles.map((cc) => {
+              if (cc.id === classId) {
+                return {
+                  ...cc,
+                  role: 'TA',
+                }
+              }
+
+              return cc
+            }),
+          }),
+          () => {
+            const c = _.find(this.state.classRoles, { id: classId })
+            if (c.role === 'TA') {
+              api.postAddClass(classId, this.state.user.id, 'TA')
+              EventEmitter.publish('currentlyEnrolled', this.state.classRoles)
+            }
+          }
+        )
+      } else {
+        NotificationManager.error('Failed to register as TA for ' + cr.name)
+      }
+    })
+    //enroll as student
     this.state.classRoles.forEach((c) => {
       if (c.role === '') {
         api.deleteClassUser(c.id, this.state.user.id)
-      } else if (c.role === 'Student') {
+      } else {
         api.postAddClass(c.id, this.state.user.id, c.role)
       }
     })
-    EventEmitter.publish('currentlyEnrolled', this.state.classRoles)
-  }
 
-  verifyCode() {
-    this.state.codeToClass.forEach((code, classId) => {
-      if (code === api.getClass(classId).classCode) {
-        api.postAddClass( classId, this.state.user.id, 'TA').then(() => {
-          _.find(this.state.classRoles, ['id', classId].role = 'TA')
-        })
-      }
-      //verify code
-      //api.postAddClass
-      //map over this.state.classRoles to update with the new role
-      //alert when the verificaion fails
-    })
+    EventEmitter.publish('currentlyEnrolled', this.state.classRoles)
   }
 
   getTACell(classRole: ClassRole) {
@@ -137,7 +156,7 @@ export default class ModifyClassesModal extends Component<
       ></Input>
     ) : (
       <Header as="h4">
-        <Header.Content>{'verified ' + classRole}</Header.Content>
+        <Header.Content>{'verified ' + classRole.role}</Header.Content>
       </Header>
     )
   }
@@ -157,7 +176,9 @@ export default class ModifyClassesModal extends Component<
               content="Modify Class"
               fluid
               style={{ fontSize: '1vw' }}
-              onClick={() => this.setState({ modalState: true, codeToClass: new Map() })}
+              onClick={() =>
+                this.setState({ modalState: true, codeToClass: new Map() })
+              }
             />
           }
           open={this.state.modalState}

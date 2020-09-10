@@ -26,8 +26,9 @@ interface User {
 interface Class {
   id: number
   name: string
-  calendarId: number
+  calendarId: string
   ClassUser: ClassUser
+  classCode: string
 }
 
 interface ClassUser {
@@ -37,7 +38,7 @@ interface ClassUser {
 interface RootResponse {
   id: number
   name: string
-  calendarId: number
+  calendarId: string
   role: string
 }
 
@@ -59,10 +60,10 @@ router.get(
 interface ClassClassIDResponse {
   id: number
   name: string
-  calendarId: number
+  calendarId: string
   groups: Group
   users: ClassUser
-  classCode: number
+  classCode: string
 }
 
 interface Group {
@@ -90,7 +91,7 @@ router.get(
     const currentClass = await models.Class.findByPk(ClassId, {
       include: [{ model: models.Group }, { model: models.User }],
     })
-
+    
     return res.json({
       id: currentClass.id,
       name: currentClass.name,
@@ -119,6 +120,7 @@ interface AllClassesResponse {
   id: number
   name: string
   calendarId: number
+  classCode: string,
 }
 
 router.get(
@@ -130,6 +132,7 @@ router.get(
       id: c.id,
       name: c.name,
       calendarId: c.calendarId,
+      classCode: c.classCode
     }))
 
     return res.json(all)
@@ -158,7 +161,6 @@ router.post('/addClass', authRequired, async (req, res) => {
   }
 
   //if the user has already enrolled in the class, nothing's changed
-
   return res.status(204).send()
 })
 
