@@ -202,6 +202,7 @@ class ScreenContainer extends React.Component {
               }}
               session={this.sessionHelper.session}
               name={this.props.name}
+              profile={this.props.profile}
             />
             {this.state.streams.map((stream) => (
               <>
