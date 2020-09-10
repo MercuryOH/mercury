@@ -122,17 +122,36 @@ export default class TAQueueView extends Component<
       })
     })
 
-    EventEmitter.subscribe('callOver', ({ classId }: { classId: number }) => {
-      const { inCallWithStudent } = this.state
-      if (inCallWithStudent) {
-        EventEmitter.publish('signalCallOver')
-        EventEmitter.publish('activateFeedbackModal', classId)
-        this.setState({
-          inCallWithStudent: false,
-          currStudentBeingHelped: { id: -1, name: '' },
-        })
+    EventEmitter.subscribe(
+      'callOver',
+      ({
+        classId,
+        needToBootStudent,
+        currentGroupId,
+        myId,
+      }: {
+        classId: Number
+        needToBootStudent: Boolean
+        currentGroupId: Number
+        myId: Number
+      }) => {
+        const { inCallWithStudent } = this.state
+        console.log(needToBootStudent)
+        if (inCallWithStudent) {
+          EventEmitter.publish('signalCallOver')
+          EventEmitter.publish('activateFeedbackModal', classId)
+
+          if (needToBootStudent) {
+            EventEmitter.publish('bootStudent', { currentGroupId, myId })
+          }
+
+          this.setState({
+            inCallWithStudent: false,
+            currStudentBeingHelped: { id: -1, name: '' },
+          })
+        }
       }
-    })
+    )
 
     EventEmitter.subscribe(
       'updateStudentsInQueue',
@@ -242,7 +261,7 @@ export default class TAQueueView extends Component<
           marginLeft: '.8%',
           backgroundColor: '#03b5ad',
           marginRight: '1%',
-          color: 'white'
+          color: 'white',
         }}
         key={currStudentBeingHelped.id}
       >

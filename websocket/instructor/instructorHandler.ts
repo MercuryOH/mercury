@@ -3,6 +3,7 @@ import { webSocketConnectionManager } from '../util/connectionmanager'
 import { prepareMessage } from '../util/util'
 import { userRepository } from '../../repository/userRepository'
 import { groupManager } from '../util/groupmanager'
+import group from '../../models/group'
 
 /**
  * Handles web socket messages sent by a student user
@@ -148,6 +149,20 @@ const handleInstructorMessage = async (ws: any, message: string) => {
         prepareMessage({
           msgType: 'receiveBroadcast',
           msg: msg,
+        })
+      )
+      break
+
+    case 'bootStudent':
+      // msg - groupId, myId -- myId is the TA ID so we do not want to boot the TA
+      const { currentGroupId, myId } = msg
+
+      groupManager.broadcastToAllExcept(
+        currentGroupId,
+        myId,
+        prepareMessage({
+          msgType: 'bootFromCall',
+          msg: currentGroupId,
         })
       )
       break

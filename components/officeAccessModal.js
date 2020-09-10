@@ -37,7 +37,7 @@ class OfficeAccessModal extends Component {
               height: '50%',
               margin: 'auto',
             }}
-            content={'Wait in queue to get help from TAs!'}
+            content={`Join Queue To Get Help From TA's!`}
           />
           <div
             style={{

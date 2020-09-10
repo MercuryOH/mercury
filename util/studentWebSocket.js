@@ -218,6 +218,10 @@ export default class StudentWebSocketClient {
     EventEmitter.publish('receiveBroadcast', data)
   }
 
+  bootFromCall(groupToBoot) {
+    EventEmitter.publish('bootFromCall', groupToBoot)
+  }
+
   processConnectionMessage(e) {
     const { msgType, msg } = JSON.parse(e.data)
 
@@ -284,6 +288,10 @@ export default class StudentWebSocketClient {
 
       case 'receiveBroadcast':
         this.activateReceiveBroadcastModal(msg)
+        break
+
+      case 'bootFromCall':
+        this.bootFromCall(msg)
         break
 
       default:

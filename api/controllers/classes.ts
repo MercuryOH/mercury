@@ -62,6 +62,7 @@ interface ClassClassIDResponse {
   calendarId: number
   groups: Group
   users: ClassUser
+  classCode: number
 }
 
 interface Group {
@@ -102,6 +103,7 @@ router.get(
         userId: g.UserId,
         // users: g.users,
       })),
+      classCode: currentClass.classCode,
       users: currentClass.Users.map((u: any) => ({
         id: u.id,
         firstName: u.firstName,

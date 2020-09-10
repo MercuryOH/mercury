@@ -336,7 +336,7 @@ class StudentQueueView extends Component<
           marginLeft: '.8%',
           backgroundColor: '#03b5ad',
           marginRight: '1%',
-          color: 'white'
+          color: 'white',
         }}
         key={id}
       >
