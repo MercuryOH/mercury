@@ -12,6 +12,7 @@ export default (sequelize: any, DataTypes: any) => {
     {
       name: DataTypes.STRING,
       calendarId: DataTypes.STRING,
+      classCode: DataTypes.STRING,
     },
     {
       sequelize,

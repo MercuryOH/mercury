@@ -1,6 +1,6 @@
 import React from 'react'
 import { useRouter } from 'next/router'
-import { Grid, Header, Message } from 'semantic-ui-react'
+import { Grid, Header, Message, Image } from 'semantic-ui-react'
 import { useAuth } from '../components/authProvider'
 import { NotificationContainer, NotificationManager } from 'react-notifications'
 import HeadComponent from '../components/headComponent'
@@ -9,20 +9,6 @@ import GoogleLogin from 'react-google-login'
 function LoginPage() {
   const router = useRouter()
   const { login } = useAuth()
-
-  const handleLogin = async (values, { setSubmitting }) => {
-    setSubmitting(true)
-
-    const user = await login(values.email, values.password)
-
-    if (user) {
-      await router.push('/calendar')
-    } else {
-      NotificationManager.error('Username And/Or Password Are Incorrect')
-    }
-
-    setSubmitting(false)
-  }
 
   const handleSuccess = async (response) => {
     const obj = response.profileObj
@@ -44,10 +30,16 @@ function LoginPage() {
           verticalAlign="middle"
         >
           <Grid.Column style={{ maxWidth: 450, minWidth: 300 }}>
-            <Header as="h2" color="teal" textAlign="center">
-              {/* <Image src={require('../public/wave.png')} /> */}
+            <Image src="/wave_light.png" large style={{ padding: '1%' }} />
+            <Header
+              as="h2"
+              color="teal"
+              textAlign="center"
+              style={{ paddingBottom: '10%' }}
+            >
               Mercury | Login
             </Header>
+
             <GoogleLogin
               clientId="1019939739333-mi49g41jn4u9v50nqqd538vsfpl3jf9s.apps.googleusercontent.com"
               buttonText="Login with school email"
@@ -55,12 +47,13 @@ function LoginPage() {
               onFailure={handleFailure}
               cookiePolicy={'single_host_origin'}
             />
-            <Message>
-              <a href="#">Contact Us</a>
-            </Message>
+            <div style={{ paddingTop: '2%', color: 'white' }}>
+              <a href="mailto:jz674@cornell.edu">
+                Try out Mercury for your class! Contact Us
+              </a>
+            </div>
           </Grid.Column>
         </Grid>
-
         <NotificationContainer />
       </div>
     </>

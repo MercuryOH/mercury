@@ -1,7 +1,7 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import styled from 'styled-components'
 import { useRouter } from 'next/router'
-import { Menu, Image, Label, Dropdown} from 'semantic-ui-react'
+import { Menu, Image, Label, Dropdown } from 'semantic-ui-react'
 import { useAuth } from './authProvider'
 
 const ProfileContainer = styled.div`
@@ -13,7 +13,13 @@ function Navbar() {
   const router = useRouter()
   const { user } = useAuth()
 
-  return (
+  useEffect(() => {
+    if (!user) {
+      router.push('/login')
+    }
+  },[])
+
+  return ( !user ? null:
     <Menu size="massive" style={{ marginBottom: 0, zIndex: 1 }} borderless>
       <Menu.Item header>Mercury</Menu.Item>
       <Menu.Menu position="right">
@@ -42,6 +48,7 @@ function Navbar() {
         </ProfileContainer>
       </Menu.Menu>
     </Menu>
+    
   )
 }
 

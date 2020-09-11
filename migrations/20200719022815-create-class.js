@@ -21,6 +21,9 @@ module.exports = {
       },
       calendarId:{
         type: Sequelize.STRING
+      },
+      classCode:{
+        type: Sequelize.STRING
       }
     });
   },

@@ -41,7 +41,11 @@ class DropDown extends Component {
 
       .then(() => api.getMe())
       .then((me) => {
-        this.setState({ userId: me.id })
+        if (!me) {
+          this.props.router.push('/login')
+        } else {
+          this.setState({ userId: me.id })
+        }
       })
 
     EventEmitter.subscribe('currentlyEnrolled', (classes) => {
