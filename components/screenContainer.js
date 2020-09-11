@@ -243,6 +243,12 @@ class ScreenContainer extends React.Component {
         {this.videoStateButton()}
         {this.screenShareButton()}
         <Button
+          onClick={()=> window.open("https://letsboard.co/", "_blank")}
+          icon="square outline"
+          style={{ fontSize: '.8vw', display: 'inline-flex' }}
+          content="Whiteboard"
+        />
+        <Button
           onClick={onLeave}
           color="red"
           icon="close"
