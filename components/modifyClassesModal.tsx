@@ -46,7 +46,7 @@ interface ClassGeneral {
   classCode: string
 }
 
-export default class ModifyClassesModal extends Component<
+class ModifyClassesModal extends Component<
   ModifyClassesModalProps,
   ModifyClassesModalState
 > {
@@ -182,7 +182,10 @@ export default class ModifyClassesModal extends Component<
             />
           }
           open={this.state.modalState}
-          onClose={() => this.setState({ modalState: false })}
+          onClose={() =>{
+            this.setState({ modalState: false })
+          }
+          }
           closeOnDimmerClick={false}
           closeOnEscape={false}
           closeIcon
@@ -299,3 +302,5 @@ export default class ModifyClassesModal extends Component<
     )
   }
 }
+
+export default ModifyClassesModal

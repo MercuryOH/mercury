@@ -43,9 +43,9 @@ export default class ScreenPublisher extends Component {
         ) : null}
         <OTPublisher
           properties={{
-            width: '13.62vw',
-            maxWidth: '13.62vw',
-            height: '20vh',
+            width: '9.7vw',
+            maxWidth: '9.7vw',
+            height: '15.5vh',
             publishAudio: this.state.audio,
             publishVideo: this.state.video,
             videoSource: 'screen',

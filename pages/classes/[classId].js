@@ -487,7 +487,7 @@ class ClassPage extends Component {
     const unClickedGroupsStyle = {
       fontSize: '.8vw',
       textAlign: 'left',
-      width: '80%',
+      width: '90%',
       marginBottom: '2%',
       minWidth: '41px',
       display: 'inline-block',
@@ -496,7 +496,7 @@ class ClassPage extends Component {
     const clickedGroupsStyle = {
       fontSize: '.8vw',
       textAlign: 'left',
-      width: '80%',
+      width: '90%',
       marginBottom: '2%',
       minWidth: '41px',
       background: '#e0e1e2',
@@ -514,8 +514,8 @@ class ClassPage extends Component {
 
   showOffice() {
     return (
-      <div style={{ paddingLeft: 20 }}>
-        <List relaxed selection verticalAlign="middle">
+      <div style={{ paddingLeft: 20 }} style = {{ width: '100%' }}>
+        <List relaxed selection verticalAlign="middle" style = {{ width: '100%' }}>
           {this.state.allGroups
             .filter((group) => group.type === 'office')
             .map((group) => (
@@ -531,8 +531,8 @@ class ClassPage extends Component {
                 style={this.getListItemStyle(group)}
               >
                 <List.Icon name="graduation cap" />
-                <List.Content>
-                  <List.Header as="a">
+                <List.Content style = {{ width: '100%' }}>
+                  <List.Header as="a" style = {{ width: '100%' }}>
                     {group.name + ' (' + group.users.length + ')'}
                   </List.Header>
                 </List.Content>
@@ -557,7 +557,7 @@ class ClassPage extends Component {
             icon="angle left"
             content={this.state.currentClass.name}
             style={{
-              fontSize: '1.5vw',
+              fontSize: '1.2vw',
               textAlign: 'left',
               width: '75%',
               marginBottom: '2%',

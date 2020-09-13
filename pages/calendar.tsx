@@ -58,6 +58,8 @@ class Calendar extends Component<CalendarProps, CalendarState> {
     EventEmitter.subscribe('currentlyEnrolled', (classes: Array<Class>) => {
       this.setState({ classes })
     })
+
+    //EventEmitter.subscribe('reloadCalendar', () => {window.location.reload()})
   }
 
   mergeCal(classList: Array<Class>): string {
@@ -80,7 +82,7 @@ class Calendar extends Component<CalendarProps, CalendarState> {
     return (
       <>
         <HeadComponent />
-        
+
         <Layout
           left={
             <div style={{ paddingLeft: 20, paddingRight: 20 }}>

@@ -8,7 +8,7 @@ function LargeLabel({ content }) {
       <Label
         size="massive"
         style={{
-          fontSize: '2vw',
+          fontSize: '1.8vw',
           textAlign: 'center',
           width: '100%',
           marginBottom: '4%',

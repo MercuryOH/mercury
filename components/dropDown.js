@@ -162,7 +162,6 @@ class DropDown extends Component {
                           </List.Item>
                         ))} */}
                       {this.state.classes
-
                         .filter(
                           (c) => c.role === 'Professor' || c.role === 'TA'
                         )
