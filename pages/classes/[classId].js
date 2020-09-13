@@ -225,7 +225,7 @@ class ClassPage extends Component {
       NotificationManager.info(msg)
     })
 
-    EventEmitter.subscribe('createTAOffice', (classUser) => {
+    /*EventEmitter.subscribe('createTAOffice', (classUser) => {
       this.fetchAllGroups()
       this.handleCreateTAOffice({
         classId: classUser.classId,
@@ -233,7 +233,7 @@ class ClassPage extends Component {
         type: 'office',
         userId: classUser.userId,
       })
-    })
+    })*/
 
     EventEmitter.subscribe('leaveCallOnError', () => {
       this.leaveGroup()
@@ -426,11 +426,13 @@ class ClassPage extends Component {
     )
   }
 
-  handleCreateTAOffice = async (group) => {
+  /*handleCreateTAOffice = async (group) => {
+    console.log('handlecreatefire')
     if (
       this.state.allGroups.filter((check) => check.name === group.name)
         .length === 0
     ) {
+      console.log(this.state.allGroups)
       const groupData = await api.postGroup(
         group.classId,
         group.name,
@@ -440,8 +442,9 @@ class ClassPage extends Component {
       EventEmitter.publish('classGroupSetChanged', this.classId)
       this.fetchAllGroups()
     } else {
+      console.log('groupexists')
     }
-  }
+  }*/
 
   handleCreateGroup = async (group) => {
     const groupData = await api.postGroup(

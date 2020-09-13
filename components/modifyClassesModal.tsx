@@ -111,7 +111,14 @@ class ModifyClassesModal extends Component<
             const c = _.find(this.state.classRoles, { id: classId })
             if (c.role === 'TA') {
               api.postAddClass(classId, this.state.user.id, 'TA')
+              api.postGroup(
+                classId,
+                this.state.user.firstName + ' ' + this.state.user.lastName + "'s Office",
+                'office',
+                this.state.user.id,
+              )
               EventEmitter.publish('currentlyEnrolled', this.state.classRoles)
+              EventEmitter.publish('classGroupSetChanged', classId)
             }
           }
         )

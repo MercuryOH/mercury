@@ -177,10 +177,6 @@ class DropDown extends Component {
                                 color={colors[c.id % colors.length]}
                                 content={c.name}
                                 onClick={() => {
-                                  EventEmitter.publish('createTAOffice', {
-                                    classId: c.id,
-                                    userId: this.state.userId,
-                                  })
                                   this.props.router.push(`/classes/${c.id}`)
                                 }}
                               />
