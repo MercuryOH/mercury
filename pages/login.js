@@ -30,7 +30,11 @@ function LoginPage() {
           verticalAlign="middle"
         >
           <Grid.Column style={{ maxWidth: 450, minWidth: 300 }}>
-            <Image src="/wave_dark.png" size='large' style={{ padding: '1%' }} />
+            <Image
+              src="/wave_dark.png"
+              size="large"
+              style={{ padding: '1%' }}
+            />
             <Header
               as="h2"
               color="teal"
@@ -42,7 +46,7 @@ function LoginPage() {
 
             <GoogleLogin
               clientId="1019939739333-mi49g41jn4u9v50nqqd538vsfpl3jf9s.apps.googleusercontent.com"
-              buttonText="Login with school email"
+              buttonText="Login With School Email"
               onSuccess={handleSuccess}
               onFailure={handleFailure}
               cookiePolicy={'single_host_origin'}
