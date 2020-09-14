@@ -5,45 +5,21 @@ import models from '../../models/index'
 import crypto from '../../util/crypto'
 import { authRequired } from '../../util/middleware'
 
-const createUserSchema = joi.object({
-  firstName: joi.string().required(),
-  lastName: joi.string().required(),
-  email: joi.string().email().required(),
-  password: joi.string().min(8).required(),
-})
-
 const loginSchema = joi.object({
   email: joi.string().email().required(),
-  password: joi.string().min(8).required(),
+  firstName: joi.string().required(),
+  lastName: joi.string().required(),
+  profile: joi.string().required(),
 })
 
-router.post('/', async (req, res) => {
-  const { value, error } = createUserSchema.validate(req.body)
-
-  if (error) {
-    return res.status(400).json({ error })
-  }
-
-  try {
-    const existingUser = await models.User.findOne({
-      where: { email: value.email },
-    })
-
-    if (existingUser) {
-      throw new Error('User with such email already exists')
-    }
-
-    const user = await models.User.create(value)
-
-    return res.json({
-      id: user.id,
-      firstName: user.firstName,
-      lastName: user.lastName,
-      email: user.email,
-    })
-  } catch (err) {
-    return res.status(400).json({ error: err.message || err })
-  }
+router.get('/me', authRequired, async (req: any, res: any) => {
+  return res.json({
+    id: req.user.id,
+    firstName: req.user.firstName,
+    lastName: req.user.lastName,
+    email: req.user.email,
+    profile: req.user.profile,
+  })
 })
 
 router.post('/login', async (req, res) => {
@@ -54,34 +30,25 @@ router.post('/login', async (req, res) => {
   }
 
   try {
-    const user = await models.User.findOne({ where: { email: value.email } })
+    var user = await models.User.findOne({ where: { email: value.email } })
 
-    if (!user || !user.isPasswordMatch(value.password)) {
-      throw new Error('User not found')
+    if (!user) {
+      user = await models.User.create(value)
     }
 
     const token = crypto.createJWT({ id: user.id })
-
+   
     return res.json({
       id: user.id,
       firstName: user.firstName,
       lastName: user.lastName,
-      email: user.email,
+      profile: user.profile,
       token,
     })
   } catch (err) {
     console.log(err)
     return res.status(400).json({ error: err.message || err })
   }
-})
-
-router.get('/me', authRequired, async (req: any, res: any) => {
-  return res.json({
-    id: req.user.id,
-    firstName: req.user.firstName,
-    lastName: req.user.lastName,
-    email: req.user.email,
-  })
 })
 
 export default router

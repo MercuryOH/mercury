@@ -6,6 +6,7 @@ import HeadComponent from '../components/headComponent'
 import { EventEmitter } from '../components/util/EventEmitter'
 import { AuthRequired } from '../components/authProvider'
 import * as api from '../util/mercuryService'
+import { NotificationContainer, NotificationManager } from 'react-notifications'
 
 const colors = [
   'D50000', //red
@@ -57,6 +58,8 @@ class Calendar extends Component<CalendarProps, CalendarState> {
     EventEmitter.subscribe('currentlyEnrolled', (classes: Array<Class>) => {
       this.setState({ classes })
     })
+
+    //EventEmitter.subscribe('reloadCalendar', () => {window.location.reload()})
   }
 
   mergeCal(classList: Array<Class>): string {
@@ -79,6 +82,7 @@ class Calendar extends Component<CalendarProps, CalendarState> {
     return (
       <>
         <HeadComponent />
+
         <Layout
           left={
             <div style={{ paddingLeft: 20, paddingRight: 20 }}>
@@ -96,6 +100,7 @@ class Calendar extends Component<CalendarProps, CalendarState> {
             scrolling="no"
           />
         </Layout>
+        <NotificationContainer />
       </>
     )
   }

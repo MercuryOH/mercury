@@ -5,6 +5,7 @@ export default class HeadComponent extends Component {
   render() {
     return (
       <Head>
+        <title>Mercury</title>
         <link
           rel="apple-touch-icon"
           sizes="180x180"

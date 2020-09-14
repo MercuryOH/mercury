@@ -122,7 +122,6 @@ router.get('/', authRequired, async (req, res) => {
       })),
     })
   }
-
   return res.json(groupDtos)
 })
 

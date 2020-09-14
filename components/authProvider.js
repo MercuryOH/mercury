@@ -29,8 +29,8 @@ export function AuthProvider({ children }) {
     loadUserFromCookies()
   }, [])
 
-  const login = async (email, password) => {
-    const loginResponse = await api.postLogin(email, password)
+  const login = async (email, firstName, lastName, profile) => {
+    const loginResponse = await api.postLogin(email, firstName, lastName, profile)
     if (!loginResponse || !loginResponse.token) return null
 
     Cookies.set(MERCURY_TOKEN, loginResponse.token, { expires: 60 })

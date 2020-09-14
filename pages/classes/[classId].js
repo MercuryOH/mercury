@@ -61,8 +61,8 @@ class ClassPage extends Component {
   }
 
   fetchAllGroups = () => {
-    api
-      .getGroups(this.state.currentClass.id)
+   api
+      .getGroups(this.classId)
       .then((groups) => this.setState({ allGroups: groups }))
   }
 
@@ -145,7 +145,7 @@ class ClassPage extends Component {
   leaveGroupForTAOffice = () => {
     api
       .deleteGroupUser(
-        this.state.currentClass.id,
+        this.classId,
         this.state.currentGroup.id,
         this.user.id
       )
@@ -165,11 +165,11 @@ class ClassPage extends Component {
 
   leaveGroup = () => {
     const needToBootStudent = this.needToBootStudent()
-    console.log(this.isProfessor())
+
     const currentGroupId = this.state.currentGroup.id
     api
       .deleteGroupUser(
-        this.state.currentClass.id,
+        this.classId,
         this.state.currentGroup.id,
         this.user.id
       )
@@ -225,7 +225,7 @@ class ClassPage extends Component {
       NotificationManager.info(msg)
     })
 
-    EventEmitter.subscribe('createTAOffice', (classUser) => {
+    /*EventEmitter.subscribe('createTAOffice', (classUser) => {
       this.fetchAllGroups()
       this.handleCreateTAOffice({
         classId: classUser.classId,
@@ -233,7 +233,7 @@ class ClassPage extends Component {
         type: 'office',
         userId: classUser.userId,
       })
-    })
+    })*/
 
     EventEmitter.subscribe('leaveCallOnError', () => {
       this.leaveGroup()
@@ -332,6 +332,7 @@ class ClassPage extends Component {
     if (
       group.type === 'office' ||
       role === 'Professor' ||
+      role === 'TA'||
       group.type === 'discussion'
     ) {
       // you are popped off the waiting queue or you are a TA
@@ -426,11 +427,13 @@ class ClassPage extends Component {
     )
   }
 
-  handleCreateTAOffice = async (group) => {
+  /*handleCreateTAOffice = async (group) => {
+    console.log('handlecreatefire')
     if (
       this.state.allGroups.filter((check) => check.name === group.name)
         .length === 0
     ) {
+      console.log(this.state.allGroups)
       const groupData = await api.postGroup(
         group.classId,
         group.name,
@@ -440,9 +443,10 @@ class ClassPage extends Component {
       EventEmitter.publish('classGroupSetChanged', this.classId)
       this.fetchAllGroups()
     } else {
+      console.log('groupexists')
     }
-  }
-
+  }*/
+  
   handleCreateGroup = async (group) => {
     const groupData = await api.postGroup(
       this.classId,
@@ -487,7 +491,7 @@ class ClassPage extends Component {
     const unClickedGroupsStyle = {
       fontSize: '.8vw',
       textAlign: 'left',
-      width: '80%',
+      width: '90%',
       marginBottom: '2%',
       minWidth: '41px',
       display: 'inline-block',
@@ -496,7 +500,7 @@ class ClassPage extends Component {
     const clickedGroupsStyle = {
       fontSize: '.8vw',
       textAlign: 'left',
-      width: '80%',
+      width: '90%',
       marginBottom: '2%',
       minWidth: '41px',
       background: '#e0e1e2',
@@ -514,8 +518,8 @@ class ClassPage extends Component {
 
   showOffice() {
     return (
-      <div style={{ paddingLeft: 20 }}>
-        <List relaxed selection verticalAlign="middle">
+      <div style={{ paddingLeft: 20 }} style = {{ width: '100%' }}>
+        <List relaxed selection verticalAlign="middle" style = {{ width: '100%' }}>
           {this.state.allGroups
             .filter((group) => group.type === 'office')
             .map((group) => (
@@ -531,8 +535,8 @@ class ClassPage extends Component {
                 style={this.getListItemStyle(group)}
               >
                 <List.Icon name="graduation cap" />
-                <List.Content>
-                  <List.Header as="a">
+                <List.Content style = {{ width: '100%' }}>
+                  <List.Header as="a" style = {{ width: '100%' }}>
                     {group.name + ' (' + group.users.length + ')'}
                   </List.Header>
                 </List.Content>
@@ -557,7 +561,7 @@ class ClassPage extends Component {
             icon="angle left"
             content={this.state.currentClass.name}
             style={{
-              fontSize: '1.5vw',
+              fontSize: '1.2vw',
               textAlign: 'left',
               width: '75%',
               marginBottom: '2%',
@@ -753,6 +757,7 @@ class ClassPage extends Component {
             token={this.state.vonageCred.token}
             onLeave={this.leaveGroup}
             name={this.user.firstName + ' ' + this.user.lastName}
+            profile={this.user.profile}
           />
         )}
         <OfficeAccessModal />

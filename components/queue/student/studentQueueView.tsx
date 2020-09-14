@@ -399,7 +399,7 @@ class StudentQueueView extends Component<
             labelPosition="right"
             onClick={this.alterStudentDisplay.bind(this)}
             style={{
-              fontSize: '1.5vw',
+              fontSize: '1.2vw',
               textAlign: 'center',
               width: '100%',
               marginBottom: '2%',

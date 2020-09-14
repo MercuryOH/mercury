@@ -21,13 +21,13 @@ function Layout({ children, left, right }) {
     <>
       <Navbar />
       <Grid style={{ height: 'calc(100vh - 54px)', marginTop: 0 }}>
-        <SideColumn width={3}>
+        <SideColumn width={2}>
           <SideSegment style={{ paddingLeft: '24px !important' }} vertical>
             {left}
           </SideSegment>
         </SideColumn>
-        <Grid.Column width={10}>{children}</Grid.Column>
-        <SideColumn width={3}>
+        <Grid.Column width={12}>{children}</Grid.Column>
+        <SideColumn width={2}>
           <SideSegment style={{ paddingRight: '24px !important' }} vertical>
             {right}
           </SideSegment>

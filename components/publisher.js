@@ -37,15 +37,17 @@ export default class Publisher extends Component {
         {this.state.error ? <div>{"We noticed you denied access to your microphone or camera. Please click the camera/microphone blocked icon in your browser's address bar, allow access, and then refresh the page and rejoin the call. You will be able to mute yourself or disable your video once you join a call."}</div> : null}
         <OTPublisher
           properties={{
-            width: '13.57vw',
-            maxWidth: '13.57vw',
-            maxHeight: '8vh',
+            width: '9.7vw',
+            maxWidth: '9.7vw',
+            height: '15.5vh',
+            maxHeight: '15.5vh',
             publishVideo: this.state.video,
             marginBottom: '5px',
             name: this.props.name,
             style: {
               buttonDisplayMode: 'on',
-              nameDisplayMode: 'on'
+              nameDisplayMode: 'on',
+              backgroundImageURI: this.props.profile
             }
           }}
           session={this.props.session}
@@ -53,9 +55,9 @@ export default class Publisher extends Component {
         />
         <ScreenPublisher
           style={{
-            width: '13.62vw',
-            maxWidth: '13.62vw',
-            height: '500px',
+            width: '9.7vw',
+            maxWidth: '9.7vw',
+            height: '15.5vh',
             maxHeight: '16vh',
             marginBottom: '5px',
           }}

@@ -10,6 +10,7 @@ import {
 import _ from 'lodash'
 import * as api from '../util/mercuryService'
 import { EventEmitter } from './util/EventEmitter'
+import { NotificationContainer, NotificationManager } from 'react-notifications'
 
 interface ModifyClassesModalProps {}
 
@@ -34,7 +35,7 @@ interface ClassRole {
   name: string
   calendarId: number
   role: string
-  classCode: number
+  classCode: string
 }
 
 /** Type ClassGeneral returned from api.getAllClasses */
@@ -42,9 +43,10 @@ interface ClassGeneral {
   id: number
   name: string
   calendarId: number
+  classCode: string
 }
 
-export default class ModifyClassesModal extends Component<
+class ModifyClassesModal extends Component<
   ModifyClassesModalProps,
   ModifyClassesModalState
 > {
@@ -87,29 +89,61 @@ export default class ModifyClassesModal extends Component<
 
   handleSubmit = () => {
     this.setState({ modalState: false })
-    this.verifyCode()
+    //enroll as TA
+    this.state.codeToClass.forEach((code, classId, map) => {
+      const cr = _.find(this.state.classRoles, { id: classId })
+
+      if (code === cr.classCode) {
+        this.setState(
+          (state) => ({
+            classRoles: state.classRoles.map((cc) => {
+              if (cc.id === classId) {
+                return {
+                  ...cc,
+                  role: 'TA',
+                }
+              }
+
+              return cc
+            }),
+          }),
+          () => {
+            const c = _.find(this.state.classRoles, { id: classId })
+            if (c.role === 'TA') {
+              api.postAddClass(classId, this.state.user.id, 'TA')
+              api.postGroup(
+                classId,
+                this.state.user.firstName +
+                  ' ' +
+                  this.state.user.lastName +
+                  "'s Office",
+                'office',
+                this.state.user.id
+              )
+              EventEmitter.publish('currentlyEnrolled', this.state.classRoles)
+              EventEmitter.publish('classGroupSetChanged', classId)
+            }
+          }
+        )
+      } else {
+        NotificationManager.error('Failed to register as TA for ' + cr.name)
+      }
+    })
+
+    // enroll as student
     this.state.classRoles.forEach((c) => {
       if (c.role === '') {
-        api.deleteClassUser(c.id, this.state.user.id)
+        api
+          .deleteClassUser(c.id, this.state.user.id)
+          .catch((err) => console.log(err))
       } else if (c.role === 'Student') {
-        api.postAddClass(c.id, this.state.user.id, c.role)
+        api
+          .postAddClass(c.id, this.state.user.id, c.role)
+          .catch((err) => console.log(err))
       }
     })
     EventEmitter.publish('currentlyEnrolled', this.state.classRoles)
-  }
 
-  verifyCode() {
-    this.state.codeToClass.forEach((code, classId) => {
-      if (code === api.getClass(classId).classCode) {
-        api.postAddClass( classId, this.state.user.id, 'TA').then(() => {
-          _.find(this.state.classRoles, ['id', classId].role = 'TA')
-        })
-      }
-      //verify code
-      //api.postAddClass
-      //map over this.state.classRoles to update with the new role
-      //alert when the verificaion fails
-    })
   }
 
   getTACell(classRole: ClassRole) {
@@ -137,7 +171,7 @@ export default class ModifyClassesModal extends Component<
       ></Input>
     ) : (
       <Header as="h4">
-        <Header.Content>{'verified ' + classRole}</Header.Content>
+        <Header.Content>{'verified ' + classRole.role}</Header.Content>
       </Header>
     )
   }
@@ -157,11 +191,15 @@ export default class ModifyClassesModal extends Component<
               content="Modify Class"
               fluid
               style={{ fontSize: '1vw' }}
-              onClick={() => this.setState({ modalState: true, codeToClass: new Map() })}
+              onClick={() =>
+                this.setState({ modalState: true, codeToClass: new Map() })
+              }
             />
           }
           open={this.state.modalState}
-          onClose={() => this.setState({ modalState: false })}
+          onClose={() => {
+            this.setState({ modalState: false })
+          }}
           closeOnDimmerClick={false}
           closeOnEscape={false}
           closeIcon
@@ -219,33 +257,6 @@ export default class ModifyClassesModal extends Component<
                             })
                           }
                         />
-                        {/* {c.role === 'Professor' || c.role === 'TA' ? (
-                          <Header as="h4">
-                            <Header.Content>
-                              {'verified ' + c.role}
-                            </Header.Content>
-                          </Header>
-                        ) : (
-                          <Checkbox
-                            checked={c.role !== ''}
-                            onChange={() =>
-                              this.setState({
-                                classRoles: this.state.classRoles.map((cc) => {
-                                  if (
-                                    cc.id === c.id &&
-                                    (cc.role === '' || cc.role === 'Student')
-                                  ) {
-                                    return {
-                                      ...cc,
-                                      role: cc.role === '' ? 'Student' : '',
-                                    }
-                                  }
-                                  return cc
-                                }),
-                              })
-                            }
-                          />
-                        )} */}
                       </Table.Cell>
                       <Table.Cell style={{ textAlign: 'center' }}>
                         {this.getTACell(c)}
@@ -278,3 +289,5 @@ export default class ModifyClassesModal extends Component<
     )
   }
 }
+
+export default ModifyClassesModal

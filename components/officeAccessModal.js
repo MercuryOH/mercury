@@ -49,7 +49,7 @@ class OfficeAccessModal extends Component {
             }}
           >
             <Button
-              color="gray"
+              color="grey"
               style={{ width: '50%', fontSize: '1vw' }}
               onClick={() => this.setState({ modalState: false })}
               content={'Dismiss'}

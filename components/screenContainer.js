@@ -91,6 +91,7 @@ class ScreenContainer extends React.Component {
           width: '100%',
           maxHeight: '75vh',
           margin: '0px',
+          backgroundColor: 'transparent',
         }}
       >
         <OTSubscriber
@@ -101,7 +102,7 @@ class ScreenContainer extends React.Component {
             maxWidth: '75vw',
             maxHeight: '74.5vh',
             height: '84vh',
-            width: '48vw',
+            width: '64vw',
             style: {
               buttonDisplayMode: 'on',
               nameDisplayMode: 'on',
@@ -183,12 +184,12 @@ class ScreenContainer extends React.Component {
         <div
           style={{ display: 'inline-flex', width: '100%', maxHeight: '86vh' }}
         >
-          <div style={{ width: '78%', maxHeight: '85vh', overflow: 'auto' }}>
+          <div style={{ width: '87%', maxHeight: '85vh', overflow: 'auto' }}>
             {this.getStreamToDisplay()}
           </div>
           <div
             style={{
-              width: '22%',
+              width: '13%',
               maxHeight: '85vh',
               overflow: 'auto',
               height: '1000px',
@@ -196,12 +197,13 @@ class ScreenContainer extends React.Component {
           >
             <Publisher
               style={{
-                width: '13.57vw',
-                maxWidth: '13.57vw',
+                width: '9.7vw',
+                maxWidth: '9.7vw',
                 marginBottom: '5px',
               }}
               session={this.sessionHelper.session}
               name={this.props.name}
+              profile={this.props.profile}
             />
             {this.state.streams.map((stream) => (
               <>
@@ -213,7 +215,7 @@ class ScreenContainer extends React.Component {
                   style={{
                     padding: '0px',
                     width: '100%',
-                    maxHeight: '18vh',
+                    maxHeight: '15.5vh',
                     margin: '0px',
                   }}
                 >
@@ -223,8 +225,8 @@ class ScreenContainer extends React.Component {
                     stream={stream}
                     properties={{
                       width: '100%',
-                      height: '18vh',
-                      maxHeight: '18vh',
+                      height: '15.5vh',
+                      maxHeight: '15.5vh',
                       margin: '0px',
                       style: {
                         buttonDisplayMode: 'on',
@@ -241,6 +243,12 @@ class ScreenContainer extends React.Component {
         </div>
         {this.videoStateButton()}
         {this.screenShareButton()}
+        <Button
+          onClick={()=> window.open("https://letsboard.co/", "_blank")}
+          icon="square outline"
+          style={{ fontSize: '.8vw', display: 'inline-flex' }}
+          content="Whiteboard"
+        />
         <Button
           onClick={onLeave}
           color="red"
