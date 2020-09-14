@@ -3,6 +3,7 @@ import styled from 'styled-components'
 import { useRouter } from 'next/router'
 import { Menu, Image, Label, Dropdown } from 'semantic-ui-react'
 import { useAuth } from './authProvider'
+import { GoogleLogout } from 'react-google-login'
 
 const ProfileContainer = styled.div`
   display: flex;
@@ -11,7 +12,11 @@ const ProfileContainer = styled.div`
 
 function Navbar() {
   const router = useRouter()
-  const { user } = useAuth()
+  const { user, logout } = useAuth()
+
+  const logoutUser = (response) => {
+    logout()
+  }
 
   useEffect(() => {
     if (!user) {
@@ -39,16 +44,20 @@ function Navbar() {
                 text={user && `${user.firstName} ${user.lastName}`}
               />
               <Dropdown.Item text={user && user.email} />
-              <Dropdown.Item
-                text="Logout"
-                onClick={() => router.push('/login')}
-              />
+              <Dropdown.Item>
+              <GoogleLogout
+                clientId="1019939739333-mi49g41jn4u9v50nqqd538vsfpl3jf9s.apps.googleusercontent.com"
+                buttonText="Logout"
+                onLogoutSuccess={logoutUser}
+              >
+              </GoogleLogout>
+              </Dropdown.Item>
             </Dropdown.Menu>
           </Dropdown>
         </ProfileContainer>
       </Menu.Menu>
     </Menu>
-    
+
   )
 }
 
