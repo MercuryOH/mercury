@@ -61,8 +61,8 @@ class ClassPage extends Component {
   }
 
   fetchAllGroups = () => {
-    api
-      .getGroups(this.state.currentClass.id)
+   api
+      .getGroups(this.classId)
       .then((groups) => this.setState({ allGroups: groups }))
   }
 
@@ -145,7 +145,7 @@ class ClassPage extends Component {
   leaveGroupForTAOffice = () => {
     api
       .deleteGroupUser(
-        this.state.currentClass.id,
+        this.classId,
         this.state.currentGroup.id,
         this.user.id
       )
@@ -165,11 +165,11 @@ class ClassPage extends Component {
 
   leaveGroup = () => {
     const needToBootStudent = this.needToBootStudent()
-    console.log(this.isProfessor())
+
     const currentGroupId = this.state.currentGroup.id
     api
       .deleteGroupUser(
-        this.state.currentClass.id,
+        this.classId,
         this.state.currentGroup.id,
         this.user.id
       )
@@ -332,6 +332,7 @@ class ClassPage extends Component {
     if (
       group.type === 'office' ||
       role === 'Professor' ||
+      role === 'TA'||
       group.type === 'discussion'
     ) {
       // you are popped off the waiting queue or you are a TA
@@ -445,7 +446,7 @@ class ClassPage extends Component {
       console.log('groupexists')
     }
   }*/
-
+  
   handleCreateGroup = async (group) => {
     const groupData = await api.postGroup(
       this.classId,

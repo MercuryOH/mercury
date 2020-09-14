@@ -91,7 +91,7 @@ router.get(
     const currentClass = await models.Class.findByPk(ClassId, {
       include: [{ model: models.Group }, { model: models.User }],
     })
-    
+
     return res.json({
       id: currentClass.id,
       name: currentClass.name,
@@ -120,7 +120,7 @@ interface AllClassesResponse {
   id: number
   name: string
   calendarId: number
-  classCode: string,
+  classCode: string
 }
 
 router.get(
@@ -132,7 +132,7 @@ router.get(
       id: c.id,
       name: c.name,
       calendarId: c.calendarId,
-      classCode: c.classCode
+      classCode: c.classCode,
     }))
 
     return res.json(all)
@@ -148,19 +148,23 @@ router.post('/addClass', authRequired, async (req, res) => {
   }
 
   const user = await models.ClassUser.findOne({
-    where: { ClassId: value.classId, UserId: value.userId, role: value.role },
+    where: { ClassId: value.classId, UserId: value.userId },
   })
 
   if (!user) {
-    //the user hasn't enrolled in the class yet or has a different role
+    //the user hasn't enrolled in the class yet
     await models.ClassUser.create({
       ClassId: value.classId,
       UserId: value.userId,
       role: value.role,
-    })
+    }).catch((err: any) => console.log(err))
+  } else if (user.role !== value.role) {
+    //user had a different role, update their role
+    user.role = value.role
+    user.save()
   }
 
-  //if the user has already enrolled in the class, nothing's changed
+  //if the user has already enrolled in the class with the same role, nothing's changed
   return res.status(204).send()
 })
 
@@ -200,7 +204,9 @@ router.post('/createClass', async (req, res) => {
       throw new Error('Class with same name already exists')
     }
 
-    const newClass = await models.Class.create(value)
+    const newClass = await models.Class.create(value).catch((err: any) =>
+      console.log(err)
+    )
 
     return res.json({
       id: newClass.id,

@@ -113,9 +113,12 @@ class ModifyClassesModal extends Component<
               api.postAddClass(classId, this.state.user.id, 'TA')
               api.postGroup(
                 classId,
-                this.state.user.firstName + ' ' + this.state.user.lastName + "'s Office",
+                this.state.user.firstName +
+                  ' ' +
+                  this.state.user.lastName +
+                  "'s Office",
                 'office',
-                this.state.user.id,
+                this.state.user.id
               )
               EventEmitter.publish('currentlyEnrolled', this.state.classRoles)
               EventEmitter.publish('classGroupSetChanged', classId)
@@ -126,16 +129,21 @@ class ModifyClassesModal extends Component<
         NotificationManager.error('Failed to register as TA for ' + cr.name)
       }
     })
-    //enroll as student
+
+    // enroll as student
     this.state.classRoles.forEach((c) => {
       if (c.role === '') {
-        api.deleteClassUser(c.id, this.state.user.id)
+        api
+          .deleteClassUser(c.id, this.state.user.id)
+          .catch((err) => console.log(err))
       } else if (c.role === 'Student') {
-        api.postAddClass(c.id, this.state.user.id, c.role)
+        api
+          .postAddClass(c.id, this.state.user.id, c.role)
+          .catch((err) => console.log(err))
       }
     })
-
     EventEmitter.publish('currentlyEnrolled', this.state.classRoles)
+
   }
 
   getTACell(classRole: ClassRole) {
@@ -189,10 +197,9 @@ class ModifyClassesModal extends Component<
             />
           }
           open={this.state.modalState}
-          onClose={() =>{
+          onClose={() => {
             this.setState({ modalState: false })
-          }
-          }
+          }}
           closeOnDimmerClick={false}
           closeOnEscape={false}
           closeIcon
@@ -250,33 +257,6 @@ class ModifyClassesModal extends Component<
                             })
                           }
                         />
-                        {/* {c.role === 'Professor' || c.role === 'TA' ? (
-                          <Header as="h4">
-                            <Header.Content>
-                              {'verified ' + c.role}
-                            </Header.Content>
-                          </Header>
-                        ) : (
-                          <Checkbox
-                            checked={c.role !== ''}
-                            onChange={() =>
-                              this.setState({
-                                classRoles: this.state.classRoles.map((cc) => {
-                                  if (
-                                    cc.id === c.id &&
-                                    (cc.role === '' || cc.role === 'Student')
-                                  ) {
-                                    return {
-                                      ...cc,
-                                      role: cc.role === '' ? 'Student' : '',
-                                    }
-                                  }
-                                  return cc
-                                }),
-                              })
-                            }
-                          />
-                        )} */}
                       </Table.Cell>
                       <Table.Cell style={{ textAlign: 'center' }}>
                         {this.getTACell(c)}

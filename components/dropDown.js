@@ -69,33 +69,6 @@ class DropDown extends Component {
                 content: (
                   <div>
                     <List relaxed>
-                      {/* <>
-                        {_.zip(
-                          _.dropRight(
-                            this.state.colors,
-                            this.state.colors.length - this.state.classes.length
-                          ),
-                          this.state.classes
-                        )
-                          .filter((zipped) => zipped[1].role === 'Student')
-                          .map((zipped) => (
-                            <List.Item key={`class_${zipped[1].id}`}>
-                              <List.Content>
-                                <Link href={`/classes/${zipped[1].id}`}>
-                                  <Button
-                                    style={{
-                                      fontSize: '1vw',
-                                      width: '100%',
-                                      minWidth: '41px',
-                                    }}
-                                    color={zipped[0]}
-                                    content={zipped[1].name}
-                                  />
-                                </Link>
-                              </List.Content>
-                            </List.Item>
-                          ))}
-                      </> */}
                       <>
                         {this.state.classes
                           .filter((c) => c.role === 'Student')
@@ -129,38 +102,6 @@ class DropDown extends Component {
                 content: (
                   <div>
                     <List relaxed>
-                      {/* {_.zip(
-                        _.dropRight(
-                          this.state.colors,
-                          this.state.colors.length - this.state.classes.length
-                        ),
-                        this.state.classes
-                      )
-                        .filter((zipped) => zipped[1].role === 'Professor')
-                        .map((zipped) => (
-                          <List.Item key={`class_${zipped[1].id}`}>
-                            <List.Content>
-                              <Button
-                                style={{
-                                  fontSize: '1vw',
-                                  width: '100%',
-                                  minWidth: '41px',
-                                }}
-                                color={zipped[0]}
-                                content={zipped[1].name}
-                                onClick={() => {
-                                  EventEmitter.publish('createTAOffice', {
-                                    classId: zipped[1].id,
-                                    userId: this.state.userId,
-                                  })
-                                  this.props.router.push(
-                                    `/classes/${zipped[1].id}`
-                                  )
-                                }}
-                              />
-                            </List.Content>
-                          </List.Item>
-                        ))} */}
                       {this.state.classes
                         .filter(
                           (c) => c.role === 'Professor' || c.role === 'TA'
