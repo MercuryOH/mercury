@@ -121,6 +121,17 @@ class WebSocketConnectionManager {
 
     return null
   }
+
+  getActiveUsersInClass(courseId: number) {
+    const activeUsers: number[] = []
+    if (this.courseToSockets.has(courseId)) {
+      const currentConnections = this.courseToSockets.get(courseId)
+      currentConnections.forEach((connection: any) => {
+        activeUsers.push(this.getSocketUserId(connection))
+      })
+    }
+    return activeUsers
+  }
 }
 
 const webSocketConnectionManager = new WebSocketConnectionManager()

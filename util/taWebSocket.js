@@ -30,6 +30,15 @@ export default class TAWebSocketClient {
       )
     })
 
+    EventEmitter.subscribe('getActiveUsers', () => {
+      this.connection.send(
+        this.prepareMessage({
+          msgType: 'activeUsers',
+          msg: this.id,
+        })
+      )
+    })
+
     EventEmitter.subscribe('signalGetNextStudent', () => {
       this.getNextStudent()
     })
@@ -153,6 +162,10 @@ export default class TAWebSocketClient {
     EventEmitter.publish('initializeQueueOnGreeting', msg)
   }
 
+  updateActiveUsers(msg) {
+    EventEmitter.publish('updateActiveUsers', msg)
+  }
+
   notifyFetchGroups() {
     EventEmitter.publish('fetchGroups')
   }
@@ -187,6 +200,10 @@ export default class TAWebSocketClient {
     switch (msgType) {
       case 'greetingAck':
         this.initializeQueueOnGreeting(msg)
+        break
+
+      case 'activeUsersUpdate':
+        this.updateActiveUsers(msg)
         break
 
       case 'queue': // in this case, the server will send a message indicating the current students in the queue

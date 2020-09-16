@@ -30,7 +30,11 @@ function LoginPage() {
           verticalAlign="middle"
         >
           <Grid.Column style={{ maxWidth: 450, minWidth: 300 }}>
-            <Image src="/wave_dark.png" size='large' style={{ padding: '1%' }} />
+            <Image
+              src="/wave_dark-min.png"
+              size="large"
+              style={{ padding: '1%' }}
+            />
             <Header
               as="h2"
               color="teal"

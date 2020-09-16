@@ -30,6 +30,15 @@ export default class StudentWebSocketClient {
       )
     })
 
+    EventEmitter.subscribe('getActiveUsers', () => {
+      this.connection.send(
+        this.prepareMessage({
+          msgType: 'activeUsers',
+          msg: this.id,
+        })
+      )
+    })
+
     EventEmitter.subscribe('signalStudentTimeout', (TAId) =>
       this.signalStudentTimeout(TAId)
     )
@@ -174,6 +183,10 @@ export default class StudentWebSocketClient {
     EventEmitter.publish('initializeQueueOnGreeting', msg)
   }
 
+  updateActiveUsers(msg) {
+    EventEmitter.publish('updateActiveUsers', msg)
+  }
+
   activateReceiveInviteModal(msg) {
     EventEmitter.publish('activateReceiveInviteModal', msg)
   }
@@ -228,6 +241,10 @@ export default class StudentWebSocketClient {
     switch (msgType) {
       case 'greetingAck':
         this.initializeQueueOnGreeting(msg)
+        break
+
+      case 'activeUsersUpdate':
+        this.updateActiveUsers(msg)
         break
 
       case 'queue': // in this case, the server will send a message indicating the current students in the queue

@@ -23,6 +23,22 @@ const handleStudentMessage = async (ws: any, message: string) => {
           msg: {
             currStudent: courseQueue.getCurrStudent(courseId),
             studentsInQueue: courseQueue.getAllStudents(courseId),
+            activeUsersIds: webSocketConnectionManager.getActiveUsersInClass(
+              courseId
+            ),
+          },
+        })
+      )
+      break
+
+    case 'activeUsers':
+      ws.send(
+        prepareMessage({
+          msgType: 'activeUsersUpdate',
+          msg: {
+            activeUsersIds: webSocketConnectionManager.getActiveUsersInClass(
+              courseId
+            ),
           },
         })
       )
