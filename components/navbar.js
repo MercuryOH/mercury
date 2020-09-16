@@ -22,9 +22,9 @@ function Navbar() {
     if (!user) {
       router.push('/login')
     }
-  },[])
+  }, [])
 
-  return ( !user ? null:
+  return !user ? null : (
     <Menu size="massive" style={{ marginBottom: 0, zIndex: 1 }} borderless>
       <Menu.Item header>Mercury</Menu.Item>
       <Menu.Menu position="right">
@@ -44,20 +44,23 @@ function Navbar() {
                 text={user && `${user.firstName} ${user.lastName}`}
               />
               <Dropdown.Item text={user && user.email} />
-              <Dropdown.Item>
+
               <GoogleLogout
                 clientId="1019939739333-mi49g41jn4u9v50nqqd538vsfpl3jf9s.apps.googleusercontent.com"
-                buttonText="Logout"
+                render={(renderProps) => (
+                  <Dropdown.Item
+                    icon="sign-out"
+                    text="Logout"
+                    onClick={renderProps.onClick}
+                  ></Dropdown.Item>
+                )}
                 onLogoutSuccess={logoutUser}
-              >
-              </GoogleLogout>
-              </Dropdown.Item>
+              ></GoogleLogout>
             </Dropdown.Menu>
           </Dropdown>
         </ProfileContainer>
       </Menu.Menu>
     </Menu>
-
   )
 }
 
