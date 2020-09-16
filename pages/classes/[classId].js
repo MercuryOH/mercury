@@ -55,15 +55,16 @@ class ClassPage extends Component {
       isMounted: false,
       allGroups: [],
       toRejoin: false, // activate rejoin option confirm alert
+      activeUsersIds: [],
     }
 
     this.defineEventEmitterCallbacks()
   }
 
   fetchAllGroups = () => {
-   api
-      .getGroups(this.classId)
-      .then((groups) => this.setState({ allGroups: groups }))
+    api.getGroups(this.classId).then((groups) => {
+      this.setState({ allGroups: groups })
+    })
   }
 
   takeOne(arr) {
@@ -144,11 +145,7 @@ class ClassPage extends Component {
 
   leaveGroupForTAOffice = () => {
     api
-      .deleteGroupUser(
-        this.classId,
-        this.state.currentGroup.id,
-        this.user.id
-      )
+      .deleteGroupUser(this.classId, this.state.currentGroup.id, this.user.id)
       .catch(console.error)
 
     this.fetchAllGroups()
@@ -168,11 +165,7 @@ class ClassPage extends Component {
 
     const currentGroupId = this.state.currentGroup.id
     api
-      .deleteGroupUser(
-        this.classId,
-        this.state.currentGroup.id,
-        this.user.id
-      )
+      .deleteGroupUser(this.classId, this.state.currentGroup.id, this.user.id)
       .catch(console.error)
 
     this.fetchAllGroups() // re-fetch current groups
@@ -234,6 +227,17 @@ class ClassPage extends Component {
         userId: classUser.userId,
       })
     })*/
+
+    EventEmitter.subscribe(
+      'initializeQueueOnGreeting',
+      ({ activeUsersIds }) => {
+        this.setState({ activeUsersIds })
+      }
+    )
+
+    EventEmitter.subscribe('updateActiveUsers', ({ activeUsersIds }) => {
+      this.setState({ activeUsersIds })
+    })
 
     EventEmitter.subscribe('leaveCallOnError', () => {
       this.leaveGroup()
@@ -308,6 +312,9 @@ class ClassPage extends Component {
       })
       .then(() => {
         setInterval(this.fetchAllGroups, 10000)
+        setInterval(function () {
+          EventEmitter.publish('getActiveUsers')
+        }, 10000)
       })
       .then(() => {
         this.setState({ isMounted: true })
@@ -332,7 +339,7 @@ class ClassPage extends Component {
     if (
       group.type === 'office' ||
       role === 'Professor' ||
-      role === 'TA'||
+      role === 'TA' ||
       group.type === 'discussion'
     ) {
       // you are popped off the waiting queue or you are a TA
@@ -446,7 +453,7 @@ class ClassPage extends Component {
       console.log('groupexists')
     }
   }*/
-  
+
   handleCreateGroup = async (group) => {
     const groupData = await api.postGroup(
       this.classId,
@@ -518,10 +525,19 @@ class ClassPage extends Component {
 
   showOffice() {
     return (
-      <div style={{ paddingLeft: 20 }} style = {{ width: '100%' }}>
-        <List relaxed selection verticalAlign="middle" style = {{ width: '100%' }}>
+      <div style={{ paddingLeft: 20 }} style={{ width: '100%' }}>
+        <List
+          relaxed
+          selection
+          verticalAlign="middle"
+          style={{ width: '100%' }}
+        >
           {this.state.allGroups
-            .filter((group) => group.type === 'office')
+            .filter(
+              (group) =>
+                group.type === 'office' &&
+                this.state.activeUsersIds.includes(group.UserId)
+            )
             .map((group) => (
               <List.Item
                 key={`${group.name}`}
@@ -535,8 +551,8 @@ class ClassPage extends Component {
                 style={this.getListItemStyle(group)}
               >
                 <List.Icon name="graduation cap" />
-                <List.Content style = {{ width: '100%' }}>
-                  <List.Header as="a" style = {{ width: '100%' }}>
+                <List.Content style={{ width: '100%' }}>
+                  <List.Header as="a" style={{ width: '100%' }}>
                     {group.name + ' (' + group.users.length + ')'}
                   </List.Header>
                 </List.Content>

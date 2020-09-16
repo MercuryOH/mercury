@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { useRouter } from 'next/router'
 import { Grid, Header, Message, Image } from 'semantic-ui-react'
 import { useAuth } from '../components/authProvider'
@@ -31,7 +31,7 @@ function LoginPage() {
         >
           <Grid.Column style={{ maxWidth: 450, minWidth: 300 }}>
             <Image
-              src="/wave_dark.png"
+              src="/wave_dark-min.png"
               size="large"
               style={{ padding: '1%' }}
             />

@@ -213,19 +213,6 @@ export async function postJoinGroup(classId, groupId, email) {
   }
 }
 
-export async function getAllGroups(classId) {
-  try {
-    const { data } = await axios.get(`/api/classes/${classId}/groups`, {
-      headers: {
-        authorization: token,
-      },
-    })
-    return data
-  } catch (e) {
-    return null
-  }
-}
-
 export async function deleteGroupUser(classId, groupId, userId) {
   try {
     await axios.delete(
