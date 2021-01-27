@@ -16,7 +16,7 @@ function LoginPage() {
     await router.push('/calendar')
   }
   const handleFailure = (response) => {
-    NotificationManager.error('Something went wrong. Please try again.')
+    // NotificationManager.error('Something went wrong. Please try again.')
   }
 
   return (
